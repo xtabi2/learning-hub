@@ -1,148 +1,130 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { grades } from "./words.js";
-import { speakWord, stopSpeaking } from "./speech.js";
-
-const SWIPE_PX = 48;
+import { allClassWords, lessons } from "./class-words.js";
+import FlashCards from "./FlashCards.jsx";
+import SentenceBuilder from "./SentenceBuilder.jsx";
+import StoryTime from "./StoryTime.jsx";
 
 export default function App() {
-  const [gradeId, setGradeId] = useState(null);
-  const [index, setIndex] = useState(0);
-  const [speaking, setSpeaking] = useState(false);
-  const drag = useRef(null);
-  const speakWatch = useRef(0);
+  const [screen, setScreen] = useState("home");
+  const [mode, setMode] = useState("cards");
+  const [deck, setDeck] = useState(null);
 
-  const grade = grades.find((item) => item.id === gradeId) ?? null;
-  const word = grade?.words[index] ?? "";
-
-  useEffect(() => {
-    stopSpeaking();
-    setSpeaking(false);
-    window.clearTimeout(speakWatch.current);
-    return () => window.clearTimeout(speakWatch.current);
-  }, [gradeId, index]);
-
-  useEffect(() => {
-    if (!grade) return undefined;
-
-    const onKey = (event) => {
-      if (event.repeat) return;
-      if (event.key === "ArrowRight") {
-        event.preventDefault();
-        go(1);
-      } else if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        go(-1);
-      }
-    };
-
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [grade, index]);
-
-  function pickGrade(id) {
-    setGradeId(id);
-    setIndex(0);
+  function pickMode(next) {
+    setMode(next);
+    setDeck(null);
+    setScreen("decks");
   }
 
-  function go(step) {
-    if (!grade) return;
-    setIndex((current) => {
-      const next = current + step;
-      if (next < 0 || next >= grade.words.length) return current;
-      return next;
+  function openDeck(next) {
+    setDeck(next);
+    setScreen(mode);
+  }
+
+  function openGrade(grade) {
+    openDeck({
+      id: grade.id,
+      label: grade.label,
+      backTo: "decks",
+      words: grade.words.map((text) => ({ text })),
     });
   }
 
-  function readAloud() {
-    if (!word) return;
-    window.clearTimeout(speakWatch.current);
-    const started = speakWord(word, () => {
-      window.clearTimeout(speakWatch.current);
-      setSpeaking(false);
+  function openLesson(lesson) {
+    openDeck({
+      id: lesson.id,
+      label: lesson.label,
+      backTo: "class",
+      words: lesson.words,
     });
-    if (!started) return;
-    setSpeaking(true);
-    speakWatch.current = window.setTimeout(() => setSpeaking(false), 5000);
   }
 
-  function onPointerDown(event) {
-    if (event.button !== undefined && event.button !== 0) return;
-    if (event.target.closest("button")) return;
-    drag.current = { x: event.clientX, y: event.clientY };
-    event.currentTarget.setPointerCapture?.(event.pointerId);
+  function leaveDeck() {
+    setScreen(deck?.backTo ?? "decks");
+    setDeck(null);
   }
 
-  function onPointerUp(event) {
-    if (!drag.current) return;
-    const dx = event.clientX - drag.current.x;
-    const dy = event.clientY - drag.current.y;
-    drag.current = null;
-    if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) < Math.abs(dy)) return;
-    go(dx < 0 ? 1 : -1);
+  if (screen === "stories") {
+    return <StoryTime onBack={() => setScreen("home")} />;
   }
 
-  function onPointerCancel() {
-    drag.current = null;
+  if (screen === "cards" && deck) {
+    return <FlashCards deck={deck} onBack={leaveDeck} />;
   }
 
-  if (!grade) {
+  if (screen === "sentence" && deck) {
+    return <SentenceBuilder deck={deck} onBack={leaveDeck} />;
+  }
+
+  if (screen === "class") {
     return (
       <main className="app">
-        <h1>Sight Words</h1>
-        <p className="sub">Pick a grade</p>
+        <div className="top">
+          <button type="button" className="big alt grades" onClick={() => setScreen("decks")}>
+            Back
+          </button>
+        </div>
+        <h1>Class Words</h1>
         <div className="grid">
-          {grades.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className="big"
-              onClick={() => pickGrade(item.id)}
-            >
-              {item.label}
+          {lessons.map((lesson) => (
+            <button key={lesson.id} type="button" className="big" onClick={() => openLesson(lesson)}>
+              {lesson.label}
             </button>
           ))}
+          <button
+            type="button"
+            className="big wide"
+            onClick={() =>
+              openDeck({
+                id: "class-all",
+                label: "All together",
+                backTo: "class",
+                words: allClassWords(),
+              })
+            }
+          >
+            All together
+          </button>
         </div>
       </main>
     );
   }
 
-  const atStart = index === 0;
-  const atEnd = index === grade.words.length - 1;
+  if (screen === "decks") {
+    return (
+      <main className="app">
+        <div className="top">
+          <button type="button" className="big alt grades" onClick={() => setScreen("home")}>
+            Back
+          </button>
+        </div>
+        <h1>{mode === "sentence" ? "Build a Sentence" : "Flash Cards"}</h1>
+        <div className="grid">
+          {grades.map((grade) => (
+            <button key={grade.id} type="button" className="big" onClick={() => openGrade(grade)}>
+              {grade.label}
+            </button>
+          ))}
+          <button type="button" className="big alt wide" onClick={() => setScreen("class")}>
+            Class Words
+          </button>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main
-      className="app play"
-      onPointerDown={onPointerDown}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerCancel}
-    >
-      <div className="top">
-        <button type="button" className="big alt grades" onClick={() => pickGrade(null)}>
-          Grades
+    <main className="app">
+      <h1>Sight Words</h1>
+      <div className="stack">
+        <button type="button" className="big" onClick={() => pickMode("cards")}>
+          Flash Cards
         </button>
-        <div className="progress">
-          <span>{grade.label}</span>
-          <span>
-            {index + 1} of {grade.words.length}
-          </span>
-        </div>
-      </div>
-      <div className="card" aria-live="polite">
-        {word}
-      </div>
-      <button
-        type="button"
-        className={`big speak${speaking ? " speaking" : ""}`}
-        onClick={readAloud}
-      >
-        Read it to me
-      </button>
-      <div className="nav">
-        <button type="button" className="big" onClick={() => go(-1)} disabled={atStart}>
-          Previous
+        <button type="button" className="big" onClick={() => pickMode("sentence")}>
+          Build a Sentence
         </button>
-        <button type="button" className="big" onClick={() => go(1)} disabled={atEnd}>
-          Next
+        <button type="button" className="big" onClick={() => setScreen("stories")}>
+          Story Time
         </button>
       </div>
     </main>
