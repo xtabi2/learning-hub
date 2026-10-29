@@ -1,0 +1,165 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif;
+  background: #fff8e1;
+  color: #263238;
+}
+
+button {
+  font-family: inherit;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px calc(16px + env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.6rem;
+  color: #ff6f00;
+  margin: 8px 0;
+}
+
+.sub {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+@media (min-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.big {
+  min-height: 80px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 20px;
+  background: #42a5f5;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 5px #1e88e5;
+  touch-action: manipulation;
+}
+
+.big:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 2px #1e88e5;
+}
+
+.big:disabled {
+  background: #cfd8dc;
+  color: #546e7a;
+  box-shadow: 0 5px #b0bec5;
+  cursor: default;
+}
+
+.big.alt {
+  background: #ab47bc;
+  box-shadow: 0 5px #8e24aa;
+}
+
+.big.alt:active:not(:disabled) {
+  box-shadow: 0 2px #8e24aa;
+}
+
+.big.speak {
+  background: #26a69a;
+  box-shadow: 0 5px #00897b;
+  min-height: 88px;
+  font-size: 2rem;
+  width: 100%;
+}
+
+.big.speak:active:not(:disabled) {
+  box-shadow: 0 2px #00897b;
+}
+
+.big.speak.speaking {
+  background: #00897b;
+}
+
+.play {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100dvh;
+  touch-action: pan-y;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progress {
+  font-size: 1.15rem;
+  color: #6d4c41;
+  font-weight: 700;
+  text-align: right;
+  line-height: 1.25;
+}
+
+.progress span {
+  display: block;
+}
+
+.grades {
+  min-height: 56px;
+  padding: 0 18px;
+  font-size: 1.2rem;
+  flex: 0 0 auto;
+}
+
+.card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(2.75rem, 13vw, 6.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  background: #fff;
+  border-radius: 28px;
+  padding: 28px 12px;
+  box-shadow: 0 6px 18px #0000001a;
+  border: 6px solid #ffca28;
+  min-height: 180px;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.card:active {
+  cursor: grabbing;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
