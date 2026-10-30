@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { hub } from "../../../shared/index.js";
 import { formatSentence, gradeSentence } from "./grade-sentence.js";
 import { setsFor } from "./sentence-sets.js";
 import { speakWord, stopSpeaking } from "./speech.js";
@@ -120,7 +121,14 @@ export default function SentenceBuilder({ deck, onBack }) {
   }
 
   function check() {
-    setNote(gradeSentence(built));
+    const result = gradeSentence(built);
+    setNote(result);
+    if (!result.ok) return;
+    const child = hub().getCurrentChild();
+    if (!child) return;
+    hub().recordProgress(child.id, {
+      reading: { masteredWords: built, updatedAt: new Date().toISOString() },
+    });
   }
 
   function readAloud() {

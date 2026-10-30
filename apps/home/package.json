@@ -1,0 +1,9 @@
+{
+  "name": "@hub/home",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node build.mjs && node --test home.test.js"
+  }
+}

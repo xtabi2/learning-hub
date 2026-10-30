@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fff8e1" />
+    <title>Learning Hub</title>
+    <link rel="stylesheet" href="./home.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>Learning Hub</h1>
+      <p class="lede">Pick who's playing, then choose a game.</p>
+      <section class="panel" aria-labelledby="who-heading">
+        <h2 id="who-heading">Who's playing?</h2>
+        <div class="kids" id="kids"></div>
+        <form class="add" id="add-form">
+          <label>
+            Name
+            <input id="name" name="name" maxlength="40" autocomplete="off" required />
+          </label>
+          <label>
+            Grade
+            <select id="grade" name="grade">
+              <option value="K">Kindergarten</option>
+              <option value="1">1st grade</option>
+              <option value="2">2nd grade</option>
+              <option value="3">3rd grade</option>
+            </select>
+          </label>
+          <button type="submit">Add this kid</button>
+          <p class="note" id="note" role="status"></p>
+        </form>
+      </section>
+      <p class="playing" id="playing"></p>
+      <nav class="games" aria-label="Games">
+        <a class="game math" id="math" href="/math/">Math</a>
+        <a class="game reading" id="reading" href="/reading/">Reading</a>
+        <a class="game adventure" id="adventure" href="/adventure/">Adventure</a>
+      </nav>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

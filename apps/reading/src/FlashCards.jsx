@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { hub } from "../../../shared/index.js";
 import { speakWord, stopSpeaking } from "./speech.js";
 import { ButtonFace } from "./icons.jsx";
 
@@ -23,6 +24,13 @@ export default function FlashCards({ deck, onBack }) {
   const drag = useRef(null);
   const speakWatch = useRef(0);
   const word = deck.words[index];
+
+  useEffect(() => {
+    const child = hub().getCurrentChild();
+    if (child && word?.text) {
+      hub().recordProgress(child.id, { reading: { practicedWords: [word.text] } });
+    }
+  }, [word?.text]);
 
   useEffect(() => {
     stopSpeaking();

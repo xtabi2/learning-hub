@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { hub } from '../../../shared/index.js';
 import { Mode, Problem, Result, makeRound, summarize, factText } from './logic';
 
 const MODES: { id: Mode; label: string }[] = [
@@ -15,8 +16,20 @@ export default function App() {
   const [feedback, setFeedback] = useState<Result | null>(null);
   const shownAt = useRef(0);
 
+  const player = hub().getCurrentChild();
   const start = (m: Mode) => { setMode(m); setRound(makeRound(m)); setIdx(0); setResults([]); setFeedback(null); setScreen('play'); };
   useEffect(() => { if (screen === 'play' && !feedback) shownAt.current = performance.now(); }, [screen, idx, feedback]);
+  useEffect(() => {
+    if (screen !== 'done') return;
+    const child = hub().getCurrentChild();
+    if (!child) return;
+    const s = summarize(results);
+    const math: { lastMode: string; lastPct: number; lastAvgSec: number; updatedAt: string; level?: string } = {
+      lastMode: mode, lastPct: s.pct, lastAvgSec: s.avgSec, updatedAt: new Date().toISOString(),
+    };
+    if (s.pct >= 80) math.level = mode;
+    hub().recordProgress(child.id, { math });
+  }, [screen, mode, results]);
 
   const choose = (v: number) => {
     if (feedback) return;
@@ -32,7 +45,7 @@ export default function App() {
   if (screen === 'start') return (
     <main className="app">
       <h1>Math Fluency ⭐</h1>
-      <p className="sub">Pick a kind of problem!</p>
+      <p className="sub">{player ? `Hi, ${player.name}!` : 'Hi!'} Pick a kind of problem!</p>
       <div className="grid">{MODES.map(m => <button key={m.id} className="big" onClick={() => start(m.id)}>{m.label}</button>)}</div>
     </main>
   );

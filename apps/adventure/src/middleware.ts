@@ -4,6 +4,12 @@ import { SESSION_COOKIE } from "./lib/constants";
 
 const PROTECTED = ["/dashboard", "/children", "/play", "/report"];
 
+function redirectToLogin(request: NextRequest) {
+  const url = request.nextUrl.clone();
+  url.pathname = "/login";
+  return NextResponse.redirect(url);
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const needsAuth = PROTECTED.some(
@@ -15,15 +21,13 @@ export async function middleware(request: NextRequest) {
 
   const token = request.cookies.get(SESSION_COOKIE)?.value;
   const secret = process.env.AUTH_SECRET;
-  if (!token || !secret) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  if (!token || !secret) return redirectToLogin(request);
 
   try {
     await jwtVerify(token, new TextEncoder().encode(secret));
     return NextResponse.next();
   } catch {
-    return NextResponse.redirect(new URL("/login", request.url));
+    return redirectToLogin(request);
   }
 }
 

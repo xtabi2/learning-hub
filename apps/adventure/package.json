@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && tsx scripts/turso-migrate.ts --if-configured && next build",
+    "build": "sh -c 'export DATABASE_URL=\"${DATABASE_URL:-file:./dev.db}\"; prisma generate && tsx scripts/turso-migrate.ts --if-configured && next build'",
     "start": "next start",
     "test": "vitest run",
     "postinstall": "prisma generate",

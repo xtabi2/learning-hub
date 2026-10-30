@@ -58,7 +58,7 @@ export async function requestPasswordReset(
     await db.passwordResetToken.create({
       data: { userId: user.id, tokenHash, expiresAt: new Date(now.getTime() + RESET_TOKEN_TTL_MS) },
     });
-    const link = `${baseUrl.replace(/\/+$/, "")}/reset-password?token=${encodeURIComponent(token)}`;
+    const link = `${baseUrl.replace(/\/+$/, "")}/adventure/reset-password?token=${encodeURIComponent(token)}`;
     await send(email, link);
   } catch (err) {
     console.error("[password-reset] request failed", err);

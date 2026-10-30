@@ -22,7 +22,7 @@ button {
 .app {
   max-width: 720px;
   margin: 0 auto;
-  padding: 24px 16px calc(16px + env(safe-area-inset-bottom));
+  padding: 72px 16px calc(16px + env(safe-area-inset-bottom));
   text-align: center;
 }
 
@@ -124,6 +124,11 @@ h1 {
 .big.alt {
   background: #ab47bc;
   box-shadow: 0 5px #8e24aa;
+}
+
+.big.yours {
+  outline: 6px solid #ff6f00;
+  outline-offset: 2px;
 }
 
 .big.alt:active:not(:disabled) {

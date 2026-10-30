@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { hub, readingGradeId } from "../../../shared/index.js";
 import { grades } from "./words.js";
 import { allClassWords, lessons } from "./class-words.js";
 import FlashCards from "./FlashCards.jsx";
@@ -7,6 +8,10 @@ import StoryTime from "./StoryTime.jsx";
 import { ButtonFace } from "./icons.jsx";
 
 const gradeMark = { k: "K", 1: "1", 2: "2", 3: "3" };
+
+function player() {
+  return hub().getCurrentChild();
+}
 
 export default function App() {
   const [screen, setScreen] = useState("home");
@@ -102,9 +107,16 @@ export default function App() {
           </button>
         </div>
         <h1>{mode === "sentence" ? "Build a Sentence" : "Flash Cards"}</h1>
+        {player() ? <p className="sub">Hi, {player().name}! Your grade is highlighted.</p> : null}
         <div className="grid">
           {grades.map((grade) => (
-            <button key={grade.id} type="button" className="big" onClick={() => openGrade(grade)}>
+            <button
+              key={grade.id}
+              type="button"
+              className={grade.id === readingGradeId(player()?.grade) ? "big yours" : "big"}
+              autoFocus={grade.id === readingGradeId(player()?.grade)}
+              onClick={() => openGrade(grade)}
+            >
               <ButtonFace icon={`badge-${gradeMark[grade.id] ?? grade.id}`}>{grade.label}</ButtonFace>
             </button>
           ))}
@@ -119,6 +131,7 @@ export default function App() {
   return (
     <main className="app">
       <h1>Sight Words</h1>
+      {player() ? <p className="sub">Hi, {player().name}!</p> : null}
       <div className="stack">
         <button type="button" className="big" onClick={() => pickMode("cards")}>
           <ButtonFace icon="cards">Flash Cards</ButtonFace>

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { DemoBanner } from "@/components/DemoBanner";
 import { Disclaimer } from "@/components/Disclaimer";
+import { HubChildBridge } from "@/components/HubChildBridge";
 import { LaunchTowerHome } from "@/components/LaunchTowerHome";
 import { resolveTowerCovers } from "@/lib/launchTowerArt";
 import { requireChildForParent, requireUser } from "@/lib/auth";
@@ -29,6 +30,12 @@ export default async function PlayPage({
     <div className="kid-shell kid-shell-launch-tower">
       {child.isDemo ? <DemoBanner /> : null}
       <Disclaimer oneLine />
+      <HubChildBridge
+        portalChildName={child.name}
+        storyReadingBand={adventure.storyReadingBand}
+        partsCollected={adventure.partsCollected}
+        readyToLeave={adventure.readyToLeave}
+      />
       <LaunchTowerHome
         childId={childId}
         childName={child.name}

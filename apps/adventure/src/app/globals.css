@@ -29,6 +29,11 @@ body {
   .btn-secondary {
     @apply btn bg-pine-100 text-pine-900 hover:bg-pine-200;
   }
+  .hub-home {
+    min-height: 48px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
   .input {
     @apply w-full rounded-xl border border-pine-200 bg-white px-3 py-2 outline-none ring-pine-400 focus:ring-2;
   }
