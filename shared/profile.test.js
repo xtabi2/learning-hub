@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { GRADES, createHub, createMemoryStorage, readingGradeId } from "./index.js";
+import { DEFAULT_CHILDREN, GRADES, STORAGE_KEY, createHub, createMemoryStorage, gradeLabel, readingGradeId } from "./index.js";
 
 function fresh() {
   return createHub(createMemoryStorage());
@@ -12,14 +12,14 @@ test("adds a child and selects them", () => {
   assert.equal(child.name, "Ada");
   assert.equal(child.grade, "1");
   assert.equal(hub.getCurrentChild().id, child.id);
-  assert.equal(hub.listChildren().length, 1);
+  assert.equal(hub.listChildren().length, DEFAULT_CHILDREN.length + 1, "defaults kept alongside the new kid");
 });
 
 test("rejects an empty name and an unknown grade", () => {
   const hub = fresh();
   assert.throws(() => hub.addChild({ name: "   ", grade: "K" }), /Name/);
   assert.throws(() => hub.addChild({ name: "Bea", grade: "4" }), /Grade/);
-  assert.deepEqual(GRADES, ["K", "1", "2", "3"]);
+  assert.deepEqual(GRADES, ["PreK", "K", "1", "2", "3"]);
 });
 
 test("switches and removes the current child", () => {
@@ -29,9 +29,11 @@ test("switches and removes the current child", () => {
   assert.equal(hub.getCurrentChild().id, bea.id);
   assert.equal(hub.setCurrentChild(ada.id).name, "Ada");
   hub.removeChild(ada.id);
-  assert.equal(hub.getCurrentChild().id, bea.id);
-  hub.removeChild(bea.id);
+  assert.equal(hub.getCurrentChild().id, hub.listChildren()[0].id);
+  assert.ok(hub.listChildren().some((kid) => kid.id === bea.id));
+  for (const kid of hub.listChildren()) hub.removeChild(kid.id);
   assert.equal(hub.getCurrentChild(), null);
+  assert.equal(hub.listChildren().length, DEFAULT_CHILDREN.length, "defaults reappear once nothing is saved");
 });
 
 test("records math level, mastered words, and adventure progress", () => {
@@ -55,4 +57,50 @@ test("records math level, mastered words, and adventure progress", () => {
 test("maps kindergarten for the sight-word grade buttons", () => {
   assert.equal(readingGradeId("K"), "k");
   assert.equal(readingGradeId("2"), "2");
+});
+
+test("shows Madison, Sydney, and Wesley when nothing is saved", () => {
+  const storage = createMemoryStorage();
+  const hub = createHub(storage);
+  const kids = hub.listChildren();
+  assert.deepEqual(
+    kids.map(({ name, age, grade }) => ({ name, age, grade })),
+    [
+      { name: "Madison", age: 7, grade: "1" },
+      { name: "Sydney", age: 5, grade: "PreK" },
+      { name: "Wesley", age: 2, grade: "PreK" },
+    ],
+  );
+  assert.equal(DEFAULT_CHILDREN.length, 3);
+  assert.equal(hub.getCurrentChild(), null);
+  assert.equal(storage.getItem(STORAGE_KEY), null, "listing does not write to storage");
+  assert.equal(hub.setCurrentChild("default-sydney").name, "Sydney");
+  assert.equal(hub.getCurrentChild().grade, "PreK");
+});
+
+test("never overwrites saved profiles with the defaults", () => {
+  const storage = createMemoryStorage();
+  const saved = { children: [{ id: "x", name: "Zoe", grade: "2", createdAt: "t", progress: {} }], currentId: "x" };
+  storage.setItem(STORAGE_KEY, JSON.stringify(saved));
+  const hub = createHub(storage);
+  assert.deepEqual(hub.listChildren().map((k) => k.name), ["Zoe"]);
+  hub.addChild({ name: "Ann", grade: "K" });
+  assert.deepEqual(hub.listChildren().map((k) => k.name), ["Zoe", "Ann"]);
+});
+
+test("stores and validates age", () => {
+  const hub = fresh();
+  const kid = hub.addChild({ name: "Lu", grade: "PreK", age: "4" });
+  assert.equal(kid.age, 4);
+  assert.equal(hub.updateChild(kid.id, { age: 5 }).age, 5);
+  assert.throws(() => hub.addChild({ name: "Bad", grade: "K", age: -1 }), /Age/);
+  assert.throws(() => hub.addChild({ name: "Bad", grade: "K", age: 2.5 }), /Age/);
+  assert.equal(hub.addChild({ name: "NoAge", grade: "K" }).age, undefined);
+});
+
+test("Pre-K falls back to the easiest content", () => {
+  assert.equal(readingGradeId("PreK"), "k");
+  assert.equal(gradeLabel("PreK"), "Pre-K");
+  assert.equal(gradeLabel("K"), "Kindergarten");
+  assert.equal(gradeLabel("1"), "Grade 1");
 });
