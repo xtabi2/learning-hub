@@ -13,8 +13,9 @@ import path from "node:path";
 
 async function main() {
   const url = process.env.TURSO_DATABASE_URL;
-  if (!url && process.argv.includes("--if-configured")) {
-    console.log("TURSO_DATABASE_URL not set; skipping Turso migrations (SQLite/db push path).");
+  const token = process.env.TURSO_AUTH_TOKEN;
+  if (process.argv.includes("--if-configured") && (!url || (url.startsWith("libsql://") && !token))) {
+    console.log("Turso URL or auth token not set; skipping Turso migrations (SQLite/db push path).");
     return;
   }
   if (!url) throw new Error("TURSO_DATABASE_URL is required (libsql://... or file:...)");
