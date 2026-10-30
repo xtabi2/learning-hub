@@ -1,0 +1,209 @@
+{
+  "bookId": "glowtrails",
+  "fruitLabel": "GlowTrails",
+  "title": "GlowTrails",
+  "firstPlanetId": "tidal",
+  "firstPlanetKidName": "Tidal",
+  "partOrder": ["oxygen-tank", "dorsal-fin", "sonar"],
+  "hintAfterMs": 180000,
+  "bands": ["emerging", "early", "growing", "fluent-ms"],
+  "tree": {
+    "homeLine": {
+      "emerging": "Ride the elevator and tap a book to blast off!",
+      "early": "Ride the elevator and tap a book to blast off!",
+      "growing": "Ride the elevator and tap a book to blast off!",
+      "fluent-ms": "Ride the elevator and tap a book to blast off!"
+    },
+    "fruitGlowTrails": {
+      "emerging": "GlowTrails",
+      "early": "GlowTrails",
+      "growing": "GlowTrails",
+      "fluent-ms": "GlowTrails"
+    }
+  },
+  "hud": {
+    "goToShip": {
+      "emerging": "Go to the ship",
+      "early": "Go to the ship",
+      "growing": "Go to the ship",
+      "fluent-ms": "Go to the ship"
+    },
+    "treeControl": {
+      "emerging": "Tree",
+      "early": "Story Tree",
+      "growing": "Story Tree",
+      "fluent-ms": "Story Tree"
+    },
+    "shipExit": {
+      "emerging": "Back to book",
+      "early": "Back to the book",
+      "growing": "Back to the page",
+      "fluent-ms": "Back to your page"
+    },
+    "mapTitle": {
+      "emerging": "Star map",
+      "early": "Star map",
+      "growing": "Star map",
+      "fluent-ms": "Star map"
+    },
+    "tidalMissionLabels": {
+      "oxygen-tank": {
+        "emerging": "Find the oxygen tank",
+        "early": "Mission: oxygen tank",
+        "growing": "Tidal mission: find the oxygen tank",
+        "fluent-ms": "Tidal mission: spot the oxygen tank on the ocean floor"
+      },
+      "dorsal-fin": {
+        "emerging": "Find the dorsal fin",
+        "early": "Mission: dorsal fin",
+        "growing": "Tidal mission: find the dorsal fin",
+        "fluent-ms": "Tidal mission: spot the dorsal fin near the sharks"
+      },
+      "sonar": {
+        "emerging": "Find the sonar",
+        "early": "Mission: sonar",
+        "growing": "Tidal mission: find the sonar",
+        "fluent-ms": "Tidal mission: spot the sonar in the sunken-ship gold"
+      }
+    },
+    "tidalPlanetChip": {
+      "emerging": "Tidal",
+      "early": "Tidal — underwater",
+      "growing": "Tidal (here now)",
+      "fluent-ms": "Tidal — current planet"
+    }
+  },
+  "intro": {
+    "page1_open": {
+      "emerging": ["GlowTrails opens!", "Nibbles is here!"],
+      "early": ["GlowTrails opens!", "Nibbles comes alive!"],
+      "growing": ["GlowTrails opens…", "Nibbles comes alive and wiggles ready."],
+      "fluent-ms": ["GlowTrails opens with a soft glow.", "Nibbles comes alive—jelly, tools, and all."]
+    },
+    "page2_meet": {
+      "emerging": ["Hi! I am Nibbles.", "I help in every book."],
+      "early": ["Hi! I’m Nibbles.", "I help in every storybook."],
+      "growing": ["Hi! I’m Nibbles the goo mechanic.", "I come along in every GlowTrails book."],
+      "fluent-ms": ["Hi! I’m Nibbles—the goo mechanic who tags along in every GlowTrails book."]
+    },
+    "page3_quest": {
+      "emerging": ["We need ship parts.", "Let’s look under the sea!"],
+      "early": ["Our ship needs parts.", "First stop: Tidal, under the sea!"],
+      "growing": ["Our ship needs special parts.", "First planet: Tidal—an underwater world. Ready to look?"],
+      "fluent-ms": ["Our ship needs special parts before we can fly farther.", "First planet: Tidal—an underwater world full of hide-and-seek surprises."]
+    },
+    "page4_bridge": {
+      "emerging": ["Turn the page.", "Planet Tidal!"],
+      "early": ["Turn the page.", "Planet Tidal — underwater!"],
+      "growing": ["Turn the page with me.", "Planet Tidal—time to find ship parts in the sea."],
+      "fluent-ms": ["Let’s turn the page together.", "Planet Tidal—dive in and find our ship parts one spread at a time."]
+    }
+  },
+  "tidal": {
+    "chapterOpen": {
+      "emerging": ["Planet Tidal.", "Look under the water."],
+      "early": ["Planet Tidal!", "We are under the water."],
+      "growing": ["Welcome to Tidal!", "An underwater planet—parts are hiding. Look close."],
+      "fluent-ms": ["Welcome to Tidal!", "An underwater planet where ship parts hide in plain sight—look carefully."]
+    },
+    "spreads": {
+      "oxygen-tank": {
+        "kidLabel": "oxygen tank",
+        "partId": "oxygen-tank",
+        "overview": {
+          "emerging": ["We are on the ocean floor.", "Sandcastle. Coral. Friends in the sand.", "Find the oxygen tank. Match the picture!"],
+          "early": ["We are on the ocean floor by a fun sandcastle and coral.", "Sea creatures live here too.", "Find the oxygen tank—use the picture to help!"],
+          "growing": ["Down on the ocean floor you’ll see coral, a silly sandcastle, and friendly sea creatures.", "One ship part is hiding here.", "Find the oxygen tank. Match it to the picture!"],
+          "fluent-ms": ["We’re on the ocean floor among coral, a playful sandcastle, and friendly sea creatures.", "Somewhere in this scene is a ship part we need.", "Find the oxygen tank—match what you see to the picture."]
+        },
+        "hint": {
+          "emerging": ["Hint time!", "Look by the sandcastle."],
+          "early": ["Need a hint?", "Check near the sandcastle and coral."],
+          "growing": ["Want a goo hint?", "Peek around the sandcastle—something tank-shaped is blending in."],
+          "fluent-ms": ["Okay, gentle hint!", "Look around the sandcastle and coral—our oxygen tank is camouflaged there, not swimming away."]
+        },
+        "find": {
+          "emerging": ["Oxygen tank!"],
+          "early": ["You found the oxygen tank!"],
+          "growing": ["You found the oxygen tank—breathe easy!"],
+          "fluent-ms": ["You found the oxygen tank—perfect for deep-sea bravery!"]
+        },
+        "earn": {
+          "emerging": ["Tank earned!"],
+          "early": ["Oxygen tank earned! Sticker on the ship!"],
+          "growing": ["Oxygen tank earned! Sticker on the ship tray!"],
+          "fluent-ms": ["Oxygen tank earned—sticker stamped on the ship tray!"]
+        }
+      },
+      "dorsal-fin": {
+        "kidLabel": "dorsal fin",
+        "partId": "dorsal-fin",
+        "overview": {
+          "emerging": ["Sharks swim here.", "They look busy.", "Find the dorsal fin. Match the picture!"],
+          "early": ["A group of sharks is swimming nearby.", "Stay calm—they’re story sharks!", "Find the dorsal fin. Use the picture!"],
+          "growing": ["We’re floating near a group of sharks—friendly story sharks, not scary ones.", "One ship part floats with them.", "Find the dorsal fin. Match the picture!"],
+          "fluent-ms": ["We’re floating near a group of story sharks—curious, not mean.", "A ship part is drifting with them.", "Find the dorsal fin—match it to the picture."]
+        },
+        "hint": {
+          "emerging": ["Hint time!", "Look by the sharks."],
+          "early": ["Need a hint?", "Look near the shark group—not on a nose."],
+          "growing": ["Goo hint!", "Scan the shark group—our dorsal fin is floating nearby, blending in."],
+          "fluent-ms": ["Gentle hint!", "Check the shark cluster—the dorsal fin is floating with them, not biting anyone."]
+        },
+        "find": {
+          "emerging": ["Dorsal fin!"],
+          "early": ["You found the dorsal fin!"],
+          "growing": ["You found the dorsal fin—steering sparkle!"],
+          "fluent-ms": ["You found the dorsal fin—sleek steering for the ship!"]
+        },
+        "earn": {
+          "emerging": ["Fin earned!"],
+          "early": ["Dorsal fin earned! Sticker on the ship!"],
+          "growing": ["Dorsal fin earned! Sticker on the ship tray!"],
+          "fluent-ms": ["Dorsal fin earned—another sticker for the ship tray!"]
+        }
+      },
+      "sonar": {
+        "kidLabel": "sonar",
+        "partId": "sonar",
+        "overview": {
+          "emerging": ["A sunken ship!", "Gold and pirate crabs.", "Find the sonar. Match the picture!"],
+          "early": ["A sunken ship spills gold on the sand.", "Tiny crab and lobster pirates guard it.", "Find the sonar mixed in the gold. Use the picture!"],
+          "growing": ["A sunken ship spilled gold across the sand.", "Tiny crab and lobster pirates are dressed up and busy.", "Find the sonar mixed into the gold. Match the picture!"],
+          "fluent-ms": ["A sunken ship spilled treasure gold across the sand.", "Tiny crab and lobster pirates are outfitted and bustling about.", "Find the sonar mixed into the gold—match it to the picture."]
+        },
+        "hint": {
+          "emerging": ["Hint time!", "Look in the gold."],
+          "early": ["Need a hint?", "Search the gold pile by the sunken ship."],
+          "growing": ["Goo hint!", "The sonar is mixed into the gold—look twice at shiny piles near the wreck."],
+          "fluent-ms": ["Gentle hint!", "Our sonar is camouflaged in the gold near the wreck—ignore the pirate pose and spot the part shape."]
+        },
+        "find": {
+          "emerging": ["Sonar!"],
+          "early": ["You found the sonar!"],
+          "growing": ["You found the sonar—ping! We can listen far!"],
+          "fluent-ms": ["You found the sonar—ping! Now the ship can listen across the deep."]
+        },
+        "earn": {
+          "emerging": ["Sonar earned!"],
+          "early": ["Sonar earned! Sticker on the ship!"],
+          "growing": ["Sonar earned! Sticker on the ship tray!"],
+          "fluent-ms": ["Sonar earned—sticker stamped on the ship tray!"]
+        }
+      }
+    },
+    "partMiss": {
+      "emerging": ["Keep looking!"],
+      "early": ["Not that spot. Keep looking!"],
+      "growing": ["Not that spot—try another peek."],
+      "fluent-ms": ["Not that spot—give the scene another careful look."]
+    },
+    "chapterComplete": {
+      "emerging": ["Tidal done!", "Three parts found!", "The Story Star got brighter."],
+      "early": ["Tidal complete!", "Oxygen tank, dorsal fin, and sonar are ours!", "The Story Star got a little brighter."],
+      "growing": ["Tidal complete! All three ship parts stamped.", "Oxygen tank, dorsal fin, sonar—tray full!", "The Story Star got a little brighter."],
+      "fluent-ms": ["Tidal complete—all three ship parts stamped on the tray.", "Oxygen tank, dorsal fin, and sonar are ready.", "Look: the Story Star got a little brighter."]
+    }
+  },
+  "notes": "1st-grade listen/read; sharks are story-friendly not scary; pirate crustaceans cute not menacing. Hints fire 3 minutes after overview TTS ends. No Mistwhisper branding on this chapter."
+}

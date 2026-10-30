@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Spring boots morph">
+  <ellipse cx="64" cy="108" rx="40" ry="10" fill="#a4d65e" opacity="0.4"/>
+  <path d="M34 70 Q50 30 64 70 Q78 30 94 70 Q64 95 34 70" fill="#a4d65e" stroke="#3f6b2a" stroke-width="3"/>
+  <circle cx="52" cy="62" r="5" fill="#fff"/><circle cx="76" cy="62" r="5" fill="#fff"/>
+  <circle cx="53" cy="63" r="3" fill="#3f6b2a"/><circle cx="77" cy="63" r="3" fill="#3f6b2a"/>
+  <path d="M40 88 q8 16 0 20 M56 90 q8 14 0 18 M72 90 q8 14 0 18 M88 88 q8 16 0 20" fill="none" stroke="#86efac" stroke-width="3"/>
+  <circle cx="40" cy="110" r="6" fill="#4ade80" stroke="#166534" stroke-width="2"/>
+  <circle cx="88" cy="110" r="6" fill="#4ade80" stroke="#166534" stroke-width="2"/>
+</svg>

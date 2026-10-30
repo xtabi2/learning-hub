@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Dorsal fin earned lit">
+  <circle cx="128" cy="128" r="116" fill="#fde68a" opacity="0.5"/>
+  <circle cx="128" cy="128" r="108" fill="#fef3c7" stroke="#b8860b" stroke-width="8"/>
+  <path d="M72 176 Q88 88 128 52 Q168 88 184 176 Q128 188 72 176 Z" fill="#38bdf8" stroke="#0369a1" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M96 168 Q112 110 128 86 Q144 110 160 168" fill="#7dd3fc"/>
+  <path d="M128 70 L128 168" stroke="#0369a1" stroke-width="4" stroke-linecap="round"/>
+  <path d="M118 176 L128 196 L138 176" fill="#E88E35" stroke="#9a3412" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M128 108 l6 16 18 1 -14 11 5 17 -15 -10 -15 10 5 -17 -14 -11 18 -1 z" fill="#e4b84a" stroke="#a16207" stroke-width="2"/>
+</svg>

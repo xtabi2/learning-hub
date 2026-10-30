@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Story Tree home — GlowTrails fruit">
+  <defs>
+    <linearGradient id="th-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8ec8ea"/>
+      <stop offset="38%" stop-color="#c5e6f6"/>
+      <stop offset="72%" stop-color="#FBF6EE"/>
+      <stop offset="100%" stop-color="#f3e6c8"/>
+    </linearGradient>
+    <radialGradient id="th-sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff8dc"/>
+      <stop offset="55%" stop-color="#FFC107"/>
+      <stop offset="100%" stop-color="#e4b84a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="th-canopy" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#c6e48b"/>
+      <stop offset="55%" stop-color="#7cb342"/>
+      <stop offset="100%" stop-color="#4a7c2a"/>
+    </radialGradient>
+    <radialGradient id="th-fruit" cx="36%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#ffe08a"/>
+      <stop offset="50%" stop-color="#e4b84a"/>
+      <stop offset="100%" stop-color="#E88E35"/>
+    </radialGradient>
+    <radialGradient id="th-fglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff3bf" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#FFC107" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#e4b84a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#th-sky)"/>
+
+  <!-- sun -->
+  <circle cx="820" cy="150" r="110" fill="url(#th-sun)"/>
+  <circle cx="820" cy="150" r="48" fill="#ffe9a0"/>
+
+  <!-- clouds -->
+  <g fill="#FBF6EE" opacity="0.92">
+    <ellipse cx="180" cy="160" rx="70" ry="28"/>
+    <ellipse cx="230" cy="150" rx="56" ry="26"/>
+    <ellipse cx="140" cy="168" rx="40" ry="18"/>
+    <ellipse cx="560" cy="110" rx="80" ry="26"/>
+    <ellipse cx="610" cy="100" rx="50" ry="20"/>
+    <ellipse cx="500" cy="118" rx="44" ry="18"/>
+    <ellipse cx="900" cy="260" rx="64" ry="22"/>
+    <ellipse cx="940" cy="250" rx="40" ry="16"/>
+  </g>
+
+  <!-- distant hills -->
+  <ellipse cx="180" cy="700" rx="280" ry="90" fill="#b7d48a" opacity="0.55"/>
+  <ellipse cx="860" cy="690" rx="300" ry="100" fill="#9ccc65" opacity="0.45"/>
+  <!-- near hills -->
+  <ellipse cx="200" cy="860" rx="380" ry="160" fill="#8fbc5a"/>
+  <ellipse cx="820" cy="880" rx="420" ry="170" fill="#7cb342"/>
+  <ellipse cx="512" cy="960" rx="620" ry="180" fill="#5e8f3a"/>
+  <!-- cream path -->
+  <ellipse cx="512" cy="920" rx="180" ry="40" fill="#f3e6c8" opacity="0.7"/>
+
+  <!-- tiny flowers -->
+  <g>
+    <circle cx="140" cy="860" r="8" fill="#F8A4B8"/>
+    <circle cx="160" cy="850" r="7" fill="#FFC107"/>
+    <circle cx="880" cy="870" r="8" fill="#F8A4B8"/>
+    <circle cx="900" cy="848" r="6" fill="#38bdf8"/>
+    <circle cx="240" cy="900" r="7" fill="#e4b84a"/>
+    <circle cx="780" cy="910" r="7" fill="#F8A4B8"/>
+  </g>
+  <g fill="#A4D65E">
+    <ellipse cx="140" cy="872" rx="3" ry="10"/>
+    <ellipse cx="160" cy="860" rx="3" ry="9"/>
+    <ellipse cx="880" cy="882" rx="3" ry="10"/>
+    <ellipse cx="240" cy="912" rx="3" ry="9"/>
+  </g>
+
+  <!-- SMALL friendly Story Tree -->
+  <!-- trunk: simple rounded column, no extra foot -->
+  <rect x="404" y="558" width="36" height="232" rx="16" fill="#8b5a2b" stroke="#5c3a1e" stroke-width="6"/>
+  <path d="M418 600 L422 760" fill="none" stroke="#c48a4a" stroke-width="4" opacity="0.4"/>
+
+  <!-- rounded canopy clumps (small tree) -->
+  <g>
+    <ellipse cx="360" cy="540" rx="88" ry="72" fill="url(#th-canopy)" stroke="#2f4d37" stroke-width="6"/>
+    <ellipse cx="470" cy="530" rx="92" ry="78" fill="url(#th-canopy)" stroke="#2f4d37" stroke-width="6"/>
+    <ellipse cx="410" cy="480" rx="86" ry="70" fill="url(#th-canopy)" stroke="#2f4d37" stroke-width="6"/>
+    <ellipse cx="330" cy="500" rx="54" ry="44" fill="#8fbc5a" stroke="#2f4d37" stroke-width="5"/>
+    <ellipse cx="500" cy="500" rx="50" ry="40" fill="#8fbc5a" stroke="#2f4d37" stroke-width="5"/>
+    <!-- leaf highlights -->
+    <ellipse cx="390" cy="460" rx="28" ry="16" fill="#d9f99d" opacity="0.45"/>
+    <ellipse cx="340" cy="520" rx="20" ry="12" fill="#d9f99d" opacity="0.35"/>
+  </g>
+
+  <!-- ONE glowing GlowTrails fruit — hit center ~ (502, 478) = 49% / 47% -->
+  <circle cx="502" cy="478" r="92" fill="url(#th-fglow)"/>
+  <circle cx="502" cy="478" r="62" fill="url(#th-fglow)" opacity="0.85"/>
+  <ellipse cx="502" cy="478" rx="38" ry="40" fill="url(#th-fruit)" stroke="#1d3023" stroke-width="5"/>
+  <ellipse cx="490" cy="464" rx="8" ry="11" fill="#fff8dc" opacity="0.75"/>
+  <rect x="496" y="436" width="8" height="16" rx="3" fill="#2f4d37"/>
+  <ellipse cx="518" cy="442" rx="12" ry="6" fill="#A4D65E" stroke="#2f4d37" stroke-width="2" transform="rotate(20 518 442)"/>
+
+  <!-- readable labeled area (not a hotspot ring) -->
+  <rect x="548" y="508" width="220" height="52" rx="26" fill="#FBF6EE" stroke="#2f4d37" stroke-width="4"/>
+  <text x="658" y="543" text-anchor="middle" font-family="DejaVu Serif, Georgia, serif" font-size="26" fill="#1d3023">GlowTrails</text>
+
+  <!-- soft ground shadow -->
+  <ellipse cx="424" cy="802" rx="70" ry="14" fill="#1d3023" opacity="0.18"/>
+
+  <!-- calm title chip, not competing -->
+  <rect x="48" y="40" width="300" height="64" rx="32" fill="#FBF6EE" stroke="#2f4d37" stroke-width="4" opacity="0.92"/>
+  <text x="198" y="82" text-anchor="middle" font-family="DejaVu Serif, Georgia, serif" font-size="28" fill="#1d3023">Story Tree</text>
+</svg>

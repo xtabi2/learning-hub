@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Sticky boots morph">
+  <ellipse cx="64" cy="100" rx="36" ry="12" fill="#a4d65e" opacity="0.4"/>
+  <path d="M40 70 Q64 35 88 70 Q64 95 40 70" fill="#a4d65e" stroke="#3f6b2a" stroke-width="3"/>
+  <circle cx="52" cy="66" r="5" fill="#fff"/><circle cx="76" cy="66" r="5" fill="#fff"/>
+  <circle cx="53" cy="67" r="3" fill="#3f6b2a"/><circle cx="77" cy="67" r="3" fill="#3f6b2a"/>
+  <ellipse cx="48" cy="100" rx="14" ry="10" fill="#ddd6fe" stroke="#5b21b6" stroke-width="2"/>
+  <ellipse cx="80" cy="100" rx="14" ry="10" fill="#ddd6fe" stroke="#5b21b6" stroke-width="2"/>
+  <circle cx="48" cy="100" r="4" fill="#c4b5fd"/><circle cx="80" cy="100" r="4" fill="#c4b5fd"/>
+</svg>

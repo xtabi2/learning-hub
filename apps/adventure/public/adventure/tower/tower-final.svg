@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="640" viewBox="0 0 1024 640">
+<path d="M512 20 C600 90 650 180 660 300 H364 C374 180 424 90 512 20Z" fill="#FFF4E0"/>
+<path d="M512 20 C560 60 590 110 606 170 H418 C434 110 464 60 512 20Z" fill="#F28C6B"/>
+<circle cx="512" cy="230" r="40" fill="#4FB3BF" stroke="#1F2A5C" stroke-width="12"/>
+<circle cx="512" cy="14" r="14" fill="#FFC857"/>
+<rect x="96" y="300" width="832" height="340" fill="#2E3B7A"/>
+<g stroke="#F28C6B" stroke-width="18" stroke-linecap="round"><line x1="96" y1="300" x2="96" y2="640"/><line x1="928" y1="300" x2="928" y2="640"/></g>
+<rect x="430" y="300" width="164" height="340" fill="#1F2A5C"/>
+<rect x="430" y="300" width="12" height="340" fill="#FFC857"/><rect x="582" y="300" width="12" height="340" fill="#FFC857"/>
+<rect x="72" y="580" width="880" height="44" rx="22" fill="#FFF4E0"/>
+<g fill="#FFC857"><path d="M220 360 l10 22 24 3 -18 16 5 24 -21 -12 -21 12 5 -24 -18 -16 24 -3Z"/><path d="M800 360 l10 22 24 3 -18 16 5 24 -21 -12 -21 12 5 -24 -18 -16 24 -3Z"/></g>
+</svg>

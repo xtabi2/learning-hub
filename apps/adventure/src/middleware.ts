@@ -1,0 +1,32 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { jwtVerify } from "jose";
+import { SESSION_COOKIE } from "./lib/constants";
+
+const PROTECTED = ["/dashboard", "/children", "/play", "/report"];
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const needsAuth = PROTECTED.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
+  if (!needsAuth) {
+    return NextResponse.next();
+  }
+
+  const token = request.cookies.get(SESSION_COOKIE)?.value;
+  const secret = process.env.AUTH_SECRET;
+  if (!token || !secret) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  try {
+    await jwtVerify(token, new TextEncoder().encode(secret));
+    return NextResponse.next();
+  } catch {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+}
+
+export const config = {
+  matcher: ["/dashboard/:path*", "/children/:path*", "/play/:path*", "/report/:path*"],
+};

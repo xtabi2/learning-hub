@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Mistwhisper chapter spread">
+
+  <defs>
+    <radialGradient id="mw" cx="40%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#f5f3ff"/>
+      <stop offset="50%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="#e8eef5"/>
+  <!-- planet -->
+  <circle cx="360" cy="420" r="260" fill="url(#mw)" stroke="#5b4a8a" stroke-width="10"/>
+  <ellipse cx="300" cy="380" rx="140" ry="50" fill="#f8fafc" opacity="0.45"/>
+  <ellipse cx="420" cy="480" rx="120" ry="40" fill="#ddd6fe" opacity="0.5"/>
+  <g fill="#ede9fe" opacity="0.9">
+    <rect x="250" y="400" width="50" height="18" rx="8"/>
+    <rect x="320" y="360" width="70" height="18" rx="8"/>
+    <rect x="400" y="420" width="40" height="18" rx="8"/>
+    <rect x="300" y="500" width="60" height="18" rx="8"/>
+  </g>
+  <circle cx="280" cy="340" r="12" fill="#fef9c3"/>
+  <circle cx="450" cy="450" r="10" fill="#fef9c3"/>
+  <!-- chapter plate -->
+  <rect x="620" y="120" width="340" height="140" rx="28" fill="#fbf6ee" stroke="#5b4a8a" stroke-width="5"/>
+  <text x="790" y="185" text-anchor="middle" font-family="Georgia,serif" font-size="40" fill="#1d3023">Chapter 1</text>
+  <text x="790" y="235" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" fill="#5b4a8a">Mistwhisper</text>
+  <!-- karaoke -->
+  <rect x="96" y="760" width="832" height="200" rx="36" fill="#fbf6ee" stroke="#c4b5fd" stroke-width="5"/>
+  <text x="512" y="860" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" fill="#2f4d37">Karaoke zone — hotspots stay above</text>
+  <!-- hotspot hint rings (not parts — placement guides) -->
+  <circle cx="700" cy="400" r="56" fill="none" stroke="#e4b84a" stroke-width="4" stroke-dasharray="8 8" opacity="0.7"/>
+  <circle cx="860" cy="520" r="56" fill="none" stroke="#e4b84a" stroke-width="4" stroke-dasharray="8 8" opacity="0.7"/>
+
+</svg>

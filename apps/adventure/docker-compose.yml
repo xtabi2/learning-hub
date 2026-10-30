@@ -1,0 +1,22 @@
+services:
+  reading-progress-game:
+    build: .
+    image: reading-progress-game:latest
+    container_name: reading-progress-game
+    ports:
+      # LAN + Tailscale on knowledge (all interfaces)
+      - "0.0.0.0:3000:3000"
+    environment:
+      AUTH_SECRET: ${AUTH_SECRET}
+      # HTTPS via nginx (self-signed lab) — Secure cookies on
+      AUTH_COOKIE_SECURE: "true"
+      AUTH_URL: ${AUTH_URL:-https://100.115.249.38}
+      DATABASE_URL: file:/data/dev.db
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+    volumes:
+      - reading-progress-data:/data
+    restart: unless-stopped
+
+volumes:
+  reading-progress-data:

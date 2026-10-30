@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Flipcliff">
+  <defs>
+    <radialGradient id="fc-g" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#f5f3ff"/>
+      <stop offset="100%" stop-color="#ddd6fe"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="64" cy="64" r="52" fill="url(#fc-g)" stroke="#5b21b6" stroke-width="3"/>
+  <path d="M36 40 Q64 20 92 40 Q64 56 36 40" fill="#4ade80" stroke="#166534" stroke-width="2"/>
+  <path d="M40 88 Q64 108 88 88 Q64 72 40 88" fill="#86efac" stroke="#166534" stroke-width="2"/>
+  <path d="M48 52 L48 76 M80 52 L80 76" stroke="#5b21b6" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  <circle cx="48" cy="48" r="4" fill="#ddd6fe" stroke="#5b21b6" stroke-width="1.5"/>
+  <circle cx="80" cy="80" r="4" fill="#ddd6fe" stroke="#5b21b6" stroke-width="1.5"/>
+  <path d="M56 64 h16" stroke="#7c3aed" stroke-width="2" stroke-dasharray="3 3"/>
+
+</svg>

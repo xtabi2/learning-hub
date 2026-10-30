@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Sonar earned lit">
+  <circle cx="128" cy="128" r="116" fill="#fde68a" opacity="0.5"/>
+  <circle cx="128" cy="128" r="108" fill="#fef3c7" stroke="#b8860b" stroke-width="8"/>
+  <circle cx="128" cy="128" r="62" fill="#5eead4" opacity="0.35"/>
+  <circle cx="128" cy="128" r="58" fill="#14b8a6" stroke="#0f766e" stroke-width="5"/>
+  <circle cx="128" cy="128" r="42" fill="#5eead4" stroke="#0f766e" stroke-width="3"/>
+  <circle cx="128" cy="128" r="26" fill="#99f6e4" stroke="#0f766e" stroke-width="3"/>
+  <circle cx="128" cy="128" r="10" fill="#e4b84a" stroke="#a16207" stroke-width="3"/>
+  <path d="M128 66 L128 82" stroke="#e4b84a" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="128" cy="62" r="5" fill="#FFC107"/>
+</svg>

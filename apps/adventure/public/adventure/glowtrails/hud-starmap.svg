@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Star map — Tidal highlighted">
+  <defs>
+    <radialGradient id="sm-space" cx="50%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#1a3a5c"/>
+      <stop offset="60%" stop-color="#12263c"/>
+      <stop offset="100%" stop-color="#0b1724"/>
+    </radialGradient>
+    <radialGradient id="sm-tidal" cx="38%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#ccfbf1"/>
+      <stop offset="45%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </radialGradient>
+    <radialGradient id="sm-tglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5eead4" stop-opacity="0.7"/>
+      <stop offset="70%" stop-color="#14b8a6" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#sm-space)"/>
+
+  <!-- soft nebula washes -->
+  <ellipse cx="280" cy="240" rx="200" ry="90" fill="#3A82C4" opacity="0.12"/>
+  <ellipse cx="780" cy="700" rx="220" ry="100" fill="#7c3aed" opacity="0.08"/>
+  <ellipse cx="600" cy="200" rx="160" ry="70" fill="#e4b84a" opacity="0.06"/>
+
+  <!-- stars -->
+  <g fill="#fde68a">
+    <circle cx="80" cy="90" r="2"/><circle cx="160" cy="140" r="1.5"/>
+    <circle cx="300" cy="60" r="2"/><circle cx="420" cy="120" r="1.5"/>
+    <circle cx="540" cy="50" r="2"/><circle cx="680" cy="100" r="1.6"/>
+    <circle cx="820" cy="70" r="2"/><circle cx="940" cy="130" r="1.5"/>
+    <circle cx="70" cy="400" r="1.5"/><circle cx="150" cy="520" r="2"/>
+    <circle cx="90" cy="700" r="1.5"/><circle cx="200" cy="860" r="2"/>
+    <circle cx="900" cy="400" r="2"/><circle cx="960" cy="560" r="1.5"/>
+    <circle cx="880" cy="820" r="2"/><circle cx="760" cy="900" r="1.5"/>
+    <circle cx="480" cy="880" r="2"/><circle cx="360" cy="940" r="1.5"/>
+    <circle cx="620" cy="80" r="1.4"/><circle cx="250" cy="300" r="1.5"/>
+  </g>
+
+  <!-- faint constellation lines -->
+  <g stroke="#7dd3fc" stroke-width="2" opacity="0.18" fill="none">
+    <path d="M200 280 L360 620 L180 720"/>
+    <path d="M780 220 L800 560 L650 750"/>
+    <path d="M200 280 L520 480 L780 220"/>
+    <path d="M360 620 L520 480 L800 560"/>
+  </g>
+
+  <!-- dimmer planets -->
+  <!-- Star Nook -->
+  <g opacity="0.62">
+    <circle cx="200" cy="280" r="28" fill="#FBF6EE" stroke="#c9b896" stroke-width="4"/>
+    <ellipse cx="188" cy="272" rx="8" ry="5" fill="#d6d3d1" opacity="0.6"/>
+  </g>
+  <!-- Sparkle Nursery -->
+  <g opacity="0.55">
+    <circle cx="780" cy="220" r="24" fill="#38bdf8" stroke="#0369a1" stroke-width="4"/>
+    <circle cx="772" cy="212" r="5" fill="#e0f2fe" opacity="0.6"/>
+  </g>
+  <!-- Little Comet -->
+  <g opacity="0.55">
+    <circle cx="360" cy="620" r="22" fill="#c4b5fd" stroke="#6d28d9" stroke-width="4"/>
+  </g>
+  <!-- Story Drift -->
+  <g opacity="0.55">
+    <circle cx="800" cy="560" r="24" fill="#34d399" stroke="#047857" stroke-width="4"/>
+  </g>
+  <!-- Signal Forge -->
+  <g opacity="0.5">
+    <circle cx="180" cy="720" r="20" fill="#fbbf24" stroke="#b45309" stroke-width="4"/>
+  </g>
+  <!-- Softsnow -->
+  <g opacity="0.48">
+    <circle cx="650" cy="750" r="18" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="3"/>
+  </g>
+
+  <!-- HIGHLIGHT current planet TIDAL — teal/aqua, larger, soft glow (no dashed ring) -->
+  <circle cx="520" cy="480" r="110" fill="url(#sm-tglow)"/>
+  <circle cx="520" cy="480" r="70" fill="url(#sm-tglow)" opacity="0.8"/>
+  <circle cx="520" cy="480" r="52" fill="url(#sm-tidal)" stroke="#0f766e" stroke-width="6"/>
+  <ellipse cx="504" cy="464" rx="16" ry="9" fill="#ccfbf1" opacity="0.55"/>
+  <path d="M490 492 Q520 504 550 488" fill="none" stroke="#99f6e4" stroke-width="3" opacity="0.7"/>
+  <path d="M498 508 Q520 518 544 506" fill="none" stroke="#5eead4" stroke-width="2.5" opacity="0.55"/>
+
+  <rect x="430" y="556" width="180" height="48" rx="24" fill="#FBF6EE" stroke="#0f766e" stroke-width="4"/>
+  <text x="520" y="588" text-anchor="middle" font-family="DejaVu Serif, Georgia, serif" font-size="26" fill="#1d3023">Tidal</text>
+
+  <!-- map title -->
+  <rect x="48" y="40" width="220" height="56" rx="28" fill="#FBF6EE" stroke="#2f4d37" stroke-width="4" opacity="0.92"/>
+  <text x="158" y="77" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="24" fill="#1d3023">Star map</text>
+</svg>
