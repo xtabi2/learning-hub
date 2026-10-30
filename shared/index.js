@@ -4,13 +4,40 @@
  * see the same kid. Games keep their own saved progress; this is the foundation.
  */
 
-export const GRADES = ["K", "1", "2", "3"];
+export const GRADES = ["PreK", "K", "1", "2", "3"];
 export const STORAGE_KEY = "learning-hub.v1";
+
+/** Shown only when no profiles are saved yet. Never written over saved kids. */
+export const DEFAULT_CHILDREN = Object.freeze([
+  Object.freeze({ id: "default-madison", name: "Madison", age: 7, grade: "1" }),
+  Object.freeze({ id: "default-sydney", name: "Sydney", age: 5, grade: "PreK" }),
+  Object.freeze({ id: "default-wesley", name: "Wesley", age: 2, grade: "PreK" }),
+]);
+
+const GRADE_ERROR = "Grade must be Pre-K, K, 1, 2, or 3";
+
+export function gradeLabel(grade) {
+  if (grade === "PreK") return "Pre-K";
+  if (grade === "K") return "Kindergarten";
+  return `Grade ${grade}`;
+}
+
+function normalizeAge(age) {
+  if (age === undefined || age === null || age === "") return undefined;
+  const n = Number(age);
+  if (!Number.isInteger(n) || n < 0 || n > 18) throw new Error("Age must be a whole number from 0 to 18");
+  return n;
+}
+
+function seedChildren() {
+  return DEFAULT_CHILDREN.map((kid) => ({ ...kid, createdAt: "2026-10-30T00:00:00.000Z", progress: {} }));
+}
 
 let memoryStorage;
 
 export function readingGradeId(grade) {
-  if (grade === "K" || grade === "k") return "k";
+  // Pre-K has no deck of its own; it uses the easiest (Kindergarten) sight words.
+  if (grade === "PreK" || grade === "K" || grade === "k") return "k";
   return grade;
 }
 
@@ -33,12 +60,15 @@ export function createHub(storage) {
   function load() {
     try {
       const raw = storage.getItem(STORAGE_KEY);
-      if (!raw) return { children: [], currentId: null };
+      if (!raw) return { children: seedChildren(), currentId: null };
       const data = JSON.parse(raw);
-      if (!data || !Array.isArray(data.children)) return { children: [], currentId: null };
+      if (!data || !Array.isArray(data.children) || data.children.length === 0) {
+        return { children: seedChildren(), currentId: null };
+      }
       return { children: data.children, currentId: data.currentId ?? null };
     } catch {
-      return { children: [], currentId: null };
+      // Unreadable data: show defaults but do not overwrite what is stored until a real save.
+      return { children: seedChildren(), currentId: null };
     }
   }
 
@@ -51,15 +81,17 @@ export function createHub(storage) {
       return load().children.map((child) => ({ ...child }));
     },
 
-    addChild({ name, grade }) {
+    addChild({ name, grade, age }) {
       const trimmed = String(name ?? "").trim().slice(0, 40);
       if (!trimmed) throw new Error("Name is required");
-      if (!GRADES.includes(grade)) throw new Error("Grade must be K, 1, 2, or 3");
+      if (!GRADES.includes(grade)) throw new Error(GRADE_ERROR);
+      const childAge = normalizeAge(age);
       const data = load();
       const child = {
         id: crypto.randomUUID(),
         name: trimmed,
         grade,
+        ...(childAge !== undefined ? { age: childAge } : {}),
         createdAt: new Date().toISOString(),
         progress: {},
       };
@@ -79,8 +111,13 @@ export function createHub(storage) {
         child.name = trimmed;
       }
       if (patch.grade !== undefined) {
-        if (!GRADES.includes(patch.grade)) throw new Error("Grade must be K, 1, 2, or 3");
+        if (!GRADES.includes(patch.grade)) throw new Error(GRADE_ERROR);
         child.grade = patch.grade;
+      }
+      if (patch.age !== undefined) {
+        const childAge = normalizeAge(patch.age);
+        if (childAge === undefined) delete child.age;
+        else child.age = childAge;
       }
       save(data);
       return { ...child };

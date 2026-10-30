@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { hub } from "../../../../shared/index.js";
+import { gradeLabel, hub } from "../../../../shared/index.js";
 
 export function HubPlayingAs() {
   const [label, setLabel] = useState("");
@@ -9,8 +9,7 @@ export function HubPlayingAs() {
   useEffect(() => {
     const child = hub().getCurrentChild();
     if (!child) return;
-    const grade = child.grade === "K" ? "Kindergarten" : `Grade ${child.grade}`;
-    setLabel(`${child.name} · ${grade}`);
+    setLabel(`${child.name} · ${gradeLabel(child.grade)}`);
   }, []);
 
   if (!label) return null;

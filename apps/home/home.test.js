@@ -17,3 +17,8 @@ test("home menu asks who is playing", () => {
   assert.match(html, /Who's playing/);
   assert.match(html, /id="kids"/);
 });
+
+test("home menu offers Pre-K and an age field", () => {
+  assert.match(html, /<option value="PreK">Pre-K<\/option>/);
+  assert.match(html, /id="age"/);
+});

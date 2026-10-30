@@ -1,12 +1,16 @@
-export const GRADES: readonly ["K", "1", "2", "3"];
+export const GRADES: readonly ["PreK", "K", "1", "2", "3"];
 export const STORAGE_KEY: string;
 
-export type Grade = "K" | "1" | "2" | "3";
+export type Grade = "PreK" | "K" | "1" | "2" | "3";
+
+export const DEFAULT_CHILDREN: readonly { id: string; name: string; age: number; grade: Grade }[];
+export function gradeLabel(grade: string): string;
 
 export interface Child {
   id: string;
   name: string;
   grade: Grade;
+  age?: number;
   createdAt: string;
   progress?: Progress;
 }
@@ -48,8 +52,8 @@ export interface HubStorage {
 
 export interface Hub {
   listChildren(): Child[];
-  addChild(input: { name: string; grade: Grade }): Child;
-  updateChild(id: string, patch: { name?: string; grade?: Grade }): Child | null;
+  addChild(input: { name: string; grade: Grade; age?: number | string }): Child;
+  updateChild(id: string, patch: { name?: string; grade?: Grade; age?: number | string | null }): Child | null;
   removeChild(id: string): void;
   getCurrentChild(): Child | null;
   setCurrentChild(id: string): Child | null;
