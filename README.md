@@ -83,7 +83,10 @@ Hobby environment variables to copy from the existing **reading-progress-game** 
 - `TURSO_AUTH_TOKEN`
 - `AUTH_SECRET`
 - `AUTH_COOKIE_SECURE` (`true` on Vercel HTTPS)
-- `RESEND_API_KEY` and `EMAIL_FROM` if password-reset email should send
+- `TURSO_AUTH_TOKEN` (sensitive; copy it from the reading-progress-game project — it cannot be read back from the API)
+- `RESEND_API_KEY` and `EMAIL_FROM` if password-reset email should send (the API key is sensitive and must be copied by hand)
+
+`AUTH_SECRET` on learning-hub is a new value used only to sign cookies for this site. `TURSO_DATABASE_URL` is already set. Until `TURSO_AUTH_TOKEN` is set, the build skips Turso migrations and the parent portal cannot reach the database. Math, Reading, and the home menu do not need those variables.
 
 Sharing the existing Turso database means Adventure progress stays in the same place as the standalone game. The build runs `scripts/turso-migrate.ts --if-configured`, which skips when `TURSO_DATABASE_URL` is unset and is idempotent when it is set.
 
@@ -109,7 +112,7 @@ A **Home** link in each game returns to `/`.
 
 - Adventure git history before `4ebb13d` is not in this repo (shallow clone). The tree at `4aa3069` is.
 - Adventure art files moved from `public/adventure/` to `public/` so Next `basePath: "/adventure"` serves the same URLs. Path strings in the game code are unchanged.
-- Password-reset links include `/adventure`. Login redirects in middleware use `nextUrl` so they stay under that prefix.
+- Password-reset links include `/adventure`. Page guards (`requireUser`) redirect to `/adventure/login`. The old Edge middleware file is not in this copy: Vercel Services does not run Edge middleware, and those pages already check the session.
 - Math still has its Docker/nginx files. The hub deploy does not use them.
 - Math and Reading had no `localStorage` of their own. Their in-memory play is unchanged; hub progress is extra.
 - Adventure still needs the env vars above for accounts, email, and Turso. Without them the game builds and the kid UI shell loads, but parent login and saved portal progress do not.
