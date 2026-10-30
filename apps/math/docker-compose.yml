@@ -1,0 +1,7 @@
+services:
+  math-fluency-game:
+    build: .
+    container_name: math-fluency-game
+    ports:
+      - "3100:80"
+    restart: unless-stopped
