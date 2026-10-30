@@ -1,0 +1,8 @@
+{
+  "name": "@hub/profile",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test profile.test.js"
+  }
+}

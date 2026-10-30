@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Echo scoop morph">
+  <ellipse cx="64" cy="100" rx="34" ry="12" fill="#a4d65e" opacity="0.45"/>
+  <ellipse cx="64" cy="72" rx="28" ry="26" fill="#a4d65e" stroke="#3f6b2a" stroke-width="3"/>
+  <circle cx="54" cy="68" r="5" fill="#fff"/><circle cx="74" cy="68" r="5" fill="#fff"/>
+  <circle cx="55" cy="69" r="3" fill="#3f6b2a"/><circle cx="75" cy="69" r="3" fill="#3f6b2a"/>
+  <path d="M40 48 Q64 20 88 48" fill="none" stroke="#5eead4" stroke-width="4"/>
+  <path d="M48 42 Q64 24 80 42" fill="none" stroke="#2dd4bf" stroke-width="3"/>
+  <ellipse cx="64" cy="40" rx="16" ry="8" fill="#99f6e4" stroke="#0f766e" stroke-width="2"/>
+</svg>

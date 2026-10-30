@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Fire suit morph">
+  <ellipse cx="64" cy="104" rx="36" ry="10" fill="#a4d65e" opacity="0.35"/>
+  <path d="M44 90 L50 40 L64 48 L78 40 L84 90 Z" fill="#fb923c" stroke="#9a3412" stroke-width="3"/>
+  <ellipse cx="64" cy="78" rx="18" ry="16" fill="#a4d65e" stroke="#3f6b2a" stroke-width="2"/>
+  <circle cx="56" cy="76" r="4" fill="#fff"/><circle cx="72" cy="76" r="4" fill="#fff"/>
+  <circle cx="57" cy="77" r="2.5" fill="#3f6b2a"/><circle cx="73" cy="77" r="2.5" fill="#3f6b2a"/>
+  <path d="M58 34 q6 -16 12 0" fill="#fde68a" stroke="#b45309" stroke-width="2"/>
+</svg>

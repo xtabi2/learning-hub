@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Sorter mitts morph">
+  <ellipse cx="64" cy="104" rx="34" ry="10" fill="#a4d65e" opacity="0.4"/>
+  <ellipse cx="64" cy="70" rx="24" ry="22" fill="#a4d65e" stroke="#3f6b2a" stroke-width="3"/>
+  <circle cx="54" cy="68" r="5" fill="#fff"/><circle cx="74" cy="68" r="5" fill="#fff"/>
+  <circle cx="55" cy="69" r="3" fill="#3f6b2a"/><circle cx="75" cy="69" r="3" fill="#3f6b2a"/>
+  <rect x="28" y="78" width="22" height="18" rx="6" fill="#fbbf24" stroke="#a16207" stroke-width="2"/>
+  <rect x="78" y="78" width="22" height="18" rx="6" fill="#fbbf24" stroke="#a16207" stroke-width="2"/>
+  <rect x="58" y="48" width="12" height="12" rx="2" fill="#38bdf8" stroke="#0369a1" stroke-width="1.5"/>
+</svg>

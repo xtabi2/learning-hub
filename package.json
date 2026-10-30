@@ -1,0 +1,22 @@
+{
+  "name": "learning-hub",
+  "private": true,
+  "workspaces": [
+    "apps/home",
+    "apps/math",
+    "apps/reading",
+    "apps/adventure",
+    "shared"
+  ],
+  "scripts": {
+    "test": "npm test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "dev:home": "npm run build -w @hub/home && npx --yes serve apps/home/dist -p 5170",
+    "dev:math": "npm run dev -w math-fluency-game",
+    "dev:reading": "npm run dev -w sight-word-game",
+    "dev:adventure": "npm run dev -w reading-progress-game"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

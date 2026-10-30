@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Tidal open water — dorsal fin hide">
+  <defs>
+    <linearGradient id="df-water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c7eef8"/>
+      <stop offset="30%" stop-color="#5ec4e0"/>
+      <stop offset="70%" stop-color="#2b8fb3"/>
+      <stop offset="100%" stop-color="#155e7a"/>
+    </linearGradient>
+    <linearGradient id="df-ray" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff8dc" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#fff8dc" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="df-shark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9bb8c8"/>
+      <stop offset="100%" stop-color="#6f92a6"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#df-water)"/>
+
+  <!-- surface shimmer -->
+  <ellipse cx="512" cy="-20" rx="700" ry="90" fill="#e0f7ff" opacity="0.45"/>
+  <polygon points="200,0 270,0 220,780 130,780" fill="url(#df-ray)"/>
+  <polygon points="480,0 540,0 500,700 420,700" fill="url(#df-ray)"/>
+  <polygon points="760,0 830,0 800,760 710,760" fill="url(#df-ray)"/>
+
+  <!-- bubbles -->
+  <g fill="#e0f2fe" opacity="0.5" stroke="#7dd3fc" stroke-width="2">
+    <circle cx="80" cy="200" r="8"/><circle cx="120" cy="340" r="5"/>
+    <circle cx="940" cy="180" r="9"/><circle cx="900" cy="320" r="6"/>
+    <circle cx="60" cy="600" r="7"/><circle cx="980" cy="560" r="5"/>
+    <circle cx="500" cy="140" r="4"/><circle cx="700" cy="80" r="5"/>
+  </g>
+
+  <!-- faint distant floor -->
+  <ellipse cx="512" cy="1080" rx="700" ry="160" fill="#1a6a86" opacity="0.35"/>
+
+  <!-- helper: friendly story shark (round eyes, blush, no teeth) -->
+  <!-- shark 1 — left mid, facing right -->
+  <g>
+    <ellipse cx="250" cy="360" rx="120" ry="52" fill="url(#df-shark)" stroke="#4a6a7a" stroke-width="5"/>
+    <ellipse cx="230" cy="378" rx="70" ry="24" fill="#eef4f6" opacity="0.85"/>
+    <!-- real dorsal -->
+    <path d="M230 316 L250 250 L278 318 Z" fill="#7fa0b2" stroke="#4a6a7a" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M360 350 L410 330 L410 378 Z" fill="#7fa0b2" stroke="#4a6a7a" stroke-width="4" stroke-linejoin="round"/>
+    <ellipse cx="210" cy="400" rx="28" ry="12" fill="#7fa0b2" stroke="#4a6a7a" stroke-width="3"/>
+    <!-- face -->
+    <circle cx="160" cy="348" r="14" fill="#fff"/>
+    <circle cx="164" cy="350" r="7" fill="#1d3023"/>
+    <circle cx="167" cy="347" r="2.4" fill="#fff"/>
+    <ellipse cx="150" cy="364" rx="8" ry="5" fill="#F8A4B8" opacity="0.75"/>
+    <path d="M138 368 Q152 376 166 368" fill="none" stroke="#4a6a7a" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- shark 2 — center, facing right, a bit higher -->
+  <g>
+    <ellipse cx="500" cy="300" rx="100" ry="44" fill="#8aadc0" stroke="#4a6a7a" stroke-width="5"/>
+    <ellipse cx="486" cy="316" rx="58" ry="18" fill="#eef4f6" opacity="0.85"/>
+    <path d="M486 262 L500 210 L522 264 Z" fill="#7fa0b2" stroke="#4a6a7a" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M590 292 L632 276 L630 316 Z" fill="#7fa0b2" stroke="#4a6a7a" stroke-width="4" stroke-linejoin="round"/>
+    <ellipse cx="470" cy="336" rx="22" ry="10" fill="#7fa0b2" stroke="#4a6a7a" stroke-width="3"/>
+    <circle cx="428" cy="290" r="12" fill="#fff"/>
+    <circle cx="431" cy="292" r="6" fill="#1d3023"/>
+    <circle cx="433" cy="289" r="2" fill="#fff"/>
+    <ellipse cx="418" cy="304" rx="7" ry="4" fill="#F8A4B8" opacity="0.75"/>
+    <path d="M408 308 Q420 314 432 308" fill="none" stroke="#4a6a7a" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- shark 3 — right, facing left (flip) -->
+  <g>
+    <ellipse cx="800" cy="420" rx="110" ry="48" fill="#7fa3b6" stroke="#4a6a7a" stroke-width="5"/>
+    <ellipse cx="816" cy="436" rx="64" ry="20" fill="#eef4f6" opacity="0.85"/>
+    <path d="M816 380 L798 322 L776 382 Z" fill="#6f92a6" stroke="#4a6a7a" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M700 412 L656 394 L658 436 Z" fill="#6f92a6" stroke="#4a6a7a" stroke-width="4" stroke-linejoin="round"/>
+    <ellipse cx="830" cy="456" rx="24" ry="11" fill="#6f92a6" stroke="#4a6a7a" stroke-width="3"/>
+    <circle cx="880" cy="410" r="13" fill="#fff"/>
+    <circle cx="876" cy="412" r="6.5" fill="#1d3023"/>
+    <circle cx="874" cy="409" r="2.2" fill="#fff"/>
+    <ellipse cx="894" cy="424" rx="8" ry="5" fill="#F8A4B8" opacity="0.75"/>
+    <path d="M868 430 Q882 438 896 430" fill="none" stroke="#4a6a7a" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- shark 4 — lower left, smaller, facing right -->
+  <g>
+    <ellipse cx="320" cy="620" rx="80" ry="34" fill="#8eb4c4" stroke="#4a6a7a" stroke-width="4"/>
+    <ellipse cx="308" cy="632" rx="46" ry="14" fill="#eef4f6" opacity="0.85"/>
+    <path d="M310 592 L322 552 L338 594 Z" fill="#7fa0b2" stroke="#4a6a7a" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M392 614 L428 600 L426 632 Z" fill="#7fa0b2" stroke="#4a6a7a" stroke-width="3.5" stroke-linejoin="round"/>
+    <circle cx="262" cy="612" r="10" fill="#fff"/>
+    <circle cx="265" cy="614" r="5" fill="#1d3023"/>
+    <circle cx="267" cy="611" r="1.8" fill="#fff"/>
+    <ellipse cx="254" cy="624" rx="6" ry="3.5" fill="#F8A4B8" opacity="0.75"/>
+    <path d="M246 626 Q256 632 266 626" fill="none" stroke="#4a6a7a" stroke-width="2.2" stroke-linecap="round"/>
+  </g>
+
+  <!-- shark 5 — mid-right lower, facing left -->
+  <g>
+    <ellipse cx="700" cy="640" rx="90" ry="38" fill="#7ba3b8" stroke="#4a6a7a" stroke-width="4"/>
+    <ellipse cx="714" cy="654" rx="52" ry="16" fill="#eef4f6" opacity="0.85"/>
+    <path d="M710 608 L696 564 L678 610 Z" fill="#6f92a6" stroke="#4a6a7a" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M620 634 L580 618 L582 656 Z" fill="#6f92a6" stroke="#4a6a7a" stroke-width="3.5" stroke-linejoin="round"/>
+    <circle cx="768" cy="632" r="11" fill="#fff"/>
+    <circle cx="765" cy="634" r="5.5" fill="#1d3023"/>
+    <circle cx="763" cy="631" r="2" fill="#fff"/>
+    <ellipse cx="780" cy="646" rx="7" ry="4" fill="#F8A4B8" opacity="0.75"/>
+    <path d="M756 650 Q770 658 784 650" fill="none" stroke="#4a6a7a" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+
+  <!-- SHIP DORSAL-FIN hide — floating among them, NOT on a nose
+       center (552, 388) = leftPct 53.9 / topPct 37.9
+       triangle ~80x90, hit ≥64px. Cream/sky/orange toy fin. -->
+  <g>
+    <!-- slight water blend shadow -->
+    <path d="M512 430 L552 340 L592 430 Z" fill="#5a8aa0" opacity="0.18"/>
+    <path d="M508 428 L552 338 L596 428 Q552 444 508 428 Z" fill="#c5d4dc" stroke="#6a8a9a" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M528 418 L552 360 L576 418" fill="#e8eef2" opacity="0.4"/>
+    <path d="M552 352 L552 420" stroke="#0369a1" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+    <path d="M536 424 L552 448 L568 424" fill="#E88E35" stroke="#9a3412" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M552 386 l5 12 13 1 -10 8 4 12 -12 -8 -12 8 4 -12 -10 -8 13 -1 z" fill="#e4b84a" stroke="#a16207" stroke-width="1.5"/>
+  </g>
+</svg>

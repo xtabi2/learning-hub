@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Bouncebloom">
+  <defs>
+    <radialGradient id="bb-g" cx="50%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#dcfce7"/>
+      <stop offset="100%" stop-color="#86efac"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="64" cy="64" r="52" fill="url(#bb-g)" stroke="#166534" stroke-width="3"/>
+  <ellipse cx="44" cy="72" rx="16" ry="10" fill="#86efac" stroke="#15803d" stroke-width="2"/>
+  <ellipse cx="72" cy="78" rx="14" ry="9" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+  <ellipse cx="60" cy="58" rx="12" ry="8" fill="#4ade80" stroke="#15803d" stroke-width="2"/>
+  <circle cx="44" cy="48" r="8" fill="#f9a8d4" stroke="#be185d" stroke-width="1.5"/>
+  <circle cx="78" cy="52" r="7" fill="#fbcfe8" stroke="#be185d" stroke-width="1.5"/>
+  <circle cx="64" cy="42" r="6" fill="#f9a8d4" stroke="#be185d" stroke-width="1.5"/>
+  <path d="M44 56 q0 12 0 18" stroke="#15803d" stroke-width="2" fill="none"/>
+  <path d="M78 59 q0 10 0 14" stroke="#15803d" stroke-width="2" fill="none"/>
+
+</svg>

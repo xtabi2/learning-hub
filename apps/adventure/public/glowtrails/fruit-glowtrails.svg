@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="GlowTrails story fruit">
+  <defs>
+    <radialGradient id="fg-glow" cx="50%" cy="48%" r="50%">
+      <stop offset="0%" stop-color="#fff3bf" stop-opacity="0.95"/>
+      <stop offset="40%" stop-color="#FFC107" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#e4b84a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="fg-body" cx="38%" cy="32%" r="68%">
+      <stop offset="0%" stop-color="#ffe08a"/>
+      <stop offset="45%" stop-color="#e4b84a"/>
+      <stop offset="100%" stop-color="#E88E35"/>
+    </radialGradient>
+  </defs>
+  <!-- soft gold glow, no dashed ring -->
+  <circle cx="256" cy="220" r="190" fill="url(#fg-glow)"/>
+  <circle cx="256" cy="220" r="148" fill="url(#fg-glow)" opacity="0.7"/>
+  <!-- juicy fruit -->
+  <ellipse cx="256" cy="228" rx="118" ry="122" fill="url(#fg-body)" stroke="#1d3023" stroke-width="8"/>
+  <ellipse cx="256" cy="228" rx="118" ry="122" fill="none" stroke="#a16207" stroke-width="3" opacity="0.45"/>
+  <!-- cleft -->
+  <path d="M256 118 Q268 228 256 338" fill="none" stroke="#a16207" stroke-width="4" opacity="0.35"/>
+  <!-- shine -->
+  <ellipse cx="210" cy="180" rx="28" ry="40" fill="#fff8dc" opacity="0.7"/>
+  <ellipse cx="198" cy="168" rx="10" ry="14" fill="#fff" opacity="0.8"/>
+  <!-- leaf + stem -->
+  <rect x="248" y="78" width="14" height="46" rx="7" fill="#2f4d37"/>
+  <ellipse cx="292" cy="96" rx="36" ry="18" fill="#A4D65E" stroke="#2f4d37" stroke-width="5" transform="rotate(18 292 96)"/>
+  <ellipse cx="304" cy="90" rx="10" ry="5" fill="#d9f99d" opacity="0.8" transform="rotate(18 304 90)"/>
+  <!-- tiny sparkles -->
+  <circle cx="132" cy="150" r="6" fill="#FFC107"/>
+  <circle cx="380" cy="130" r="5" fill="#ffe08a"/>
+  <circle cx="400" cy="250" r="4" fill="#FFC107"/>
+  <!-- readable label space -->
+  <rect x="86" y="392" width="340" height="72" rx="36" fill="#FBF6EE" stroke="#2f4d37" stroke-width="5"/>
+  <text x="256" y="440" text-anchor="middle" font-family="DejaVu Serif, Georgia, serif" font-size="36" fill="#1d3023">GlowTrails</text>
+</svg>

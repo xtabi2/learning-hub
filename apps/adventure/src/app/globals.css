@@ -1,0 +1,761 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f7faf7;
+  --foreground: #1d3023;
+}
+
+body {
+  color: var(--foreground);
+  background:
+    radial-gradient(circle at top left, #e1ebe3 0%, transparent 40%),
+    radial-gradient(circle at top right, #fff7db 0%, transparent 35%),
+    var(--background);
+  min-height: 100vh;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-pine-200 bg-white/90 p-5 shadow-sm backdrop-blur;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center rounded-xl px-4 py-2 font-semibold transition;
+  }
+  .btn-primary {
+    @apply btn bg-pine-700 text-white hover:bg-pine-800;
+  }
+  .btn-secondary {
+    @apply btn bg-pine-100 text-pine-900 hover:bg-pine-200;
+  }
+  .hub-home {
+    min-height: 48px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .input {
+    @apply w-full rounded-xl border border-pine-200 bg-white px-3 py-2 outline-none ring-pine-400 focus:ring-2;
+  }
+
+  /* Kid play shell — Material-inspired + research-based kid UX (play routes only) */
+  .kid-shell {
+    /* Shell */
+    --kid-cream: #fbf6ee;
+    --kid-cream-deep: #fdf5e6;
+    --kid-ink: #1d3023; /* = pine-900 */
+    --kid-ink-soft: #2f4d37; /* = pine-700 */
+    --kid-muted: #3d6345; /* = pine-600 */
+
+    /* Accents */
+    --kid-sky: #3a82c4;
+    --kid-sky-bright: #38bdf8;
+    --kid-lime: #a4d65e; /* Nibbles body */
+    --kid-lime-ink: #3f6b2a; /* Nibbles outline / goo text */
+    --kid-gold: #e4b84a; /* Story Star / gold-400 */
+    --kid-gold-deep: #d4a017; /* gold-500 */
+    --kid-orange: #e88e35; /* ship accent sparingly */
+    --kid-blush: #f8a4b8;
+
+    /* Surfaces */
+    --kid-card: color-mix(in srgb, white 92%, var(--kid-cream));
+    --kid-border: color-mix(in srgb, var(--kid-ink) 18%, transparent);
+
+    /* Interaction */
+    --kid-target-min: 4rem; /* 64px — primary taps */
+    --kid-radius: 1.5rem; /* rounded-3xl family */
+    --kid-radius-pill: 9999px;
+
+    /* Karaoke */
+    --kid-karaoke-on: var(--kid-gold);
+    --kid-karaoke-ink: var(--kid-ink);
+
+    /* Glowtrail planet accents (map chrome / scene tint only) */
+    --planet-mistwhisper: #c4b5fd;
+    --planet-bouncebloom: #86efac;
+    --planet-echo-canyon: #fdba74;
+    --planet-bubbledeep: #38bdf8;
+    --planet-sizzle-rock: #fb923c;
+    --planet-flipcliff: #ddd6fe;
+    --planet-softsnow-drift: #93c5fd;
+    --planet-sparktown-dock: #fbbf24;
+
+    /* Calm cream wash (not mint-heavy) when kid shell is active */
+    --background: var(--kid-cream);
+    --foreground: var(--kid-ink);
+    color: var(--kid-ink);
+    background:
+      radial-gradient(circle at top left, color-mix(in srgb, var(--kid-lime) 22%, white) 0%, transparent 42%),
+      radial-gradient(circle at top right, color-mix(in srgb, var(--kid-gold) 28%, white) 0%, transparent 38%),
+      var(--kid-cream);
+
+    @apply space-y-6 text-base sm:text-lg;
+  }
+
+  .kid-shell .card {
+    @apply rounded-3xl border-2 border-pine-200/80 p-5 shadow-md sm:p-6;
+  }
+
+  .kid-shell h1 {
+    @apply text-3xl sm:text-4xl;
+  }
+
+  .kid-shell h2 {
+    @apply text-2xl sm:text-3xl;
+  }
+
+  .flash-card {
+    @apply rounded-3xl border-4 border-amber-200 bg-gradient-to-br from-white via-amber-50 to-sky-50 p-5 shadow-md;
+  }
+
+  .kid-shell .flash-card {
+    @apply rounded-[1.75rem] border-[5px] border-amber-300 bg-gradient-to-br from-white via-amber-50 to-sky-50 p-6 shadow-lg sm:p-8;
+  }
+
+  .kid-shell .flash-card p {
+    @apply text-2xl sm:text-3xl leading-snug;
+  }
+
+  .kid-shell .flash-card button[aria-label="Replay instruction aloud"] {
+    @apply h-16 w-16 rounded-3xl border-[3px] border-pine-400 shadow-md;
+    @apply focus-visible:ring-4 focus-visible:ring-pine-500 focus-visible:ring-offset-2;
+  }
+
+  /* Large tap targets (~64–75px); selected state uses border + fill + checkmark (not color alone) */
+  .kid-option {
+    @apply relative min-h-16 overflow-hidden rounded-2xl border-[3px] border-pine-200 bg-white px-4 py-4 text-left text-xl font-semibold text-pine-900 shadow-sm transition duration-150;
+    @apply hover:border-pine-400 hover:bg-pine-50;
+    @apply focus:outline-none focus-visible:ring-4 focus-visible:ring-pine-500 focus-visible:ring-offset-2;
+    @apply active:scale-[0.98];
+  }
+
+  .kid-option::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at var(--ripple-x, 50%) var(--ripple-y, 50%),
+      rgba(47, 77, 55, 0.18) 0%,
+      transparent 55%
+    );
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity 0.25s ease-out,
+      transform 0.35s ease-out;
+    pointer-events: none;
+  }
+
+  .kid-option:active::before {
+    opacity: 1;
+    transform: scale(1.15);
+    transition-duration: 0s;
+  }
+
+  .kid-option-selected {
+    @apply border-pine-800 bg-pine-100 text-pine-900 shadow-md;
+    box-shadow:
+      0 0 0 2px #fff,
+      0 0 0 5px #2f4d37,
+      0 4px 12px rgba(29, 48, 35, 0.12);
+  }
+
+  .kid-option-selected::after {
+    content: "✓";
+    @apply absolute right-3 top-1/2 -translate-y-1/2 text-2xl font-bold text-pine-800;
+  }
+
+  .kid-option:disabled {
+    @apply cursor-default opacity-90;
+  }
+
+  .kid-primary {
+    /* Continue / mission CTAs stay pine */
+    @apply inline-flex min-h-16 items-center justify-center rounded-2xl bg-pine-700 px-8 text-xl font-bold text-white shadow-md transition;
+    @apply hover:bg-pine-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-pine-500 focus-visible:ring-offset-2;
+    @apply active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .kid-celebrate {
+    /* Celebration / Story Star / unlock CTAs — gold hierarchy */
+    @apply inline-flex min-h-16 items-center justify-center rounded-2xl bg-gold-500 px-8 text-xl font-bold text-pine-900 shadow-md transition;
+    @apply hover:bg-gold-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-gold-400 focus-visible:ring-offset-2;
+    @apply active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .kid-shell .btn-primary {
+    @apply min-h-14 rounded-2xl px-6 text-lg shadow-md;
+    @apply focus:outline-none focus-visible:ring-4 focus-visible:ring-pine-500 focus-visible:ring-offset-2;
+  }
+
+  .kid-shell .btn-secondary {
+    @apply min-h-12 rounded-2xl px-5 text-base;
+    @apply focus:outline-none focus-visible:ring-4 focus-visible:ring-pine-400 focus-visible:ring-offset-2;
+  }
+
+  .kid-path-node {
+    @apply rounded-2xl border-[3px] p-5 shadow-sm transition;
+  }
+
+  .kid-path-node-unlocked {
+    @apply border-pine-400 bg-white hover:shadow-md;
+  }
+
+  .kid-path-node-mastered {
+    @apply border-gold-500 bg-amber-50;
+  }
+
+  .kid-path-node-locked {
+    @apply border-slate-300 bg-slate-50 opacity-85;
+  }
+
+  .kid-feedback-ok {
+    /* Lime / Nibbles wash (replaces emerald) */
+    @apply rounded-2xl border-2 border-nibbles-ink/50 bg-nibbles/25 px-5 py-4 text-base text-nibbles-ink;
+  }
+
+  .kid-feedback-retry {
+    @apply rounded-2xl border-2 border-amber-600 bg-amber-50 px-5 py-4 text-base text-amber-950;
+  }
+}
+
+
+
+/* Phase 1 kids storybook */
+.kid-shell .book-shell {
+  --book-turn-ms: 420ms;
+}
+
+.book-spread {
+  position: relative;
+  transition:
+    transform var(--book-turn-ms, 420ms) ease,
+    opacity var(--book-turn-ms, 420ms) ease;
+  transform-origin: left center;
+}
+
+.book-spread-turn.is-turning {
+  transform: perspective(1200px) rotateY(-14deg) translateX(-8px);
+  opacity: 0;
+}
+
+.book-spread-fade.is-turning {
+  transform: none;
+  opacity: 0;
+}
+
+.book-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  border: 4px solid color-mix(in srgb, var(--kid-ink) 16%, white);
+  background: var(--kid-cream-deep);
+  box-shadow: 0 12px 28px rgba(29, 48, 35, 0.12);
+  aspect-ratio: 1 / 1;
+}
+
+.book-stage-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-page-edge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 7%;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.book-nibbles {
+  position: absolute;
+  left: 4%;
+  bottom: 22%;
+  width: 22%;
+  max-width: 9rem;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.book-nibbles img,
+.book-nibbles-live {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 6px 10px rgba(29, 48, 35, 0.18));
+}
+
+.book-nibbles-live {
+  animation: book-wiggle 2.6s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+
+.book-cover-copy {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 8%;
+  z-index: 4;
+  padding: 1rem 1.1rem;
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, white 86%, var(--kid-cream));
+  border: 3px solid color-mix(in srgb, var(--kid-gold) 55%, white);
+  box-shadow: 0 8px 18px rgba(29, 48, 35, 0.12);
+}
+
+.book-hotspot-layer {
+  position: absolute;
+  inset: 0 0 22% 0;
+  z-index: 5;
+}
+
+/* GlowTrails soft find-it: map leftPct/topPct to full stage (GD QA). */
+.book-hotspot-layer.glowtrails-soft-find {
+  inset: 0;
+}
+
+.book-hotspot-miss {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.book-hotspot {
+  position: absolute;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--kid-target-min, 4rem);
+  min-height: var(--kid-target-min, 4rem);
+  width: 12%;
+  height: 12%;
+  transform: translate(-50%, -50%);
+  border: 0;
+  background: transparent;
+  padding: 0;
+  border-radius: 9999px;
+}
+
+.book-hotspot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 8px rgba(29, 48, 35, 0.2));
+}
+
+.book-hotspot:focus {
+  outline: none;
+}
+
+.book-hotspot:focus-visible {
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 6px var(--kid-gold-deep);
+}
+
+.book-part-tray {
+  position: absolute;
+  left: 4%;
+  top: 4%;
+  z-index: 4;
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.35rem 0.45rem;
+  margin: 0;
+  list-style: none;
+  border-radius: 9999px;
+  background: color-mix(in srgb, white 80%, var(--kid-cream));
+  border: 2px solid color-mix(in srgb, var(--kid-ink) 12%, white);
+}
+
+.book-part-tray img {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.book-part-tray li[data-earned="false"] {
+  opacity: 0.45;
+  filter: grayscale(0.4);
+}
+
+.book-karaoke {
+  margin-top: 0.85rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, white 90%, var(--kid-cream));
+  border: 3px solid color-mix(in srgb, var(--kid-gold) 40%, white);
+}
+
+.book-star-badge {
+  position: absolute;
+  top: 6%;
+  right: 10%;
+  z-index: 4;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--kid-gold);
+  color: var(--kid-ink);
+  font-size: 1.6rem;
+  box-shadow: 0 4px 10px rgba(212, 160, 23, 0.35);
+}
+
+.book-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem;
+  overflow: auto;
+  background: color-mix(in srgb, var(--kid-ink) 45%, transparent);
+}
+
+.book-overlay-card {
+  width: min(48rem, 100%);
+  margin: 1.5rem auto;
+  padding: 1rem;
+  border-radius: 1.5rem;
+  background: var(--kid-cream);
+  border: 4px solid color-mix(in srgb, var(--kid-ink) 14%, white);
+  box-shadow: 0 16px 40px rgba(29, 48, 35, 0.22);
+}
+
+@keyframes book-wiggle {
+  0%,
+  100% { transform: rotate(-2deg) translateY(0); }
+  50% { transform: rotate(3deg) translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book-spread,
+  .book-spread-turn,
+  .book-spread-fade {
+    transition: opacity 160ms ease;
+    transform: none !important;
+  }
+  .book-nibbles-live {
+    animation: none !important;
+  }
+}
+
+
+/* --- GlowTrails Tidal / Story Tree --- */
+.kid-shell-story-tree {
+  max-width: none;
+  padding: 0;
+}
+
+.story-tree-home {
+  position: relative;
+  min-height: min(100dvh, 56rem);
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: #9ad7ff;
+}
+
+.story-tree-backdrop {
+  display: block;
+  width: 100%;
+  height: min(100dvh, 56rem);
+  object-fit: cover;
+}
+
+.story-tree-chrome {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, white 82%, transparent),
+    transparent
+  );
+}
+
+.glowtrails-book.is-desktop-spread .book-spread {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.glowtrails-book.is-desktop-spread .book-karaoke {
+  grid-column: 1 / -1;
+}
+
+.glowtrails-verso {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, white 86%, var(--kid-cream));
+  border: 3px solid color-mix(in srgb, var(--kid-ink) 10%, white);
+  padding: 1rem;
+}
+
+.glowtrails-book.is-desktop-spread .glowtrails-verso {
+  display: flex;
+}
+
+.glowtrails-overview-chip {
+  position: absolute;
+  right: 4%;
+  top: 4%;
+  z-index: 4;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 3px solid color-mix(in srgb, white 70%, #ffe28a);
+  box-shadow: 0 6px 14px rgba(29, 48, 35, 0.18);
+  background: #fff8e7;
+}
+
+.glowtrails-overview-chip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Soft find-it: ≥64px hit, NO gold rings */
+.glowtrails-soft-find .glowtrails-hotspot {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  opacity: 0.01;
+}
+
+.glowtrails-soft-find .glowtrails-hotspot:focus-visible {
+  opacity: 0.35;
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 6px color-mix(in srgb, var(--kid-pine, #2f6b4f) 70%, white);
+}
+
+.glowtrails-earned-sticker {
+  position: absolute;
+  z-index: 7;
+  width: 4.5rem;
+  height: 4.5rem;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 4px 8px rgba(29, 48, 35, 0.25));
+}
+
+.ship-hud-card {
+  max-width: 40rem;
+}
+
+.ship-hud-starmap-art {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 14%;
+  width: 72%;
+  height: auto;
+  border-radius: 1rem;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.ship-hud-map {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 16%;
+  bottom: 42%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: color-mix(in srgb, #0b1a33 72%, transparent);
+  color: #e8f7ff;
+}
+
+.ship-hud-planet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, #5ad0ff 25%, transparent);
+  font-weight: 700;
+}
+
+.ship-hud-planet.is-current {
+  outline: 2px solid #ffe28a;
+}
+
+.ship-hud-planet-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  background: #ffe28a;
+  box-shadow: 0 0 10px #ffe28a;
+}
+
+.ship-hud-missions {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.ship-hud-missions li[data-earned="true"] {
+  color: #ffe28a;
+}
+
+@media (max-width: 767px) {
+  .glowtrails-book.is-mobile-spread .glowtrails-verso {
+    display: none;
+  }
+}
+
+@media print {
+  body {
+    background: white !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+}
+
+@keyframes kid-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  35% { transform: scale(1.12); opacity: 1; }
+  70% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.92); opacity: 0; }
+}
+
+@keyframes kid-float-up {
+  0% { transform: translateY(0) scale(0.8); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateY(-55vh) scale(1.05); opacity: 0; }
+}
+
+@keyframes kid-spark {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  30% { transform: scale(1.2) rotate(20deg); opacity: 1; }
+  100% { transform: scale(0.4) rotate(80deg); opacity: 0; }
+}
+
+.kid-celebrate-burst {
+  animation: kid-pop 1.5s ease-out forwards;
+}
+
+.kid-unicorn-pop {
+  animation: kid-pop 1.5s ease-out forwards;
+}
+
+.kid-balloon-1 { animation: kid-float-up 1.6s ease-out 0.05s forwards; }
+.kid-balloon-2 { animation: kid-float-up 1.55s ease-out 0.12s forwards; }
+.kid-balloon-3 { animation: kid-float-up 1.7s ease-out 0.02s forwards; }
+.kid-balloon-4 { animation: kid-float-up 1.5s ease-out 0.18s forwards; }
+.kid-balloon-5 { animation: kid-float-up 1.65s ease-out 0.08s forwards; }
+
+.kid-spark-1 { animation: kid-spark 1.2s ease-out 0.05s forwards; }
+.kid-spark-2 { animation: kid-spark 1.1s ease-out 0.15s forwards; }
+.kid-spark-3 { animation: kid-spark 1.25s ease-out 0.1s forwards; }
+.kid-spark-4 { animation: kid-spark 1.15s ease-out 0.2s forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kid-option,
+  .kid-option::before,
+  .kid-primary,
+  .kid-celebrate,
+  .kid-celebrate-burst,
+  .kid-unicorn-pop,
+  .kid-balloon-1,
+  .kid-balloon-2,
+  .kid-balloon-3,
+  .kid-balloon-4,
+  .kid-balloon-5,
+  .kid-spark-1,
+  .kid-spark-2,
+  .kid-spark-3,
+  .kid-spark-4 {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .kid-option:active {
+    transform: none;
+  }
+}
+
+/* --- Launch Tower book picker (mobile-first portrait) --- */
+/* Lock the picker to the viewport: no page scroll. */
+body:has(.kid-shell-launch-tower) { height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+body:has(.kid-shell-launch-tower) > main { flex: 1; min-height: 0; width: 100%; padding: 0.5rem 0.5rem max(0.5rem, env(safe-area-inset-bottom)); }
+.kid-shell-launch-tower { max-width: 32rem; height: 100%; margin: 0 auto; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; min-height: 0; }
+.disclaimer-oneline summary { cursor: pointer; list-style: none; }
+.disclaimer-oneline summary::-webkit-details-marker { display: none; }
+.disclaimer-more { text-decoration: underline; font-weight: 700; margin-left: 0.25rem; }
+.disclaimer-oneline[open] .disclaimer-more { display: none; }
+.launch-tower { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.6rem; color: #FFF4E0;
+  background: radial-gradient(circle at 20% 10%, #3a4a9a 0, #1F2A5C 55%); border-radius: 1.5rem; padding: 0.75rem; overflow: hidden; }
+.tower-top-bar { margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.tower-who { font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.85rem; color: #FFC857; }
+.tower-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 9999px;
+  background: #FFF4E0; font-size: 1.25rem; text-decoration: none; }
+.tower-line { background: #FFF4E0; color: #1F2A5C; border-radius: 1rem; padding: 0.4rem 0.75rem; }
+.tower-stage { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; margin-bottom: 0.25rem; }
+.tower-sky { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+/* Bottom ~60% of the next floor peeks above the current one (art is 2:1, so 0.3 of width). */
+.tower-peek { width: 100%; aspect-ratio: 10 / 3; overflow: hidden; flex-shrink: 0; position: relative; }
+.tower-peek img { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; }
+.tower-level { position: relative; width: 100%; flex-shrink: 0; margin: 0; animation: tower-fade 400ms ease-in-out; }
+.tower-level-art { display: block; width: 100%; height: auto; }
+/* Books inset ~12% between girder inner edge and shaft; covers ~30% of card width. */
+.tower-deck { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 16% 1fr; align-items: end; padding: 0 12% 7%; column-gap: 2%; }
+.tower-level-final .tower-deck { padding-bottom: 5%; }
+.tower-deck-side { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 0.4rem; }
+.tower-shaft { display: flex; align-items: flex-end; justify-content: center; height: 100%; }
+.tower-car { width: 100%; height: auto; max-height: 70%; object-fit: contain; }
+.tower-car-up { animation: tower-car-up 400ms ease-in-out; }
+.tower-car-down { animation: tower-car-down 400ms ease-in-out; }
+.tower-book { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 4.5rem; text-decoration: none; }
+.tower-book-cover { width: 100%; max-width: 7.5rem; aspect-ratio: 1; height: auto; border-radius: 0.9rem; object-fit: cover;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35); border: 3px solid #FFF4E0; transition: transform 180ms ease; }
+.tower-book-cover-placeholder { display: flex; align-items: center; justify-content: center; font-size: 2.25rem; }
+.tower-book:hover .tower-book-cover, .tower-book:focus-visible .tower-book-cover { transform: scale(1.06); }
+.tower-book-title { padding: 0.2rem 0.7rem; border-radius: 9999px; background: #FFF4E0; color: #1F2A5C; font-weight: 800; font-size: 0.9rem; white-space: nowrap; }
+.tower-locked { background: #FFF4E0; color: #1F2A5C;
+  font-weight: 800; padding: 0.5rem 1rem; border-radius: 9999px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); white-space: nowrap; }
+.tower-elevator { display: flex; align-items: center; justify-content: flex-end; gap: 0.6rem; }
+.tower-floor-chip { min-width: 4.5rem; text-align: center; padding: 0.3rem 0.75rem; border-radius: 9999px; background: #FFC857; color: #1F2A5C; font-weight: 900; font-size: 1.05rem; }
+.tower-elev-btn { width: 4.5rem; height: 4.5rem; padding: 0; border: 0; background: none; border-radius: 9999px; cursor: pointer; }
+.tower-elev-btn img { width: 100%; height: 100%; }
+.tower-elev-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+@keyframes tower-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tower-car-up { from { transform: translateY(60%); } to { transform: translateY(0); } }
+@keyframes tower-car-down { from { transform: translateY(-60%); } to { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .tower-level, .tower-car-up, .tower-car-down { animation: none !important; } .tower-book-cover { transition: none; } }

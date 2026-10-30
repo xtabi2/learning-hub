@@ -1,0 +1,174 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  children     Child[]
+  resetTokens  PasswordResetToken[]
+}
+
+model Child {
+  id                  String    @id @default(cuid())
+  parentId            String
+  parent              User      @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  name                String
+  grade               String
+  /// Synthetic parent-owned profile for "Try as kid" preview. Progress never mixes with real children.
+  isDemo              Boolean   @default(false)
+  placementCompleted  Boolean   @default(false)
+  currentStreak       Int       @default(0)
+  lastPracticeDate    DateTime?
+  createdAt           DateTime  @default(now())
+  attempts            Attempt[]
+  sessions            Session[]
+  skillProgress       SkillProgress[]
+  schoolBaseline      SchoolBaseline?
+  adventure           ChildAdventure?
+}
+
+model Skill {
+  id                  String   @id @default(cuid())
+  pillar              String
+  slug                String   @unique
+  title               String
+  description         String
+  gradeBand           String
+  sortOrder           Int
+  prerequisiteSlug    String?
+  items               Item[]
+  progress            SkillProgress[]
+}
+
+model Item {
+  id            String    @id @default(cuid())
+  skillId       String
+  skill         Skill     @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  prompt        String
+  kind          String
+  optionsJson   String
+  correctAnswer String
+  explanation   String
+  sortOrder     Int
+  attempts      Attempt[]
+}
+
+model Attempt {
+  id        String   @id @default(cuid())
+  childId   String
+  child     Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  itemId    String
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  skillId   String
+  correct   Boolean
+  answer    String
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id             String    @id @default(cuid())
+  childId        String
+  child          Child     @relation(fields: [childId], references: [id], onDelete: Cascade)
+  startedAt      DateTime  @default(now())
+  endedAt        DateTime?
+  itemsAttempted Int       @default(0)
+  itemsCorrect   Int       @default(0)
+  kind           String    @default("practice")
+}
+
+model SkillProgress {
+  id             String  @id @default(cuid())
+  childId        String
+  child          Child   @relation(fields: [childId], references: [id], onDelete: Cascade)
+  skillId        String
+  skill          Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  itemsAttempted Int     @default(0)
+  itemsCorrect   Int     @default(0)
+  mastered       Boolean @default(false)
+  unlocked       Boolean @default(false)
+
+  @@unique([childId, skillId])
+}
+
+model PlacementItem {
+  id            String @id @default(cuid())
+  pillar        String
+  prompt        String
+  optionsJson   String
+  correctAnswer String
+  sortOrder     Int
+}
+
+/// Parent-entered / school-reported starting bands for home-lab placement.
+/// Not an official ODE, district, or vendor assessment score.
+model SchoolBaseline {
+  id              String   @id @default(cuid())
+  childId         String   @unique
+  child           Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  /// Fixed product label so rows stay clearly non-official.
+  sourceLabel     String   @default("School-reported / parent-entered")
+  /// Optional free-text instrument name for parent reference only (not cut scores).
+  instrumentLabel String?
+  /// JSON map of pillar key -> baseline band (well_below|below|approaching|on_grade|above)
+  bandsJson       String
+  notes           String?
+  appliedAt       DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+/// Kid-facing space-adventure progress (home planet Nibbles → multi-planet galaxy).
+/// Parent dashboards still use real skills/mastery; this stores fantasy rewards only.
+model ChildAdventure {
+  id             String   @id @default(cuid())
+  childId        String   @unique
+  child          Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  /// Current stop on the multi-planet map (kept in sync with currentPlanetId).
+  planetId       String   @default("nibbles")
+  /// Count of spaceship parts earned on the home / current build planet.
+  partsCollected Int      @default(0)
+  /// JSON array of earned part records: [{ "partId", "skillId?", "earnedAt" }]
+  shipPartsJson  String   @default("[]")
+  /// True when partsCollected >= launch threshold (ready to leave Nibbles).
+  readyToLeave   Boolean  @default(false)
+  /// Iteration 2: galaxy id (= grade band), e.g. galaxy-k.
+  galaxyId       String   @default("galaxy-k")
+  /// Iteration 2: JSON string[] of planet ids in this child's layout order.
+  planetOrderJson String  @default("[]")
+  /// Iteration 2: current planet (mirrors planetId; additive explicit field).
+  currentPlanetId String  @default("nibbles")
+  /// Iteration 2: ship upgrade stub tier (1 = starter hopper).
+  shipTier       Int      @default(1)
+  /// Iteration 2: JSON string[] of owned environment / spacesuit gear ids.
+  gearOwnedJson  String   @default("[]")
+  /// Placement-derived story reading demand band (emerging|early|growing|fluent-ms cap).
+  storyReadingBand String @default("emerging")
+  /// Deterministic adventure run seed (variant picks later; N=1 arrays OK now).
+  runSeed         Int      @default(0)
+  /// Phase 1 kids-book: { earnedPartIds: string[], chapterComplete: boolean }
+  bookProgressJson String  @default("{}")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+/// Self-service password reset. Only the SHA-256 hash of the emailed token is stored.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, createdAt])
+}

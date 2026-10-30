@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Dorsal fin idle silhouette">
+  <circle cx="128" cy="128" r="108" fill="#e7e5e4" stroke="#78716c" stroke-width="8"/>
+  <path d="M72 176 Q88 88 128 52 Q168 88 184 176 Q128 188 72 176 Z" fill="#a8a29e" stroke="#57534e" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M96 168 Q112 110 128 86 Q144 110 160 168" fill="#d6d3d1"/>
+  <path d="M128 70 L128 168" stroke="#78716c" stroke-width="4" stroke-linecap="round"/>
+</svg>

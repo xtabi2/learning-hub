@@ -1,0 +1,115 @@
+{
+  "phase": 1,
+  "title": "Glowtrail Adventures",
+  "chapter1PlanetId": "mistwhisper",
+  "shipPartIds": ["boost-thruster", "comet-fin"],
+  "chapterCompleteWhen": "both_parts_earned",
+  "bands": ["emerging", "early", "growing", "fluent-ms"],
+  "cover": {
+    "title": "Glowtrail Adventures",
+    "byline": "with Nibbles the goo mechanic",
+    "subtitle": {
+      "emerging": "Fly with Nibbles. Help the Story Star.",
+      "early": "Open the book. Fly with Nibbles. Help the Story Star.",
+      "growing": "Open the book and fly with Nibbles—the Story Star needs us.",
+      "fluent-ms": "Open this book, fly with Nibbles, and help the Story Star shine again."
+    },
+    "cta": {
+      "emerging": "Open the book",
+      "early": "Open the book",
+      "growing": "Open the book",
+      "fluent-ms": "Open the book"
+    }
+  },
+  "intro": {
+    "page1_coverOpen": {
+      "emerging": ["Your book opens.", "Nibbles wakes up!"],
+      "early": ["Your book opens.", "Nibbles comes alive!"],
+      "growing": ["The cover opens…", "Nibbles comes alive and wiggles ready."],
+      "fluent-ms": ["The cover opens with a soft glow.", "Nibbles comes alive—jelly, tools, and all."]
+    },
+    "page2_meet": {
+      "emerging": ["Hi! I am Nibbles.", "I fix ships."],
+      "early": ["Hi! I’m Nibbles.", "I fix ships. I may have broken this one a little."],
+      "growing": ["Hi! I’m Nibbles. I fix ships.", "Also… I may have broken this one a little."],
+      "fluent-ms": ["Hi! I’m Nibbles—I fix ships.", "Also… I may have broken this one a little."]
+    },
+    "page3_quest": {
+      "emerging": ["The Story Star is dim.", "We need a brave pilot."],
+      "early": ["The Story Star is dimming.", "We need a brave pilot. Want to help?"],
+      "growing": ["Uh-oh. The Story Star is dimming.", "If it goes dark, good stories go quiet. We need a brave pilot."],
+      "fluent-ms": ["Uh-oh—the Story Star is dimming.", "If it goes dark, the good stories go quiet. We need a brave pilot."]
+    },
+    "page4_bridge": {
+      "emerging": ["Turn the page.", "Chapter one!"],
+      "early": ["Turn the page.", "Chapter one: Mistwhisper."],
+      "growing": ["Turn the page with me.", "Chapter one: Mistwhisper—where shy words hide in the fog."],
+      "fluent-ms": ["Let’s turn the page together.", "Chapter one: Mistwhisper, where shy words hide in the fog."]
+    }
+  },
+  "mistwhisper": {
+    "chapterOpen": {
+      "emerging": ["Chapter one.", "Mistwhisper."],
+      "early": ["Chapter one: Mistwhisper.", "Soft fog. Shy words hide."],
+      "growing": ["Chapter one: Mistwhisper.", "Soft fog. Shy words hiding—I’m a lantern now. Sort of."],
+      "fluent-ms": ["Chapter one: Mistwhisper.", "Soft fog rolls in. Shy words tuck away—lucky for them, I make an excellent lantern. Sort of."]
+    },
+    "pagePrompt": {
+      "emerging": ["Find two ship parts.", "Tap what you see."],
+      "early": ["This page hides two ship parts.", "Tap them to help our ship."],
+      "growing": ["This page hides a boost thruster and a comet fin in the fog.", "Tap each one!"],
+      "fluent-ms": ["A boost thruster and a comet fin are hiding in this foggy page.", "Tap each one to earn it for our ship."]
+    },
+    "parts": {
+      "boost-thruster": {
+        "kidLabel": "boost thruster",
+        "find": {
+          "emerging": ["A boost thruster!"],
+          "early": ["You found the boost thruster!"],
+          "growing": ["You found the boost thruster—zoom power!"],
+          "fluent-ms": ["You found the boost thruster—exactly the zoom this page needed!"]
+        },
+        "earn": {
+          "emerging": ["Thruster earned!"],
+          "early": ["Boost thruster earned! Sticker on the tray!"],
+          "growing": ["Boost thruster earned! Sticker on the ship tray!"],
+          "fluent-ms": ["Boost thruster earned—sticker stamped on the ship tray!"]
+        }
+      },
+      "comet-fin": {
+        "kidLabel": "comet fin",
+        "find": {
+          "emerging": ["A comet fin!"],
+          "early": ["You found the comet fin!"],
+          "growing": ["You found the comet fin—steering sparkle!"],
+          "fluent-ms": ["You found the comet fin—steering with a side of sparkle!"]
+        },
+        "earn": {
+          "emerging": ["Fin earned!"],
+          "early": ["Comet fin earned! Sticker on the tray!"],
+          "growing": ["Comet fin earned! Sticker on the ship tray!"],
+          "fluent-ms": ["Comet fin earned—another sticker for the ship tray!"]
+        }
+      }
+    },
+    "partMiss": {
+      "emerging": ["Try another spot."],
+      "early": ["Not that one. Try again!"],
+      "growing": ["Not that spot—try another peek in the fog."],
+      "fluent-ms": ["Not that spot—give the fog another careful peek."]
+    },
+    "chapterComplete": {
+      "emerging": ["Chapter one done!", "The Story Star got brighter."],
+      "early": ["Chapter one complete!", "The Story Star got a little brighter."],
+      "growing": ["Chapter one complete! Mistwhisper stamped.", "The Story Star got a little brighter."],
+      "fluent-ms": ["Chapter one complete—Mistwhisper stamped.", "Look: the Story Star got a little brighter."]
+    },
+    "phase1EndNote": {
+      "emerging": ["More chapters soon!"],
+      "early": ["More chapters coming soon!"],
+      "growing": ["That’s our Phase 1 test page. More chapters soon!"],
+      "fluent-ms": ["That’s our Phase 1 test page—more chapters when David says go."]
+    }
+  },
+  "notes": "Wrap Mistwhisper chapterOpen with existing scene-pack arrive if desired (lantern_friends / echo_in_the_mist). No new arcs. Karaoke-short lines."
+}

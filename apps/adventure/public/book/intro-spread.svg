@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Living intro spread">
+
+  <defs>
+    <linearGradient id="ig" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#dbeafe"/>
+      <stop offset="100%" stop-color="#fbf6ee"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#ig)"/>
+  <!-- stars -->
+  <circle cx="120" cy="100" r="6" fill="#fde68a"/><circle cx="900" cy="140" r="5" fill="#fbbf24"/>
+  <circle cx="800" cy="80" r="4" fill="#fef9c3"/>
+  <!-- Story Star dim -->
+  <path d="M860 220 l14 36 40 3 -32 24 10 38 -32 -22 -32 22 10 -38 -32 -24 40 -3 z" fill="#e4b84a" opacity="0.55" stroke="#a16207" stroke-width="3"/>
+  <!-- Nibbles listen/welcome -->
+  <ellipse cx="320" cy="620" rx="150" ry="44" fill="#a4d65e" opacity="0.35"/>
+  <circle cx="320" cy="280" r="40" fill="#a4d65e" stroke="#3f6b2a" stroke-width="10"/>
+  <path d="M320 320 L320 390" stroke="#3f6b2a" stroke-width="10"/>
+  <ellipse cx="320" cy="520" rx="160" ry="150" fill="#a4d65e" stroke="#3f6b2a" stroke-width="10"/>
+  <circle cx="260" cy="480" r="32" fill="#fff"/><circle cx="380" cy="480" r="32" fill="#fff"/>
+  <circle cx="270" cy="488" r="18" fill="#3f6b2a"/><circle cx="390" cy="488" r="18" fill="#3f6b2a"/>
+  <circle cx="278" cy="480" r="7" fill="#fff"/><circle cx="398" cy="480" r="7" fill="#fff"/>
+  <path d="M280 560 q40 28 80 0" fill="none" stroke="#3f6b2a" stroke-width="8" stroke-linecap="round"/>
+  <ellipse cx="180" cy="500" rx="48" ry="36" fill="#a4d65e" stroke="#3f6b2a" stroke-width="8"/>
+  <ellipse cx="460" cy="480" rx="48" ry="36" fill="#a4d65e" stroke="#3f6b2a" stroke-width="8"/>
+  <!-- cream karaoke panel -->
+  <rect x="96" y="720" width="832" height="240" rx="40" fill="#fbf6ee" stroke="#c3d7c8" stroke-width="6"/>
+  <text x="512" y="820" text-anchor="middle" font-family="system-ui,sans-serif" font-size="36" fill="#2f4d37">Karaoke / spoken intro zone</text>
+  <text x="512" y="880" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" fill="#6f9a77">(cream panel — keep clear of art)</text>
+
+</svg>
