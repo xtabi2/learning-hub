@@ -1,6 +1,6 @@
 {
   "proxy": {
-    "entrypoint": "middleware.js"
+    "entrypoint": "middleware.mjs"
   },
   "services": {
     "home": {
