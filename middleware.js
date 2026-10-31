@@ -1,7 +1,8 @@
 // Family PIN gate (Vercel Routing Middleware). Logic lives in pin-gate/gate.mjs.
 import { handle } from "./pin-gate/gate.mjs";
 
-export const config = { runtime: "edge" };
+// Wired up through `proxy.entrypoint` in vercel.json (Services projects ignore the file convention).
+// Default Node.js runtime; Web Crypto only, so it also works on Edge.
 
 export default async function middleware(request) {
   const res = await handle(request, {
