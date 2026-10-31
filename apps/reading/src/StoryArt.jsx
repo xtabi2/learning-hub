@@ -208,7 +208,28 @@ function Bean({ height }) {
   );
 }
 
-export default function StoryArt({ storyId, scene }) {
+// Stories without hand-drawn art: their emoji cast in the same sky scene.
+// Each sentence moves the spotlight to the next character.
+function CastScene({ cast, scene }) {
+  const spots = cast.length;
+  return (
+    <Sky>
+      {cast.map((emoji, index) => {
+        const lead = scene % spots === index;
+        const x = 60 + index * (200 / Math.max(1, spots - 1)) + (lead ? (scene % 2 ? 8 : -8) : 0);
+        return (
+          <Bob key={emoji} x={x} y={lead ? 104 : 118}>
+            <text x="0" y="0" textAnchor="middle" fontSize={lead ? 54 : 40}>
+              {emoji}
+            </text>
+          </Bob>
+        );
+      })}
+    </Sky>
+  );
+}
+
+export default function StoryArt({ storyId, scene, cast = [] }) {
   const art = {
     pigs: (
       <Sky>
@@ -317,5 +338,5 @@ export default function StoryArt({ storyId, scene }) {
     ),
   };
 
-  return <div className="stage">{art[storyId]}</div>;
+  return <div className="stage">{art[storyId] ?? <CastScene cast={cast} scene={scene} />}</div>;
 }

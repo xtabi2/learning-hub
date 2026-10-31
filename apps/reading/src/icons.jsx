@@ -250,8 +250,12 @@ export function Icon({ name, className = "icon" }) {
   );
 }
 
-export function ButtonFace({ icon, children }) {
-  const picture = STORY_ICONS.has(icon) ? (
+export function ButtonFace({ icon, emoji, children }) {
+  const picture = emoji && !STORY_ICONS.has(icon) ? (
+    <span className="icon-badge emoji-badge" aria-hidden="true">
+      {emoji}
+    </span>
+  ) : STORY_ICONS.has(icon) ? (
     <span className="icon-badge">
       <Icon name={icon} />
     </span>

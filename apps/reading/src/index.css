@@ -556,3 +556,8 @@ h1 {
     transition: none;
   }
 }
+
+.emoji-badge {
+  font-size: 2rem;
+  line-height: 1;
+}
