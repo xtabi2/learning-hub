@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { hub } from '../../../shared/index.js';
-import { Mode, Problem, Result, makeRound, summarize, factText } from './logic';
+import { Mode, Problem, Result, summarize, answerText } from './logic';
+import { levelForGrade, loadRecent, makeVariedRound, modesForLevel, newSeed, saveRecent, seededRng } from './variety';
+
+const storage = typeof localStorage !== 'undefined' ? localStorage : undefined;
 
 const MODES: { id: Mode; label: string }[] = [
   { id: 'add', label: '➕ Addition' }, { id: 'sub', label: '➖ Subtraction' },
   { id: 'mul', label: '✖️ Multiplication' }, { id: 'div', label: '➗ Division' }, { id: 'mixed', label: '🎲 Mixed' },
 ];
+const GRADE_NAME: Record<string, string> = { PreK: 'Pre-K', K: 'Kindergarten' };
 
 export default function App() {
   const [screen, setScreen] = useState<'start' | 'play' | 'done'>('start');
@@ -17,7 +21,13 @@ export default function App() {
   const shownAt = useRef(0);
 
   const player = hub().getCurrentChild();
-  const start = (m: Mode) => { setMode(m); setRound(makeRound(m)); setIdx(0); setResults([]); setFeedback(null); setScreen('play'); };
+  const level = levelForGrade(player?.grade);
+  const modes = MODES.filter(m => modesForLevel(level).includes(m.id));
+  const start = (m: Mode) => {
+    // Fresh seed every session, skip this kid's recent problems, mixed formats, shuffled order.
+    const r = makeVariedRound(m, { level, rng: seededRng(newSeed()), recent: loadRecent(storage, player?.id) });
+    saveRecent(storage, player?.id, r);
+    setMode(m); setRound(r); setIdx(0); setResults([]); setFeedback(null); setScreen('play'); };
   useEffect(() => { if (screen === 'play' && !feedback) shownAt.current = performance.now(); }, [screen, idx, feedback]);
   useEffect(() => {
     if (screen !== 'done') return;
@@ -46,7 +56,8 @@ export default function App() {
     <main className="app">
       <h1>Math Fluency ⭐</h1>
       <p className="sub">{player ? `Hi, ${player.name}!` : 'Hi!'} Pick a kind of problem!</p>
-      <div className="grid">{MODES.map(m => <button key={m.id} className="big" onClick={() => start(m.id)}>{m.label}</button>)}</div>
+      {player ? <p className="level">Level: {GRADE_NAME[player.grade] ?? `Grade ${player.grade}`}</p> : null}
+      <div className="grid">{modes.map(m => <button key={m.id} className="big" onClick={() => start(m.id)}>{m.label}</button>)}</div>
     </main>
   );
 
@@ -55,12 +66,15 @@ export default function App() {
     return (
       <main className="app">
         <div className="progress">Problem {idx + 1} of {round.length}</div>
-        <div className={`card ${feedback ? (feedback.correct ? 'ok' : 'bad') : ''}`}>{factText(p)} = ?</div>
+        <div className={`card ${p.format ?? 'fact'} ${feedback ? (feedback.correct ? 'ok' : 'bad') : ''}`} data-format={p.format ?? 'fact'}>
+          {p.visual ? <div className="visual" aria-label={p.visual}>{p.visual}</div> : null}
+          <div className="prompt">{p.text ?? `${p.a} ? ${p.b}`}</div>
+        </div>
         <div className="grid answers">{p.options.map(o => (
           <button key={o} className={`big ans ${feedback && o === p.answer ? 'right' : ''} ${feedback && o === feedback.chosen && !feedback.correct ? 'wrong' : ''}`}
             onClick={() => choose(o)} disabled={!!feedback}>{o}</button>))}</div>
         <div className="feedback" aria-live="polite">
-          {feedback && (feedback.correct ? '🎉 Great job!' : `Oops! ${factText(p)} = ${p.answer}`)}
+          {feedback && (feedback.correct ? '🎉 Great job!' : `Oops! The answer is ${p.answer}${p.key?.startsWith('count:') ? '' : ` (${answerText(p)})`}`)}
         </div>
       </main>
     );
@@ -76,7 +90,7 @@ export default function App() {
       </div>
       <h2>Slowest facts</h2>
       <ul className="slow">{s.slowest.map((r, i) => (
-        <li key={i}>{factText(r.problem)} = {r.problem.answer} — {(r.ms / 1000).toFixed(1)}s {r.correct ? '✅' : '❌'}</li>))}</ul>
+        <li key={i}>{answerText(r.problem)} — {(r.ms / 1000).toFixed(1)}s {r.correct ? '✅' : '❌'}</li>))}</ul>
       <div className="grid">
         <button className="big" onClick={() => start(mode)}>Play again</button>
         <button className="big alt" onClick={() => setScreen('start')}>Change operation</button>
