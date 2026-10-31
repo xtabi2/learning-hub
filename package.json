@@ -9,7 +9,7 @@
     "shared"
   ],
   "scripts": {
-    "test": "npm test --workspaces --if-present",
+    "test": "node --test pin-gate/gate.unit.mjs && npm test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "dev:home": "npm run build -w @hub/home && npx --yes serve apps/home/dist -p 5170",
     "dev:math": "npm run dev -w math-fluency-game",
