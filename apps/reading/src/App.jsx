@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { hub, readingGradeId } from "../../../shared/index.js";
-import { grades } from "./words.js";
+import { getLevel, hub, readingGradeId } from "../../../shared/index.js";
+import { grades, wordsForLevel } from "./words.js";
 import { allClassWords, lessons } from "./class-words.js";
 import FlashCards from "./FlashCards.jsx";
 import SentenceBuilder from "./SentenceBuilder.jsx";
@@ -30,11 +30,15 @@ export default function App() {
   }
 
   function openGrade(grade) {
+    const level = getLevel(player());
+    // The kid's own grade opens their words for this point in the school year.
+    const mine = level.grade && grade.id === readingGradeId(level.grade);
+    const words = mine ? wordsForLevel(level) : grade.words;
     openDeck({
       id: grade.id,
       label: grade.label,
       backTo: "decks",
-      words: grade.words.map((text) => ({ text })),
+      words: words.map((text) => ({ text })),
     });
   }
 
@@ -113,8 +117,8 @@ export default function App() {
             <button
               key={grade.id}
               type="button"
-              className={grade.id === readingGradeId(player()?.grade) ? "big yours" : "big"}
-              autoFocus={grade.id === readingGradeId(player()?.grade)}
+              className={grade.id === readingGradeId(getLevel(player()).grade) ? "big yours" : "big"}
+              autoFocus={grade.id === readingGradeId(getLevel(player()).grade)}
               onClick={() => openGrade(grade)}
             >
               <ButtonFace icon={`badge-${gradeMark[grade.id] ?? grade.id}`}>{grade.label}</ButtonFace>

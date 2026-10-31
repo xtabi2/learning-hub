@@ -18,9 +18,12 @@ test("home menu asks who is playing", () => {
   assert.match(html, /id="kids"/);
 });
 
-test("home menu offers Pre-K and an age field", () => {
+test("home menu offers Pre-K, birthday and K start fields", () => {
   assert.match(html, /<option value="PreK">Pre-K<\/option>/);
-  assert.match(html, /id="age"/);
+  assert.match(html, /id="birth-month"/);
+  assert.match(html, /id="birth-year"/);
+  assert.match(html, /id="k-start"/);
+  assert.match(html, /value="">Automatic/);
 });
 
 test("add child lives in a hamburger menu dialog with an avatar picker", () => {
@@ -28,7 +31,7 @@ test("add child lives in a hamburger menu dialog with an avatar picker", () => {
   assert.match(html, />Add child</);
   assert.match(html, /<dialog[^>]*id="add-dialog"/);
   const dialog = html.slice(html.indexOf("<dialog"), html.indexOf("</dialog>"));
-  for (const id of ["name", "age", "grade", "avatar-grid"]) assert.match(dialog, new RegExp(`id="${id}"`));
+  for (const id of ["name", "birth-month", "birth-year", "k-start", "grade", "avatar-grid"]) assert.match(dialog, new RegExp(`id="${id}"`));
 });
 
 test("bundles cartoon animal avatars as inline SVG", async () => {

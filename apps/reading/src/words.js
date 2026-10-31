@@ -47,3 +47,21 @@ export const grades = [
   { id: "2", label: "2nd Grade", words: grade2 },
   { id: "3", label: "3rd Grade", words: grade3 },
 ];
+
+const listFor = { PreK: kindergarten, K: kindergarten, 1: grade1, 2: grade2, 3: grade3 };
+const priorList = { 1: kindergarten, 2: grade1, 3: grade2 };
+
+/**
+ * Sight words for a kid's level ({ grade, progress } from getLevel): the prior grade's list
+ * for review plus the current grade's list added in order as the year goes on. Pre-K gets a
+ * gentle slice of the kindergarten list. Never includes a word outside these lists.
+ */
+export function wordsForLevel(level) {
+  const grade = level?.grade;
+  const list = listFor[grade];
+  if (!list) return [...kindergarten];
+  const p = Math.min(1, Math.max(0, Number(level?.progress ?? 1)));
+  const share = grade === "PreK" ? 0.4 : 1;
+  const count = Math.min(list.length, Math.max(grade === "PreK" || grade === "K" ? 10 : 5, Math.ceil(list.length * p * share)));
+  return [...new Set([...(priorList[grade] ?? []), ...list.slice(0, count)])];
+}

@@ -136,7 +136,8 @@ test("migrates missing avatars once and keeps all other saved data", () => {
   assert.equal(after.children[0].name, " madison ");
   assert.equal(after.children[3].custom, 1);
   for (const [i, kid] of saved.children.entries()) {
-    const { avatar, ...rest } = after.children[i];
+    // Only the avatar and missing birthday / K-start fields may be added.
+    const { avatar, birthMonth, birthYear, kStartYear, ...rest } = after.children[i];
     const { avatar: _old, ...before } = kid;
     assert.deepEqual(rest, before);
   }

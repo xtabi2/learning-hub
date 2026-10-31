@@ -39,12 +39,29 @@
         </label>
         <div class="row">
           <label>
-            Age
-            <input id="age" name="age" type="number" min="0" max="18" step="1" inputmode="numeric" />
+            Birth month
+            <select id="birth-month" name="birthMonth">
+              <option value="">—</option>
+              <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+              <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+              <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+              <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+            </select>
+          </label>
+          <label>
+            Birth year
+            <input id="birth-year" name="birthYear" type="number" min="2005" max="2100" step="1" inputmode="numeric" />
+          </label>
+        </div>
+        <div class="row">
+          <label>
+            Starts K in
+            <input id="k-start" name="kStartYear" type="number" min="2005" max="2100" step="1" inputmode="numeric" />
           </label>
           <label>
             Grade
             <select id="grade" name="grade">
+              <option value="">Automatic</option>
               <option value="PreK">Pre-K</option>
               <option value="K">Kindergarten</option>
               <option value="1">1st grade</option>
@@ -53,6 +70,7 @@
             </select>
           </label>
         </div>
+        <p class="hint">Grade moves up each Aug 15 from the kindergarten year. Pick a grade only to override it.</p>
         <fieldset class="avatar-picker">
           <legend>Pick an animal</legend>
           <div class="avatar-grid" id="avatar-grid"></div>

@@ -512,6 +512,15 @@ export const stories = library.map(({ id, title, emoji, cast, ...levels }) => ({
 }));
 
 /** Story level for a shared-profile grade: Pre-K and K read "k", 1st reads "1", 2nd and 3rd read "2". */
+/** Story level for { grade, progress }: early in the year (review time) reads at last year's level. */
+export function storyLevelFor(level) {
+  const grades = ["PreK", "K", "1", "2", "3"];
+  const i = grades.indexOf(level?.grade);
+  if (i < 0) return storyLevel(undefined);
+  const early = Number(level.progress ?? 1) < 0.34 && i > 0;
+  return storyLevel(grades[early ? i - 1 : i]);
+}
+
 export function storyLevel(grade) {
   const g = String(grade ?? "").toLowerCase();
   if (g === "prek" || g === "k") return "k";

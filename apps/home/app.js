@@ -1,4 +1,4 @@
-import { AVATARS, GRADES, gradeLabel, hub } from "./profile.js";
+import { AVATARS, GRADES, ageFrom, getLevel, gradeLabel, hub } from "./profile.js";
 import { avatarLabel, avatarSvg } from "./avatars.js";
 
 const kidsEl = document.querySelector("#kids");
@@ -12,9 +12,22 @@ const dialog = document.querySelector("#add-dialog");
 const avatarGrid = document.querySelector("#avatar-grid");
 const removeCurrent = document.querySelector("#remove-current");
 
+const SHORT_GRADE = { PreK: "Pre-K", K: "K", 1: "1st", 2: "2nd", 3: "3rd" };
+
+/** Age from the birthday and the grade for today, e.g. { age: 7, grade: "1" }. */
+function kidInfo(child) {
+  return { age: ageFrom(child), grade: getLevel(child).grade ?? child.grade };
+}
+
 function kidLabel(child) {
-  const age = Number.isInteger(child.age) ? `, age ${child.age}` : "";
-  return `${child.name}${age}, ${gradeLabel(child.grade)}, ${avatarLabel(child.avatar)}`;
+  const { age, grade } = kidInfo(child);
+  const ageText = Number.isInteger(age) ? `, age ${age}` : "";
+  return `${child.name}${ageText}, ${gradeLabel(grade)}, ${avatarLabel(child.avatar)}`;
+}
+
+function kidMeta(child) {
+  const { age, grade } = kidInfo(child);
+  return [Number.isInteger(age) ? `${age}` : null, SHORT_GRADE[grade] ?? null].filter(Boolean).join(" · ");
 }
 
 function render() {
@@ -29,8 +42,9 @@ function render() {
     button.dataset.avatar = child.avatar;
     button.setAttribute("aria-pressed", String(child.id === current?.id));
     button.setAttribute("aria-label", kidLabel(child));
-    button.innerHTML = `<span class="face">${avatarSvg(child.avatar)}</span><span class="kid-name"></span>`;
+    button.innerHTML = `<span class="face">${avatarSvg(child.avatar)}</span><span class="kid-name"></span><span class="kid-meta"></span>`;
     button.querySelector(".kid-name").textContent = child.name;
+    button.querySelector(".kid-meta").textContent = kidMeta(child);
     button.addEventListener("click", () => {
       store.setCurrentChild(child.id);
       render();
@@ -39,7 +53,7 @@ function render() {
   }
   const ready = Boolean(current);
   playing.textContent = ready
-    ? `${current.name} is playing · ${gradeLabel(current.grade)}`
+    ? `${current.name} is playing · ${gradeLabel(kidInfo(current).grade)}`
     : "Tap your animal to start.";
   removeCurrent.hidden = !ready;
   removeCurrent.textContent = ready ? `Remove ${current.name}` : "Remove selected kid";
@@ -111,14 +125,21 @@ form.addEventListener("submit", (event) => {
   note.textContent = "";
   const name = document.querySelector("#name").value;
   const grade = document.querySelector("#grade").value;
-  const age = document.querySelector("#age").value;
+  const birthMonth = document.querySelector("#birth-month").value;
+  const birthYear = document.querySelector("#birth-year").value;
+  const kStartYear = document.querySelector("#k-start").value;
   const avatar = form.querySelector('input[name="avatar"]:checked')?.value;
-  if (!GRADES.includes(grade)) {
+  if (grade && !GRADES.includes(grade)) {
     note.textContent = "Pick Pre-K, kindergarten, or grade 1, 2, or 3.";
     return;
   }
+  if (!grade && !kStartYear) {
+    note.textContent = "Add the kindergarten start year, or pick a grade.";
+    return;
+  }
   try {
-    hub().addChild({ name, grade, age, avatar });
+    // A picked grade is a manual override; otherwise the grade follows the K start year.
+    hub().addChild({ name, grade, avatar, birthMonth, birthYear, kStartYear, gradeOverride: kStartYear ? grade : "" });
     dialog.close();
     render();
   } catch (error) {
