@@ -12,12 +12,12 @@ The home menu at `/` is where a child picks who is playing, then taps a game. Pr
 
 ## Folder ownership
 
-| Path | Owner |
-| --- | --- |
-| `apps/math` | Math bot |
-| `apps/reading` | Reading bot |
-| `apps/adventure` | Adventure bot |
-| `shared/`, `apps/home`, root config (`vercel.json`, `.github/`, this README) | Hub owner |
+| Folder | Owner | Also owns |
+| --- | --- | --- |
+| `apps/home`, `shared/`, root config (`package.json`, `vercel.json`, `README.md`, `CONTRIBUTING.md`), CI (`.github/`) | Learning Hub | |
+| `apps/reading` | Learning Hub | Original `sight-word-game` repo and site |
+| `apps/math` | Learning Hub | Original `math-fluency-game` repo and site |
+| `apps/adventure` | Head Developer (Reading Game Team) | |
 
 Each owner edits only their folder. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
