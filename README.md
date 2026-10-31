@@ -119,7 +119,7 @@ A **Home** link in each game returns to `/`.
 
 ## Family PIN gate
 
-Every page is behind a family PIN (`middleware.mjs`, Vercel Routing Middleware; logic in `pin-gate/gate.mjs`, tests in `pin-gate/gate.unit.mjs`). Same pattern as the Reading Progress Game gate.
+Every page is behind a family PIN (`middleware.js`, Vercel Routing Middleware; logic in `pin-gate/gate.js`, tests in `pin-gate/gate.unit.mjs`). Same pattern as the Reading Progress Game gate.
 
 - Env vars: `FAMILY_PIN` and `PIN_COOKIE_SECRET` (or `FAMILY_PIN_SECRET`), production + preview. If `FAMILY_PIN` is unset, the gate is off.
 - Not signed in: redirect to `/pin?next=<path>`. The keypad sends the PIN to `POST /api/pin` once 4 digits are entered (`{pin, next}` returns `{ok, next}` or `{error, retryAfterMs}`). The PIN is checked with a constant-time compare.

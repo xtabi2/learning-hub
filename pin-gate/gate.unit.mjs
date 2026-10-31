@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import * as g from "./gate.mjs";
+import * as g from "./gate.js";
 
 const raw = { FAMILY_PIN: "0000test", PIN_COOKIE_SECRET: "s".repeat(32) };
 const e = g.pinEnv(raw);
