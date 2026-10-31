@@ -5,11 +5,9 @@ import {
   CARD_THEMES,
   HISTORY_SIZE,
   cardBucket,
-  findChoices,
   historyKey,
   loadRecent,
   orderByFreshness,
-  pickTwist,
   planCards,
   rememberRecent,
   sentenceBucket,
@@ -68,34 +66,49 @@ test("recent history is stored per child and gives those cards lower priority", 
   assert.equal(saved.at(-1), "w49");
 });
 
-test("card plans use the theme list and occasional twists", () => {
-  assert.equal(pickTwist(0, 3), "find");
-  assert.equal(pickTwist(0.2, 3), "flip");
-  assert.equal(pickTwist(0.5, 3), "show");
-  assert.equal(pickTwist(0, 2), "flip");
-  const words = "abcdefghij".split("").map((text) => ({ text }));
-  const choices = findChoices(words[0], words, () => 0);
-  assert.equal(choices.length, 3);
-  assert.ok(choices.some((word) => word.text === "a"));
-  const twists = new Set();
+test("every flash card is one word with a color and an entrance", () => {
+  const words = "long under good big play men".split(" ").map((text) => ({ text }));
   const themes = new Set();
-  for (let turn = 0; turn < 8; turn += 1) {
-    const plan = planCards(words, ["a", "b"]);
-    assert.deepEqual(plan.map((card) => card.word.text).slice(-2).sort(), ["a", "b"]);
+  for (let turn = 0; turn < 20; turn += 1) {
+    const plan = planCards(words);
+    assert.equal(plan.length, words.length);
     for (const card of plan) {
+      assert.equal(typeof card.word.text, "string");
+      assert.equal(Object.hasOwn(card, "twist"), false);
+      assert.equal(Object.hasOwn(card, "choices"), false);
       assert.ok(CARD_THEMES.includes(card.theme));
       assert.ok(CARD_MOTIONS.includes(card.motion));
-      assert.ok(["show", "flip", "find"].includes(card.twist));
       themes.add(card.theme);
-      twists.add(card.twist);
-      if (card.twist === "find") {
-        assert.equal(card.choices.length, 3);
-        assert.ok(card.choices.some((word) => word.text === card.word.text));
-      }
     }
   }
   assert.ok(themes.size > 1);
-  assert.ok(twists.has("find"));
-  assert.ok(twists.has("flip"));
-  assert.ok(twists.has("show"));
+  for (const card of planCards(words, [], () => 0)) {
+    assert.equal(Object.hasOwn(card, "twist"), false);
+    assert.equal(Object.hasOwn(card, "choices"), false);
+    assert.equal(typeof card.word.text, "string");
+  }
+});
+
+test("stale find and flip records in localStorage cannot change the card", () => {
+  const store = memory();
+  store.setItem(historyKey("kid"), JSON.stringify({
+    [cardBucket("1")]: [
+      { text: "long", twist: "find", choices: ["long", "under", "good"] },
+      { word: { text: "under" }, twist: "flip" },
+      "good",
+    ],
+    session: { twist: "find", choices: ["long", "under", "good"] },
+  }));
+  const recent = loadRecent(store, "kid", cardBucket("1"));
+  assert.deepEqual(recent, ["long", "under", "good"]);
+  const saved = JSON.parse(store.getItem(historyKey("kid")));
+  assert.deepEqual(saved, { [cardBucket("1")]: ["long", "under", "good"] });
+  assert.equal(JSON.stringify(saved).includes("find"), false);
+  assert.equal(JSON.stringify(saved).includes("flip"), false);
+  assert.equal(JSON.stringify(saved).includes("choices"), false);
+  const words = ["long", "under", "good", "big"].map((text) => ({ text }));
+  const plan = planCards(words, recent, () => 0);
+  assert.equal(plan.some((card) => card.twist || card.choices), false);
+  assert.ok(plan.every((card) => typeof card.word.text === "string"));
+  assert.deepEqual(plan.map((card) => card.word.text).slice(-3).sort(), ["good", "long", "under"]);
 });

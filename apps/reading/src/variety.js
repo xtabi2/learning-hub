@@ -28,12 +28,51 @@ export function orderByFreshness(items, recentIds = [], idOf = (item) => item, r
   return [...shuffle(fresh, random), ...shuffle(stale, random)];
 }
 
+function recentLabel(item) {
+  if (typeof item === "string" || typeof item === "number") return String(item).toLowerCase();
+  if (!item || typeof item !== "object" || Array.isArray(item)) return "";
+  const text = typeof item.text === "string"
+    ? item.text
+    : typeof item.word === "string"
+      ? item.word
+      : item.word && typeof item.word.text === "string"
+        ? item.word.text
+        : "";
+  return text.toLowerCase();
+}
+
+// Old sessions sometimes stored a find-the-word or flip card. Keep only the
+// word that was seen, and drop anything that is not a list of words.
+function scrubHistory(data) {
+  const clean = {};
+  for (const [bucket, list] of Object.entries(data)) {
+    if (!Array.isArray(list)) continue;
+    const words = [];
+    for (const item of list) {
+      const label = recentLabel(item);
+      if (!label || words.includes(label)) continue;
+      words.push(label);
+    }
+    if (words.length) clean[bucket] = words.slice(-HISTORY_SIZE);
+  }
+  return clean;
+}
+
 function readHistory(store, childId) {
   try {
     const raw = store?.getItem(historyKey(childId));
     if (!raw) return {};
     const data = JSON.parse(raw);
-    return data && typeof data === "object" && !Array.isArray(data) ? data : {};
+    if (!data || typeof data !== "object" || Array.isArray(data)) return {};
+    const clean = scrubHistory(data);
+    if (store && JSON.stringify(data) !== JSON.stringify(clean)) {
+      try {
+        store.setItem(historyKey(childId), JSON.stringify(clean));
+      } catch {
+        // Leave the old value if storage is blocked. Callers still see words only.
+      }
+    }
+    return clean;
   } catch {
     return {};
   }
@@ -58,42 +97,11 @@ export function rememberRecent(store, childId, bucket, id) {
   return next;
 }
 
-export function pickTwist(roll, uniqueCount) {
-  if (uniqueCount >= 3 && roll < 0.18) return "find";
-  if (roll < 0.34) return "flip";
-  return "show";
-}
-
-export function findChoices(target, words, random = Math.random) {
-  const others = shuffle(
-    words.filter((word) => word.text.toLowerCase() !== target.text.toLowerCase()),
-    random,
-  );
-  const picked = [];
-  const seen = new Set([target.text.toLowerCase()]);
-  for (const word of others) {
-    const key = word.text.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    picked.push(word);
-    if (picked.length === 2) break;
-  }
-  return shuffle([target, ...picked], random);
-}
-
 export function planCards(words, recentTexts = [], random = Math.random) {
-  const uniqueCount = new Set(words.map((word) => word.text.toLowerCase())).size;
   const ordered = orderByFreshness(words, recentTexts, (word) => word.text, random);
-  return ordered.map((word) => {
-    const theme = CARD_THEMES[Math.floor(random() * CARD_THEMES.length)];
-    const motion = CARD_MOTIONS[Math.floor(random() * CARD_MOTIONS.length)];
-    const twist = pickTwist(random(), uniqueCount);
-    return {
-      word,
-      theme,
-      motion,
-      twist,
-      choices: twist === "find" ? findChoices(word, words, random) : [],
-    };
-  });
+  return ordered.map((word) => ({
+    word,
+    theme: CARD_THEMES[Math.floor(random() * CARD_THEMES.length)],
+    motion: CARD_MOTIONS[Math.floor(random() * CARD_MOTIONS.length)],
+  }));
 }

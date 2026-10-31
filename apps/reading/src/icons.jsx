@@ -102,21 +102,6 @@ const SHAPES = {
       <circle cx="24" cy="36" r="2.6" fill="currentColor" />
     </>
   ),
-  mouth: (
-    <>
-      <circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" strokeWidth="4" />
-      <circle cx="18" cy="20" r="2.2" fill="currentColor" />
-      <circle cx="30" cy="20" r="2.2" fill="currentColor" />
-      <path d="M16 28 Q24 36 32 28" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-    </>
-  ),
-  flip: (
-    <>
-      <rect x="8" y="10" width="22" height="28" rx="4" fill="currentColor" />
-      <path d="M32 18 A10 10 0 1 1 32 34" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-      <path d="M32 12 L32 20 L40 16 Z" fill="currentColor" />
-    </>
-  ),
   star: (
     <path
       fill="currentColor"
