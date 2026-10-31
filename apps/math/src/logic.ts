@@ -3,8 +3,12 @@ export type Mode = Op | 'mixed';
 export interface Problem {
   a: number; b: number; op: Op; answer: number; options: number[];
   /** Varied formats: 'fact' (a op b), 'missing' (a op _ = c), 'word', 'count' (emoji objects). */
-  format?: 'fact' | 'missing' | 'word' | 'count';
+  format?: 'fact' | 'missing' | 'word' | 'count' | 'algebra';
   text?: string; visual?: string; key?: string;
+  /** Word-bank / algebra metadata. */
+  template?: string; theme?: string; kind?: string; speak?: string;
+  /** Non-numeric answers (patterns, true/false): options are indexes into choices. */
+  choices?: string[];
 }
 export interface Result { problem: Problem; chosen: number; correct: boolean; ms: number; }
 export const ROUND_LENGTH = 10;
@@ -52,7 +56,7 @@ export const factText = (p: Problem) => `${p.a} ${SYMBOL[p.op]} ${p.b}`;
 /** Full worked answer for feedback / summary, for any format. */
 const compute = (p: Problem) => ({ add: p.a + p.b, sub: p.a - p.b, mul: p.a * p.b, div: p.b ? p.a / p.b : 0 })[p.op];
 export const answerText = (p: Problem) =>
-  p.key?.startsWith('count:') ? `${p.answer}` : `${factText(p)} = ${compute(p)}`;
+  p.choices ? `${p.text} ${p.choices[p.answer]}` : p.format === 'algebra' ? `${p.text} → ${p.answer}` : p.key?.startsWith('count:') ? `${p.answer}` : `${factText(p)} = ${compute(p)}`;
 
 export function summarize(results: Result[]) {
   const total = results.length;

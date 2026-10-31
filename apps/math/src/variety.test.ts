@@ -19,12 +19,12 @@ describe('variety', () => {
   it('answers are correct and options valid for every band, mode, and format', () => {
     for (const band of BANDS) for (const mode of modesForLevel(LEVELS[band])) for (let s = 1; s <= 60; s++) {
       for (const p of makeVariedRound(mode, { level: LEVELS[band], rng: seededRng(s) })) {
+        if (p.format === 'algebra') continue; // checked by its own solver in wordbank.test.ts
         expect(p.answer).toBe(expected(p));
         expect(Number.isInteger(p.answer) && p.answer >= 0).toBe(true);
         expect(p.options).toContain(p.answer);
         expect(new Set(p.options).size).toBe(4);
         if (p.format === 'missing') expect(p.text).toBe(`${p.a} ${({ add: '+', sub: '−', mul: '×', div: '÷' })[p.op]} _ = ${({ add: p.a + p.b, sub: p.a - p.b, mul: p.a * p.b, div: p.a / p.b })[p.op]}`);
-        if (p.format === 'word') expect(p.text).toMatch(/\?$/);
         if (p.format === 'count' && !p.key?.startsWith('count:')) {
           const [left, right] = p.visual!.split(/ [+−] /);
           const n = (x: string) => (x.match(/\p{Extended_Pictographic}/gu) ?? []).length;

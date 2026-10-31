@@ -1,8 +1,13 @@
 import { Mode, Op, Problem, ROUND_LENGTH, SYMBOL, makeOptions } from './logic';
+import { makeWordProblem } from './wordBank';
+import { makeAlgebraProblem } from './algebra';
 
-export type Format = 'fact' | 'missing' | 'word' | 'count';
+export type Format = 'fact' | 'missing' | 'word' | 'count' | 'algebra';
 export type Rng = () => number;
-export const FORMATS: Format[] = ['fact', 'missing', 'word', 'count'];
+export const FORMATS: Format[] = ['fact', 'missing', 'word', 'count', 'algebra'];
+/** Minimum per 10-problem round when a kid is selected (scaled for other round sizes). */
+export const MIN_WORD = 3;
+export const MIN_ALGEBRA = 2;
 
 /** Grade band from the shared profile; 'none' keeps the original ranges when no kid is selected. */
 export type Band = 'PreK' | 'K' | '1' | '2' | '3' | 'none';
@@ -15,12 +20,12 @@ export interface Level {
 }
 
 export const LEVELS: Record<Band, Level> = {
-  PreK: { band: 'PreK', ops: ['add'], addMax: 5, mulMax: 0, formats: { count: 4, word: 2, fact: 1, missing: 1 } },
-  K: { band: 'K', ops: ['add', 'sub'], addMax: 10, mulMax: 0, formats: { fact: 3, count: 2, missing: 2, word: 2 } },
-  '1': { band: '1', ops: ['add', 'sub'], addMax: 20, mulMax: 0, formats: { fact: 3, missing: 2, word: 2, count: 1 } },
-  '2': { band: '2', ops: ['add', 'sub', 'mul'], addMax: 50, mulMax: 5, formats: { fact: 3, missing: 2, word: 2, count: 1 } },
-  '3': { band: '3', ops: ['add', 'sub', 'mul', 'div'], addMax: 100, mulMax: 10, formats: { fact: 3, missing: 2, word: 2, count: 1 } },
-  none: { band: 'none', ops: ['add', 'sub', 'mul', 'div'], addMax: 20, mulMax: 5, formats: { fact: 3, missing: 2, word: 2, count: 1 } },
+  PreK: { band: 'PreK', ops: ['add'], addMax: 5, mulMax: 0, formats: { count: 3, word: 3, algebra: 2, fact: 1, missing: 1 } },
+  K: { band: 'K', ops: ['add', 'sub'], addMax: 10, mulMax: 0, formats: { fact: 2, count: 2, missing: 1, word: 3, algebra: 2 } },
+  '1': { band: '1', ops: ['add', 'sub'], addMax: 20, mulMax: 0, formats: { fact: 2, missing: 1, word: 3, count: 1, algebra: 2 } },
+  '2': { band: '2', ops: ['add', 'sub', 'mul'], addMax: 50, mulMax: 5, formats: { fact: 2, missing: 1, word: 3, count: 1, algebra: 2 } },
+  '3': { band: '3', ops: ['add', 'sub', 'mul', 'div'], addMax: 100, mulMax: 10, formats: { fact: 2, missing: 1, word: 3, count: 1, algebra: 2 } },
+  none: { band: 'none', ops: ['add', 'sub', 'mul', 'div'], addMax: 20, mulMax: 5, formats: { fact: 2, missing: 1, word: 3, count: 1, algebra: 2 } },
 };
 
 /** Pre-K counting goes up to 10 objects even though its sums stay within 5. */
@@ -63,7 +68,6 @@ export function shuffle<T>(xs: T[], rng: Rng): T[] {
 }
 
 // ---------- content ----------
-const NAMES = ['Maya', 'Leo', 'Zara', 'Sam', 'Ava', 'Noah', 'Lily', 'Omar', 'Ruby', 'Max', 'Ivy', 'Ben'];
 const THINGS: { emoji: string; one: string; many: string }[] = [
   { emoji: '🍎', one: 'apple', many: 'apples' }, { emoji: '⭐', one: 'star', many: 'stars' },
   { emoji: '🐟', one: 'fish', many: 'fish' }, { emoji: '🎈', one: 'balloon', many: 'balloons' },
@@ -71,7 +75,6 @@ const THINGS: { emoji: string; one: string; many: string }[] = [
   { emoji: '🚗', one: 'toy car', many: 'toy cars' }, { emoji: '🌸', one: 'flower', many: 'flowers' },
   { emoji: '🧁', one: 'cupcake', many: 'cupcakes' }, { emoji: '🦆', one: 'duck', many: 'ducks' },
 ];
-const plural = (n: number, t: { one: string; many: string }) => `${n} ${n === 1 ? t.one : t.many}`;
 
 // ---------- facts per level ----------
 export function levelFact(op: Op, level: Level, rng: Rng, small = false): { a: number; b: number; answer: number } {
@@ -85,15 +88,6 @@ export function levelFact(op: Op, level: Level, rng: Rng, small = false): { a: n
   }
 }
 
-function wordText(op: Op, a: number, b: number, rng: Rng): string {
-  const n1 = pick(rng, NAMES); const n2 = pick(rng, NAMES.filter(n => n !== n1)); const t = pick(rng, THINGS);
-  switch (op) {
-    case 'add': return `${n1} has ${plural(a, t)}. ${n2} gives ${n1} ${b} more. How many ${t.many} does ${n1} have now?`;
-    case 'sub': return `${n1} has ${plural(a, t)} and gives ${b} to ${n2}. How many ${t.many} are left?`;
-    case 'mul': return `${n1} has ${a} ${a === 1 ? 'bag' : 'bags'} with ${plural(b, t)} in each. How many ${t.many} in all?`;
-    case 'div': return `${n1} shares ${plural(a, t)} equally among ${b} friends. How many does each friend get?`;
-  }
-}
 
 /** Make one problem of a given op and format. Returns null if the format doesn't fit (e.g. too big to draw). */
 export function makeFormatted(op: Op, format: Format, level: Level, rng: Rng): Problem | null {
@@ -110,6 +104,8 @@ export function makeFormatted(op: Op, format: Format, level: Level, rng: Rng): P
     const visual = `${t.emoji.repeat(f.a) || ''} ${SYMBOL[op]} ${t.emoji.repeat(f.b) || ''}`;
     return { ...f, op, format, key: `${f.a}${op}${f.b}`, text: 'How many?', visual, options: makeOptions(f.answer, rng) };
   }
+  if (format === 'word') return makeWordProblem(op, level, rng);
+  if (format === 'algebra') return makeAlgebraProblem(op, level, rng);
   const f = levelFact(op, level, rng);
   const key = `${f.a}${op}${f.b}`;
   if (format === 'fact') return { ...f, op, format, key, text: `${f.a} ${SYMBOL[op]} ${f.b} = ?`, options: makeOptions(f.answer, rng) };
@@ -118,14 +114,19 @@ export function makeFormatted(op: Op, format: Format, level: Level, rng: Rng): P
     if (op === 'mul' && f.a === 0) return null; // 0 × _ = 0 has no single answer
     return { ...f, op, format, key, answer: f.b, text: `${f.a} ${SYMBOL[op]} _ = ${f.answer}`, options: makeOptions(f.b, rng) };
   }
-  if (f.a === 0 || f.b === 0 || f.answer === 0 || (op === 'mul' || op === 'div') && f.b === 1) return null; // keep stories natural
-  return { ...f, op, format, key, text: wordText(op, f.a, f.b, rng), options: makeOptions(f.answer, rng) };
+  return null;
 }
 
 /** Weighted format list for a round so every allowed format shows up, then shuffled. */
 export function planFormats(level: Level, n: number, rng: Rng): Format[] {
   const allowed = FORMATS.filter(f => level.formats[f] > 0);
   const plan: Format[] = [...allowed];
+  if (level.band !== 'none') {
+    // A selected kid always gets enough story and algebraic-thinking problems.
+    const scale = n / ROUND_LENGTH;
+    for (let i = 1; i < Math.round(MIN_WORD * scale); i++) plan.push('word');
+    for (let i = 1; i < Math.round(MIN_ALGEBRA * scale); i++) plan.push('algebra');
+  }
   const bag = allowed.flatMap(f => Array(level.formats[f]).fill(f) as Format[]);
   while (plan.length < n) plan.push(pick(rng, bag));
   return shuffle(plan.slice(0, n), rng);
