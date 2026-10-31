@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { stories } from "./stories.js";
+import { hub } from "../../../shared/index.js";
+import { stories, storyLevel } from "./stories.js";
+import { pickStories, recentStories, rememberStory } from "./story-rotation.js";
 import StoryArt from "./StoryArt.jsx";
 import { speakSequence, speakWord, stopSpeaking } from "./speech.js";
 import { ButtonFace, Icon } from "./icons.jsx";
@@ -20,7 +22,26 @@ function partsOf(sentence) {
   }));
 }
 
+function storage() {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
+function currentKid() {
+  try {
+    return hub().getCurrentChild();
+  } catch {
+    return null;
+  }
+}
+
 export default function StoryTime({ onBack }) {
+  const [kid] = useState(currentKid);
+  const level = storyLevel(kid?.grade);
+  const [picks, setPicks] = useState(() => pickStories(stories, recentStories(storage(), kid?.id)));
   const [story, setStory] = useState(null);
   const [view, setView] = useState("list");
   const [active, setActive] = useState(-1);
@@ -35,9 +56,15 @@ export default function StoryTime({ onBack }) {
     stopSpeaking();
   }, []);
 
+  function morePicks() {
+    const shown = picks.map((item) => item.id);
+    setPicks(pickStories(stories, [...recentStories(storage(), kid?.id), ...shown]));
+  }
+
   function open(next) {
     stopSpeaking();
-    setStory(next);
+    rememberStory(storage(), kid?.id, next.id);
+    setStory({ ...next, ...next.levels[level] });
     setView("read");
     setActive(-1);
     setScene(0);
@@ -49,6 +76,7 @@ export default function StoryTime({ onBack }) {
     stopSpeaking();
     window.clearTimeout(wait.current);
     setStory(null);
+    setPicks(pickStories(stories, recentStories(storage(), kid?.id)));
     setView("list");
   }
 
@@ -106,11 +134,16 @@ export default function StoryTime({ onBack }) {
         </div>
         <h1>Story Time</h1>
         <div className="stack">
-          {stories.map((item) => (
+          {picks.map((item) => (
             <button key={item.id} type="button" className="big story-name" onClick={() => open(item)}>
-              <ButtonFace icon={item.id}>{item.title}</ButtonFace>
+              <ButtonFace icon={item.id} emoji={item.emoji}>
+                {item.title}
+              </ButtonFace>
             </button>
           ))}
+          <button type="button" className="big alt" onClick={morePicks}>
+            <ButtonFace icon="shuffle">More stories</ButtonFace>
+          </button>
         </div>
       </main>
     );
@@ -178,12 +211,12 @@ export default function StoryTime({ onBack }) {
         </button>
       </div>
       <h1>{story.title}</h1>
-      <StoryArt storyId={story.id} scene={scene} />
+      <StoryArt storyId={story.id} scene={scene} cast={story.cast} />
       {story.sentences.map((sentence, index) => (
-        <div key={sentence} className={index === active ? "sentence now" : "sentence"}>
-          {partsOf(sentence).map((part) => (
+        <div key={`${index}-${sentence}`} className={index === active ? "sentence now" : "sentence"}>
+          {partsOf(sentence).map((part, partIndex) => (
             <button
-              key={`${sentence}-${part.show}`}
+              key={`${partIndex}-${part.show}`}
               type="button"
               className="word-tap"
               onClick={() => hearWord(index, part.say)}
