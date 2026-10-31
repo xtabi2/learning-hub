@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { hub } from '../../../shared/index.js';
+import { getLevel, hub } from '../../../shared/index.js';
 import { Mode, Problem, Result, summarize, answerText } from './logic';
 import { speakWord, stopSpeaking } from '../../reading/src/speech.js';
-import { levelForGrade, loadRecent, makeVariedRound, modesForLevel, newSeed, saveRecent, seededRng } from './variety';
+import { levelFor, loadRecent, makeVariedRound, modesForLevel, newSeed, saveRecent, seededRng } from './variety';
 
 const storage = typeof localStorage !== 'undefined' ? localStorage : undefined;
 
@@ -22,7 +22,8 @@ export default function App() {
   const shownAt = useRef(0);
 
   const player = hub().getCurrentChild();
-  const level = levelForGrade(player?.grade);
+  const lv = getLevel(player);
+  const level = levelFor(lv.grade, lv.progress);
   const modes = MODES.filter(m => modesForLevel(level).includes(m.id));
   const start = (m: Mode) => {
     // Fresh seed every session, skip this kid's recent problems, mixed formats, shuffled order.
@@ -58,7 +59,7 @@ export default function App() {
     <main className="app">
       <h1>Math Fluency ⭐</h1>
       <p className="sub">{player ? `Hi, ${player.name}!` : 'Hi!'} Pick a kind of problem!</p>
-      {player ? <p className="level">Level: {GRADE_NAME[player.grade] ?? `Grade ${player.grade}`}</p> : null}
+      {player ? <p className="level">Level: {lv.grade ? GRADE_NAME[lv.grade] ?? `Grade ${lv.grade}` : ''}</p> : null}
       <div className="grid">{modes.map(m => <button key={m.id} className="big" onClick={() => start(m.id)}>{m.label}</button>)}</div>
     </main>
   );

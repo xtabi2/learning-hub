@@ -37,6 +37,37 @@ export function levelForGrade(grade: string | null | undefined): Level {
   return grade && grade in LEVELS ? LEVELS[grade as Band] : LEVELS.none;
 }
 
+const BAND_ORDER: Band[] = ['PreK', 'K', '1', '2', '3'];
+/** Before this point in the year (about November) a grade's new operations stay in review mode. */
+export const NEW_OPS_FROM = 0.34;
+
+/**
+ * Level for a grade part-way through the school year: number ranges ramp from last year's
+ * ranges to this year's, and this year's new operations join once progress reaches NEW_OPS_FROM.
+ */
+export function levelFor(grade: string | null | undefined, progress = 1): Level {
+  const cur = levelForGrade(grade);
+  const i = BAND_ORDER.indexOf(cur.band);
+  const p = Math.min(1, Math.max(0, progress));
+  if (i <= 0 || p >= 1) return cur;
+  const prev = LEVELS[BAND_ORDER[i - 1]];
+  const ops = p >= NEW_OPS_FROM ? cur.ops : cur.ops.filter(op => prev.ops.includes(op));
+  const mulPrev = prev.mulMax || (ops.includes('mul') || ops.includes('div') ? 2 : 0);
+  return {
+    ...cur,
+    ops,
+    addMax: Math.round(prev.addMax + (cur.addMax - prev.addMax) * p),
+    mulMax: cur.mulMax ? Math.max(2, Math.round(mulPrev + (cur.mulMax - mulPrev) * p)) : 0,
+  };
+}
+
+/** Largest number a wrong-answer choice may show at this level (Pre-K counts to 10). */
+export function optionCap(level: Level): number {
+  if (level.band === 'none') return Infinity;
+  if (level.band === 'PreK') return PREK_COUNT_MAX;
+  return Math.max(level.addMax, level.mulMax * level.mulMax, VISUAL_MAX);
+}
+
 export function modesForLevel(level: Level): Mode[] {
   return level.ops.length > 1 ? [...level.ops, 'mixed'] : [...level.ops];
 }
@@ -158,6 +189,10 @@ export function makeVariedRound(mode: Mode, opts: RoundOptions = {}): Problem[] 
       chosen = p;
     }
     chosen ??= fallback ?? makeFormatted(pick(rng, ops), 'fact', level, rng)!;
+    // Keep every wrong-answer choice inside the grade's number range.
+    if (!chosen.choices && level.band !== 'none') {
+      chosen = { ...chosen, options: makeOptions(chosen.answer, rng, Math.max(chosen.answer, optionCap(level))) };
+    }
     used.add(chosen.key!); out.push(chosen);
   }
   // Final order shuffle; reshuffle until no two neighbours share a fact (they're unique, so this is a guard).

@@ -26,11 +26,11 @@ export function makeFact(op: Op, rng: Rng = Math.random): { a: number; b: number
   }
 }
 
-export function makeOptions(answer: number, rng: Rng = Math.random): number[] {
+export function makeOptions(answer: number, rng: Rng = Math.random, max = Infinity): number[] {
   const set = new Set<number>([answer]);
   const offsets = [1, -1, 2, -2, 3, -3, 4, -4, 5, 6, 7, 8];
   for (let i = offsets.length - 1; i > 0; i--) { const j = ri(rng, 0, i); [offsets[i], offsets[j]] = [offsets[j], offsets[i]]; }
-  for (const o of offsets) { if (set.size >= 4) break; const v = answer + o; if (v >= 0) set.add(v); }
+  for (const o of offsets) { if (set.size >= 4) break; const v = answer + o; if (v >= 0 && v <= max) set.add(v); }
   const arr = [...set];
   for (let i = arr.length - 1; i > 0; i--) { const j = ri(rng, 0, i); [arr[i], arr[j]] = [arr[j], arr[i]]; }
   return arr;

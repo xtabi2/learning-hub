@@ -7,8 +7,17 @@ export function fallbackAvatar(child: { id?: string; name?: string }): Avatar;
 
 export type Grade = "PreK" | "K" | "1" | "2" | "3";
 
-export const DEFAULT_CHILDREN: readonly { id: string; name: string; age: number; grade: Grade; avatar: Avatar }[];
+export const DEFAULT_CHILDREN: readonly { id: string; name: string; age: number; grade: Grade; avatar: Avatar; birthMonth: number; birthYear: number; kStartYear: number }[];
 export function gradeLabel(grade: string): string;
+export const KNOWN_KIDS: Readonly<Record<string, { birthMonth: number; birthYear: number; kStartYear: number }>>;
+export const RAMP_DAYS: number;
+export const REVIEW_UNTIL: number;
+export function schoolYear(date?: Date): number;
+export function yearProgress(date?: Date): number;
+export function gradeFromKStart(kStartYear: number, date?: Date): Grade;
+export function ageFrom(kid: Partial<Child> | null | undefined, date?: Date): number | undefined;
+export function getLevel(kid: Partial<Child> | null | undefined, date?: Date): { grade: Grade | null; progress: number };
+export function priorGrade(grade: string): Grade | null;
 
 export interface Child {
   id: string;
@@ -16,6 +25,10 @@ export interface Child {
   grade: Grade;
   age?: number;
   avatar: Avatar;
+  birthMonth?: number;
+  birthYear?: number;
+  kStartYear?: number;
+  gradeOverride?: Grade;
   createdAt: string;
   progress?: Progress;
 }
@@ -57,8 +70,8 @@ export interface HubStorage {
 
 export interface Hub {
   listChildren(): Child[];
-  addChild(input: { name: string; grade: Grade; age?: number | string; avatar?: Avatar }): Child;
-  updateChild(id: string, patch: { name?: string; grade?: Grade; age?: number | string | null; avatar?: Avatar }): Child | null;
+  addChild(input: { name: string; grade?: Grade | ""; age?: number | string; avatar?: Avatar; birthMonth?: number | string; birthYear?: number | string; kStartYear?: number | string; gradeOverride?: Grade | "" }): Child;
+  updateChild(id: string, patch: { name?: string; grade?: Grade; age?: number | string | null; avatar?: Avatar; birthMonth?: number | string | null; birthYear?: number | string | null; kStartYear?: number | string | null; gradeOverride?: Grade | "" | null }): Child | null;
   removeChild(id: string): void;
   getCurrentChild(): Child | null;
   setCurrentChild(id: string): Child | null;

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { hub } from "../../../shared/index.js";
-import { stories, storyLevel } from "./stories.js";
+import { getLevel, hub } from "../../../shared/index.js";
+import { stories, storyLevelFor } from "./stories.js";
 import { pickStories, recentStories, rememberStory } from "./story-rotation.js";
 import StoryArt from "./StoryArt.jsx";
 import { speakSequence, speakWord, stopSpeaking } from "./speech.js";
@@ -40,7 +40,7 @@ function currentKid() {
 
 export default function StoryTime({ onBack }) {
   const [kid] = useState(currentKid);
-  const level = storyLevel(kid?.grade);
+  const level = storyLevelFor(getLevel(kid));
   const [picks, setPicks] = useState(() => pickStories(stories, recentStories(storage(), kid?.id)));
   const [story, setStory] = useState(null);
   const [view, setView] = useState("list");

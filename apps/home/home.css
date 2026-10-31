@@ -53,6 +53,8 @@ h2 { margin: 0 0 8px; font-size: 1.35rem; text-align: center; }
 }
 .kid .face svg { width: 60px; height: 60px; display: block; }
 .kid-name { font-size: 1.05rem; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kid-meta { font-size: 0.8rem; color: #6d4c41; line-height: 1; min-height: 1em; }
+.add .hint { font-size: 0.8rem; margin: 0; color: #6d4c41; }
 .kid.current { background: #ffe082; border-color: #ff8f00; }
 .kid:active, .game:active { transform: translateY(3px); }
 
