@@ -102,6 +102,27 @@ const SHAPES = {
       <circle cx="24" cy="36" r="2.6" fill="currentColor" />
     </>
   ),
+  mouth: (
+    <>
+      <circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" strokeWidth="4" />
+      <circle cx="18" cy="20" r="2.2" fill="currentColor" />
+      <circle cx="30" cy="20" r="2.2" fill="currentColor" />
+      <path d="M16 28 Q24 36 32 28" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+    </>
+  ),
+  flip: (
+    <>
+      <rect x="8" y="10" width="22" height="28" rx="4" fill="currentColor" />
+      <path d="M32 18 A10 10 0 1 1 32 34" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+      <path d="M32 12 L32 20 L40 16 Z" fill="currentColor" />
+    </>
+  ),
+  star: (
+    <path
+      fill="currentColor"
+      d="M24 4 L29.5 16.5 H43 L32.2 24.8 L36.2 38 L24 30.8 L11.8 38 L15.8 24.8 L5 16.5 H18.5 Z"
+    />
+  ),
   shuffle: (
     <>
       <rect x="6" y="16" width="26" height="26" rx="4" fill="currentColor" />
@@ -216,14 +237,14 @@ const SHAPES = {
   ),
 };
 
-export function Icon({ name }) {
+export function Icon({ name, className = "icon" }) {
   const body = name?.startsWith("badge-") ? (
     <Badge mark={name.slice("badge-".length)} />
   ) : (
     SHAPES[name] ?? SHAPES.book
   );
   return (
-    <svg className="icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+    <svg className={className} viewBox="0 0 48 48" aria-hidden="true" focusable="false">
       {body}
     </svg>
   );

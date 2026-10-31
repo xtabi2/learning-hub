@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { gradeSentence, formatSentence, isAcceptable } from "../src/grade-sentence.js";
-import { sentenceSets } from "../src/sentence-sets.js";
+import { dealOrder, mixHand, sentenceSets, sentenceTemplateCount, setKey } from "../src/sentence-sets.js";
 import { grades } from "../src/words.js";
 import { allClassWords, lessons } from "../src/class-words.js";
 
@@ -72,6 +72,20 @@ test("agreement and object case", () => {
   accept(["Keep", "warm", "today"]);
   accept(["Keep", "clean", "today"]);
   reject(["Warm", "keep", "today"]);
+  accept(["I", "can", "be", "little"]);
+  accept(["She", "says", "it"]);
+  reject(["They", "says", "it"]);
+  reject(["I", "can", "be"]);
+  accept(["This", "word", "is", "little"]);
+  accept(["This", "is", "little"]);
+  accept(["Draw", "together", "today"]);
+  accept(["Never", "laugh", "today"]);
+  accept(["Better", "try", "today"]);
+  accept(["Never", "draw", "together", "today"]);
+  reject(["Better", "fall", "today"]);
+  accept(["People", "must", "go", "home"]);
+  accept(["Our", "man", "will", "play"]);
+  accept(["Seven", "men", "could", "draw"]);
 });
 
 test("formats a capital and a period", () => {
@@ -104,22 +118,25 @@ function combinations(items, count) {
   ];
 }
 
-test("every word set can make a sentence the grader accepts", () => {
-  for (const set of sentenceSets) {
-    let found = false;
-    for (let size = 3; size <= Math.min(5, set.words.length); size += 1) {
-      for (const combo of combinations(set.words, size)) {
-        for (const order of permutations(combo)) {
-          if (isAcceptable(order.map((word) => word.toLowerCase()))) {
-            found = true;
-            break;
-          }
-        }
-        if (found) break;
+function canFormSentence(words) {
+  const lower = words.map((word) => word.toLowerCase());
+  for (const size of [3, 4]) {
+    if (lower.length < size) continue;
+    for (const combo of combinations(lower, size)) {
+      for (const order of permutations(combo)) {
+        if (isAcceptable(order)) return true;
       }
-      if (found) break;
     }
-    assert.equal(found, true, set.words.join(" "));
+  }
+  return false;
+}
+
+test("every word set can make a 3 or 4 word sentence the grader accepts", () => {
+  assert.ok(sentenceTemplateCount >= 80, `only ${sentenceTemplateCount} templates`);
+  for (const set of sentenceSets) {
+    assert.equal(set.words.length, 4, set.words.join(" "));
+    assert.equal(new Set(set.words.map((word) => word.toLowerCase())).size, set.words.length);
+    assert.equal(canFormSentence(set.words), true, set.words.join(" "));
   }
 });
 
@@ -127,13 +144,48 @@ test("every set stays inside its deck and each deck has choices", () => {
   for (const [id, words] of Object.entries(decks)) {
     const have = new Set(words.map((word) => word.toLowerCase()));
     const sets = sentenceSets.filter((set) => set.decks.includes(id));
-    assert.ok(sets.length >= 2, `${id} needs more than one set`);
+    assert.ok(sets.length >= 12, `${id} has ${sets.length} sets`);
     for (const set of sets) {
       for (const word of set.words) {
         assert.ok(have.has(word.toLowerCase()), `${id} is missing ${word}`);
       }
     }
   }
+});
+
+test("many random deals can form a sentence for every grade", () => {
+  for (const [id, words] of Object.entries(decks)) {
+    const have = new Set(words.map((word) => word.toLowerCase()));
+    const seen = new Set();
+    const openers = new Set();
+    for (let turn = 0; turn < 40; turn += 1) {
+      const queue = dealOrder(words);
+      assert.ok(queue.length >= 12, `${id} has ${queue.length} hands`);
+      const hand = mixHand(queue[0].words);
+      assert.deepEqual(
+        [...hand].map((word) => word.toLowerCase()).sort(),
+        [...queue[0].words].map((word) => word.toLowerCase()).sort(),
+      );
+      for (const word of hand) assert.ok(have.has(word.toLowerCase()), `${id} dealt ${word}`);
+      assert.equal(canFormSentence(hand), true, hand.join(" "));
+      seen.add(setKey(queue[0]));
+      openers.add(setKey(queue[0]));
+    }
+    assert.ok(seen.size >= 5, `${id} dealt ${seen.size} unique hands`);
+    assert.ok(openers.size > 1, `${id} reused one opening hand`);
+  }
+});
+
+test("recent sentences are dealt after fresh ones", () => {
+  const words = decks.k;
+  const recent = dealOrder(words).slice(0, 6).map(setKey);
+  const next = dealOrder(words, recent, () => 0);
+  let seenRecent = false;
+  for (const key of next.map(setKey)) {
+    if (recent.includes(key)) seenRecent = true;
+    else assert.equal(seenRecent, false);
+  }
+  assert.equal(seenRecent, true);
 });
 
 test("class words together include both lessons", () => {

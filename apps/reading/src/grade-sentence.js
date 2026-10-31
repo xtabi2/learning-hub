@@ -41,6 +41,9 @@ const PAST_GO = new Set(["went", "came"]);
 const PAST_TRANS = new Set(["saw", "found", "got", "had", "made", "said"]);
 const PLACE = new Set(["home", "here", "away", "out", "up", "today", "now", "soon", "well", "again"]);
 const NUM = new Set(["two", "three", "six", "seven", "eight", "ten"]);
+const IMP_TOGETHER = new Set(["laugh", "start", "try", "draw", "grow", "drink", "fall", "show", "hold", "bring"]);
+const IMP_NEVER = new Set(["fall", "start", "try", "laugh", "grow", "draw", "drink"]);
+const IMP_BETTER = new Set(["start", "try", "laugh", "draw", "grow", "drink"]);
 
 function nounKind(noun) {
   const pl = NOUN_PL.has(noun);
@@ -72,7 +75,12 @@ function parseSubject(tokens) {
   if (!first) return null;
   if (SUBJ_I.has(first)) return { end: 1, agree: "i" };
   if (SUBJ_PL.has(first)) return { end: 1, agree: "pl" };
-  if (SUBJ_SG.has(first)) return { end: 1, agree: "sg" };
+  if (SUBJ_SG.has(first)) {
+    if ((first === "this" || first === "that") && nounKind(tokens[1])) {
+      return nounPhrase(tokens, 1, "sg");
+    }
+    return { end: 1, agree: "sg" };
+  }
   if (NOUN_PL.has(first) && !DET_ANY.has(first) && !DET_PL.has(first) && !DET_SG.has(first) && !POSS.has(first) && !ADJ.has(first)) {
     const kind = nounKind(first);
     return { end: 1, agree: kind === "either" ? "either" : "pl" };
@@ -132,6 +140,7 @@ function parsePredicate(tokens, agree) {
   if (!tokens.length) return false;
   const [first] = tokens;
   if (MODAL.has(first)) {
+    if (tokens[1] === "be" && tokens.length === 3 && ADJ.has(tokens[2])) return true;
     const verb = tokens[1];
     if (!verb) return false;
     return verbFits(verb, tokens.slice(2), "modal");
@@ -155,6 +164,9 @@ function parsePredicate(tokens, agree) {
   if (PAST_TRANS.has(first)) {
     return consumeObject(tokens, 1) === tokens.length;
   }
+  if (first === "says" && (agree === "sg" || agree === "either")) {
+    return consumeObject(tokens, 1) === tokens.length;
+  }
   if (agree === "sg") return false;
   if (agree === "i" || agree === "pl" || agree === "either") {
     return verbFits(first, tokens.slice(1), "base");
@@ -163,12 +175,13 @@ function parsePredicate(tokens, agree) {
 }
 
 function imperative(tokens) {
-  const [a, b, c] = tokens;
+  const [a, b, c, d] = tokens;
   if (a === "look" && b === "at" && tokens.length === 3 && OBJ.has(c)) return true;
   if (a === "keep" && ADJ.has(b) && tokens.length === 3 && c === "today") return true;
-  if (["laugh", "start", "try"].includes(a) && b === "together" && c === "today" && tokens.length === 3) return true;
-  if (a === "never" && ["fall", "start", "try"].includes(b) && c === "today" && tokens.length === 3) return true;
-  if (a === "better" && b === "start" && c === "today" && tokens.length === 3) return true;
+  if (IMP_TOGETHER.has(a) && b === "together" && c === "today" && tokens.length === 3) return true;
+  if (a === "never" && IMP_NEVER.has(b) && c === "today" && tokens.length === 3) return true;
+  if (a === "never" && IMP_NEVER.has(b) && c === "together" && d === "today" && tokens.length === 4) return true;
+  if (a === "better" && IMP_BETTER.has(b) && c === "today" && tokens.length === 3) return true;
   if (a === "please" && ["go", "come"].includes(b) && ["home", "here"].includes(c) && tokens.length === 3) return true;
   return false;
 }

@@ -57,11 +57,11 @@ export default function App() {
   }
 
   if (screen === "cards" && deck) {
-    return <FlashCards deck={deck} onBack={leaveDeck} />;
+    return <FlashCards key={deck.id} deck={deck} onBack={leaveDeck} />;
   }
 
   if (screen === "sentence" && deck) {
-    return <SentenceBuilder deck={deck} onBack={leaveDeck} />;
+    return <SentenceBuilder key={deck.id} deck={deck} onBack={leaveDeck} />;
   }
 
   if (screen === "class") {

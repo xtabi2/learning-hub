@@ -1,42 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { hub } from "../../../shared/index.js";
 import { formatSentence, gradeSentence } from "./grade-sentence.js";
-import { setsFor } from "./sentence-sets.js";
+import { dealOrder, mixHand, setKey } from "./sentence-sets.js";
 import { speakWord, stopSpeaking } from "./speech.js";
 import { ButtonFace, Icon } from "./icons.jsx";
+import { loadRecent, rememberRecent, sentenceBucket } from "./variety.js";
 
-function mix(words, tries = 0) {
-  const copy = [...words];
-  for (let index = copy.length - 1; index > 0; index -= 1) {
-    const swap = Math.floor(Math.random() * (index + 1));
-    [copy[index], copy[swap]] = [copy[swap], copy[index]];
+const storage = typeof localStorage !== "undefined" ? localStorage : undefined;
+
+function playerId() {
+  try {
+    return hub().getCurrentChild()?.id ?? null;
+  } catch {
+    return null;
   }
-  if (tries < 6 && gradeSentence(copy).ok) return mix(words, tries + 1);
-  return copy;
 }
 
 export default function SentenceBuilder({ deck, onBack }) {
-  const sets = setsFor(deck.words.map((word) => word.text));
-  const [setIndex, setSetIndex] = useState(0);
-  const [bank, setBank] = useState([]);
+  const who = useRef(playerId());
+  const scope = sentenceBucket(deck.id);
+  const [queue] = useState(() => dealOrder(
+    deck.words.map((word) => word.text),
+    loadRecent(storage, who.current, scope),
+  ));
+  const [cursor, setCursor] = useState(0);
+  const [bank, setBank] = useState(() => (queue[0] ? mixHand(queue[0].words) : []));
   const [built, setBuilt] = useState([]);
   const [note, setNote] = useState(null);
-  const current = sets[setIndex] ?? null;
+  const current = queue[cursor] ?? null;
 
   function showSet(index) {
-    const next = sets[index];
+    const next = queue[index];
     if (!next) return;
-    setSetIndex(index);
-    setBank(mix(next.words));
+    setCursor(index);
+    setBank(mixHand(next.words));
     setBuilt([]);
     setNote(null);
     stopSpeaking();
+    rememberRecent(storage, who.current, scope, setKey(next));
   }
 
   useEffect(() => {
-    if (sets.length) showSet(0);
+    if (queue[0]) rememberRecent(storage, who.current, scope, setKey(queue[0]));
     return () => stopSpeaking();
-  }, [deck.id]);
+  }, [deck.id, queue, scope]);
 
   if (!current) {
     return (
@@ -110,14 +117,14 @@ export default function SentenceBuilder({ deck, onBack }) {
   }
 
   function clearAll() {
-    setBank(mix(current.words));
+    setBank(mixHand(current.words));
     setBuilt([]);
     setNote(null);
     stopSpeaking();
   }
 
   function nextSet() {
-    showSet((setIndex + 1) % sets.length);
+    showSet((cursor + 1) % queue.length);
   }
 
   function check() {
