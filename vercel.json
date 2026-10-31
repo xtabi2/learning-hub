@@ -1,4 +1,7 @@
 {
+  "proxy": {
+    "entrypoint": "middleware.js"
+  },
   "services": {
     "home": {
       "root": "apps/home",
@@ -12,9 +15,18 @@
       "installCommand": "npm install --prefix ../..",
       "buildCommand": "npm run build",
       "rewrites": [
-        { "source": "/math", "destination": "/index.html" },
-        { "source": "/math/", "destination": "/index.html" },
-        { "source": "/math/:path(.*)", "destination": "/:path" }
+        {
+          "source": "/math",
+          "destination": "/index.html"
+        },
+        {
+          "source": "/math/",
+          "destination": "/index.html"
+        },
+        {
+          "source": "/math/:path(.*)",
+          "destination": "/:path"
+        }
       ]
     },
     "reading": {
@@ -23,9 +35,18 @@
       "installCommand": "npm install --prefix ../..",
       "buildCommand": "npm run build",
       "rewrites": [
-        { "source": "/reading", "destination": "/index.html" },
-        { "source": "/reading/", "destination": "/index.html" },
-        { "source": "/reading/:path(.*)", "destination": "/:path" }
+        {
+          "source": "/reading",
+          "destination": "/index.html"
+        },
+        {
+          "source": "/reading/",
+          "destination": "/index.html"
+        },
+        {
+          "source": "/reading/:path(.*)",
+          "destination": "/:path"
+        }
       ]
     },
     "adventure": {
@@ -35,13 +56,53 @@
     }
   },
   "rewrites": [
-    { "source": "/math", "destination": { "service": "math" } },
-    { "source": "/math/(.*)", "destination": { "service": "math" } },
-    { "source": "/reading", "destination": { "service": "reading" } },
-    { "source": "/reading/(.*)", "destination": { "service": "reading" } },
-    { "source": "/adventure", "destination": { "service": "adventure" } },
-    { "source": "/adventure/(.*)", "destination": { "service": "adventure" } },
-    { "source": "/", "destination": { "service": "home" } },
-    { "source": "/(.*)", "destination": { "service": "home" } }
+    {
+      "source": "/math",
+      "destination": {
+        "service": "math"
+      }
+    },
+    {
+      "source": "/math/(.*)",
+      "destination": {
+        "service": "math"
+      }
+    },
+    {
+      "source": "/reading",
+      "destination": {
+        "service": "reading"
+      }
+    },
+    {
+      "source": "/reading/(.*)",
+      "destination": {
+        "service": "reading"
+      }
+    },
+    {
+      "source": "/adventure",
+      "destination": {
+        "service": "adventure"
+      }
+    },
+    {
+      "source": "/adventure/(.*)",
+      "destination": {
+        "service": "adventure"
+      }
+    },
+    {
+      "source": "/",
+      "destination": {
+        "service": "home"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "home"
+      }
+    }
   ]
 }
