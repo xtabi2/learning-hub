@@ -1,6 +1,11 @@
 export type Op = 'add' | 'sub' | 'mul' | 'div';
 export type Mode = Op | 'mixed';
-export interface Problem { a: number; b: number; op: Op; answer: number; options: number[]; }
+export interface Problem {
+  a: number; b: number; op: Op; answer: number; options: number[];
+  /** Varied formats: 'fact' (a op b), 'missing' (a op _ = c), 'word', 'count' (emoji objects). */
+  format?: 'fact' | 'missing' | 'word' | 'count';
+  text?: string; visual?: string; key?: string;
+}
 export interface Result { problem: Problem; chosen: number; correct: boolean; ms: number; }
 export const ROUND_LENGTH = 10;
 export const SYMBOL: Record<Op, string> = { add: '+', sub: '−', mul: '×', div: '÷' };
@@ -44,6 +49,10 @@ export function makeRound(mode: Mode, n = ROUND_LENGTH, rng: Rng = Math.random):
 }
 
 export const factText = (p: Problem) => `${p.a} ${SYMBOL[p.op]} ${p.b}`;
+/** Full worked answer for feedback / summary, for any format. */
+const compute = (p: Problem) => ({ add: p.a + p.b, sub: p.a - p.b, mul: p.a * p.b, div: p.b ? p.a / p.b : 0 })[p.op];
+export const answerText = (p: Problem) =>
+  p.key?.startsWith('count:') ? `${p.answer}` : `${factText(p)} = ${compute(p)}`;
 
 export function summarize(results: Result[]) {
   const total = results.length;
