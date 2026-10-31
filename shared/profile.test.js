@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { DEFAULT_CHILDREN, GRADES, STORAGE_KEY, createHub, createMemoryStorage, gradeLabel, readingGradeId } from "./index.js";
+import { AVATARS, DEFAULT_CHILDREN, fallbackAvatar, GRADES, STORAGE_KEY, createHub, createMemoryStorage, gradeLabel, readingGradeId } from "./index.js";
 
 function fresh() {
   return createHub(createMemoryStorage());
@@ -103,4 +103,53 @@ test("Pre-K falls back to the easiest content", () => {
   assert.equal(gradeLabel("PreK"), "Pre-K");
   assert.equal(gradeLabel("K"), "Kindergarten");
   assert.equal(gradeLabel("1"), "Grade 1");
+});
+
+test("default kids have their animals", () => {
+  const kids = createHub(createMemoryStorage()).listChildren();
+  assert.deepEqual(kids.map((k) => [k.name, k.avatar]), [["Madison", "cat"], ["Sydney", "bunny"], ["Wesley", "monkey"]]);
+});
+
+test("migrates missing avatars once and keeps all other saved data", () => {
+  const storage = createMemoryStorage();
+  const progress = { reading: { masteredWords: ["the"] }, math: { level: "add" } };
+  const saved = {
+    currentId: "m",
+    extra: "keep-me",
+    children: [
+      { id: "m", name: " madison ", grade: "2", age: 8, createdAt: "t1", progress },
+      { id: "s", name: "Sydney", grade: "K", createdAt: "t2", progress: {} },
+      { id: "w", name: "WESLEY", grade: "PreK", createdAt: "t3" },
+      { id: "z", name: "Zoe", grade: "1", createdAt: "t4", custom: 1 },
+      { id: "p", name: "Madison", grade: "1", createdAt: "t5", avatar: "frog" },
+    ],
+  };
+  storage.setItem(STORAGE_KEY, JSON.stringify(saved));
+  const kids = createHub(storage).listChildren();
+  assert.deepEqual(kids.map((k) => k.avatar.length > 0 && k.avatar), ["cat", "bunny", "monkey", fallbackAvatar({ id: "z", name: "Zoe" }), "frog"]);
+  assert.ok(AVATARS.includes(kids[3].avatar));
+  const after = JSON.parse(storage.getItem(STORAGE_KEY));
+  assert.equal(after.extra, "keep-me");
+  assert.equal(after.currentId, "m");
+  assert.deepEqual(after.children[0].progress, progress);
+  assert.equal(after.children[0].age, 8);
+  assert.equal(after.children[0].name, " madison ");
+  assert.equal(after.children[3].custom, 1);
+  for (const [i, kid] of saved.children.entries()) {
+    const { avatar, ...rest } = after.children[i];
+    const { avatar: _old, ...before } = kid;
+    assert.deepEqual(rest, before);
+  }
+  const raw = storage.getItem(STORAGE_KEY);
+  createHub(storage).listChildren();
+  assert.equal(storage.getItem(STORAGE_KEY), raw, "second load changes nothing");
+});
+
+test("adds a kid with a chosen avatar and rejects unknown animals", () => {
+  const hub = fresh();
+  assert.equal(hub.addChild({ name: "Lu", grade: "K", avatar: "owl" }).avatar, "owl");
+  assert.ok(AVATARS.includes(hub.addChild({ name: "Mo", grade: "K" }).avatar));
+  assert.throws(() => hub.addChild({ name: "X", grade: "K", avatar: "dragon" }), /animal/);
+  const kid = hub.listChildren().at(-1);
+  assert.equal(hub.updateChild(kid.id, { avatar: "fox" }).avatar, "fox");
 });
