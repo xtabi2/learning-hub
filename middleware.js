@@ -1,5 +1,5 @@
-// Family PIN gate (Vercel Routing Middleware). Logic lives in pin-gate/gate.mjs.
-import { handle } from "./pin-gate/gate.mjs";
+// Family PIN gate (Vercel Routing Middleware). Logic lives in pin-gate/gate.js.
+import { handle } from "./pin-gate/gate.js";
 
 // Wired up through `proxy.entrypoint` in vercel.json (Services projects ignore the file convention).
 // Default Node.js runtime; Web Crypto only, so it also works on Edge.
