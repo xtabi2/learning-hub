@@ -116,3 +116,13 @@ A **Home** link in each game returns to `/`.
 - Math still has its Docker/nginx files. The hub deploy does not use them.
 - Math and Reading had no `localStorage` of their own. Their in-memory play is unchanged; hub progress is extra.
 - Adventure still needs the env vars above for accounts, email, and Turso. Without them the game builds and the kid UI shell loads, but parent login and saved portal progress do not.
+
+## Family PIN gate
+
+Every page is behind a family PIN (`middleware.js`, Vercel Routing Middleware; logic in `pin-gate/gate.mjs`, tests in `pin-gate/gate.unit.mjs`). Same pattern as the Reading Progress Game gate.
+
+- Env vars: `FAMILY_PIN` and `PIN_COOKIE_SECRET` (or `FAMILY_PIN_SECRET`), production + preview. If `FAMILY_PIN` is unset, the gate is off.
+- Not signed in: redirect to `/pin?next=<path>`. The keypad sends the PIN to `POST /api/pin` once 4 digits are entered (`{pin, next}` returns `{ok, next}` or `{error, retryAfterMs}`). The PIN is checked with a constant-time compare.
+- Success sets `family_pin` = `v1.<issuedAt>.<HMAC>` (HttpOnly, Secure, SameSite=Lax, 1 year). The key comes from the secret plus the PIN, so changing the PIN signs everyone out.
+- Wrong tries: the first 3 are free, then waits of 1s, 2s, 4s and so on up to 30s, and a 15-minute lockout after 10. Tracked by a signed `family_pin_tries` cookie and a best-effort per-IP counter.
+- Exempt: `/pin`, `/api/pin`, `_next`, favicon, and static files.
