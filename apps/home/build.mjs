@@ -6,7 +6,7 @@ const root = dirname(fileURLToPath(import.meta.url));
 const dist = join(root, "dist");
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
-for (const file of ["index.html", "app.js", "home.css"]) {
+for (const file of ["index.html", "app.js", "avatars.js", "home.css"]) {
   cpSync(join(root, file), join(dist, file));
 }
 cpSync(join(root, "../../shared/index.js"), join(dist, "profile.js"));

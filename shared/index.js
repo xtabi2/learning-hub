@@ -7,11 +7,29 @@
 export const GRADES = ["PreK", "K", "1", "2", "3"];
 export const STORAGE_KEY = "learning-hub.v1";
 
+export const AVATARS = ["cat", "bunny", "monkey", "dog", "bear", "panda", "fox", "frog", "owl", "pig"];
+const NAMED_AVATARS = { madison: "cat", sydney: "bunny", wesley: "monkey" };
+
+/** Avatar for a saved kid that has none: the named default, else a stable pick from the id. */
+export function fallbackAvatar(child) {
+  const named = NAMED_AVATARS[String(child?.name ?? "").trim().toLowerCase()];
+  if (named) return named;
+  const key = String(child?.id ?? child?.name ?? "");
+  let hash = 0;
+  for (const ch of key) hash = (hash * 31 + ch.codePointAt(0)) >>> 0;
+  return AVATARS[hash % AVATARS.length];
+}
+
+function checkAvatar(avatar) {
+  if (!AVATARS.includes(avatar)) throw new Error("Pick an animal");
+  return avatar;
+}
+
 /** Shown only when no profiles are saved yet. Never written over saved kids. */
 export const DEFAULT_CHILDREN = Object.freeze([
-  Object.freeze({ id: "default-madison", name: "Madison", age: 7, grade: "1" }),
-  Object.freeze({ id: "default-sydney", name: "Sydney", age: 5, grade: "PreK" }),
-  Object.freeze({ id: "default-wesley", name: "Wesley", age: 2, grade: "PreK" }),
+  Object.freeze({ id: "default-madison", name: "Madison", age: 7, grade: "1", avatar: "cat" }),
+  Object.freeze({ id: "default-sydney", name: "Sydney", age: 5, grade: "PreK", avatar: "bunny" }),
+  Object.freeze({ id: "default-wesley", name: "Wesley", age: 2, grade: "PreK", avatar: "monkey" }),
 ]);
 
 const GRADE_ERROR = "Grade must be Pre-K, K, 1, 2, or 3";
@@ -65,6 +83,15 @@ export function createHub(storage) {
       if (!data || !Array.isArray(data.children) || data.children.length === 0) {
         return { children: seedChildren(), currentId: null };
       }
+      // One-time, non-destructive migration: fill in a missing avatar, keep everything else.
+      let migrated = false;
+      for (const child of data.children) {
+        if (child && typeof child === "object" && !AVATARS.includes(child.avatar)) {
+          child.avatar = fallbackAvatar(child);
+          migrated = true;
+        }
+      }
+      if (migrated) storage.setItem(STORAGE_KEY, JSON.stringify(data));
       return { children: data.children, currentId: data.currentId ?? null };
     } catch {
       // Unreadable data: show defaults but do not overwrite what is stored until a real save.
@@ -81,17 +108,19 @@ export function createHub(storage) {
       return load().children.map((child) => ({ ...child }));
     },
 
-    addChild({ name, grade, age }) {
+    addChild({ name, grade, age, avatar }) {
       const trimmed = String(name ?? "").trim().slice(0, 40);
       if (!trimmed) throw new Error("Name is required");
       if (!GRADES.includes(grade)) throw new Error(GRADE_ERROR);
       const childAge = normalizeAge(age);
       const data = load();
+      const childAvatar = avatar === undefined ? fallbackAvatar({ name: trimmed, id: trimmed }) : checkAvatar(avatar);
       const child = {
         id: crypto.randomUUID(),
         name: trimmed,
         grade,
         ...(childAge !== undefined ? { age: childAge } : {}),
+        avatar: childAvatar,
         createdAt: new Date().toISOString(),
         progress: {},
       };
@@ -114,6 +143,7 @@ export function createHub(storage) {
         if (!GRADES.includes(patch.grade)) throw new Error(GRADE_ERROR);
         child.grade = patch.grade;
       }
+      if (patch.avatar !== undefined) child.avatar = checkAvatar(patch.avatar);
       if (patch.age !== undefined) {
         const childAge = normalizeAge(patch.age);
         if (childAge === undefined) delete child.age;

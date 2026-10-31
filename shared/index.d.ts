@@ -1,9 +1,13 @@
 export const GRADES: readonly ["PreK", "K", "1", "2", "3"];
 export const STORAGE_KEY: string;
 
+export type Avatar = "cat" | "bunny" | "monkey" | "dog" | "bear" | "panda" | "fox" | "frog" | "owl" | "pig";
+export const AVATARS: readonly Avatar[];
+export function fallbackAvatar(child: { id?: string; name?: string }): Avatar;
+
 export type Grade = "PreK" | "K" | "1" | "2" | "3";
 
-export const DEFAULT_CHILDREN: readonly { id: string; name: string; age: number; grade: Grade }[];
+export const DEFAULT_CHILDREN: readonly { id: string; name: string; age: number; grade: Grade; avatar: Avatar }[];
 export function gradeLabel(grade: string): string;
 
 export interface Child {
@@ -11,6 +15,7 @@ export interface Child {
   name: string;
   grade: Grade;
   age?: number;
+  avatar: Avatar;
   createdAt: string;
   progress?: Progress;
 }
@@ -52,8 +57,8 @@ export interface HubStorage {
 
 export interface Hub {
   listChildren(): Child[];
-  addChild(input: { name: string; grade: Grade; age?: number | string }): Child;
-  updateChild(id: string, patch: { name?: string; grade?: Grade; age?: number | string | null }): Child | null;
+  addChild(input: { name: string; grade: Grade; age?: number | string; avatar?: Avatar }): Child;
+  updateChild(id: string, patch: { name?: string; grade?: Grade; age?: number | string | null; avatar?: Avatar }): Child | null;
   removeChild(id: string): void;
   getCurrentChild(): Child | null;
   setCurrentChild(id: string): Child | null;
