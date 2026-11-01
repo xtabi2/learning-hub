@@ -5,6 +5,8 @@ import { dealOrder, mixHand, setKey } from "./sentence-sets.js";
 import { speakWord, stopSpeaking } from "./speech.js";
 import { ButtonFace, Icon } from "./icons.jsx";
 import Say from "./Say.jsx";
+import HelpCard from "./HelpCard.jsx";
+import { sentenceHelp } from "./explain.js";
 import { loadRecent, rememberRecent, sentenceBucket } from "./variety.js";
 
 const storage = typeof localStorage !== "undefined" ? localStorage : undefined;
@@ -59,6 +61,7 @@ export default function SentenceBuilder({ deck, onBack }) {
   }
 
   function addWord(word) {
+    if (note && !note.ok) return;
     setBank((items) => items.filter((item) => item !== word));
     setBuilt((items) => [...items, word]);
     setNote(null);
@@ -131,8 +134,13 @@ export default function SentenceBuilder({ deck, onBack }) {
   function check() {
     const result = gradeSentence(built);
     setNote(result);
+    if (!result.ok) {
+      // Show one right sentence and why; stay until Next.
+      const help = sentenceHelp(current.words);
+      speakWord(help ? `${result.message} ${help.say}` : result.message);
+      return;
+    }
     speakWord(result.message);
-    if (!result.ok) return;
     const child = hub().getCurrentChild();
     if (!child) return;
     hub().recordProgress(child.id, {
@@ -180,17 +188,29 @@ export default function SentenceBuilder({ deck, onBack }) {
           </button>
         ))}
       </div>
-      {note && (
-        <p className={note.ok ? "note ok" : "note"}>
-          <span aria-hidden="true">{note.ok ? "🎉 " : "🤔 "}</span>
+      {note && note.ok ? (
+        <p className="note ok">
+          <span aria-hidden="true">🎉 </span>
           {note.message}
         </p>
-      )}
+      ) : null}
+      {note && !note.ok ? (() => {
+        const help = sentenceHelp(current.words);
+        if (!help) return <p className="note"><span aria-hidden="true">🤔 </span>{note.message}</p>;
+        return (
+          <HelpCard answer={help.sentence} say={`${note.message} ${help.say}`} onNext={nextSet}>
+            <p className="help-why">
+              <span aria-hidden="true">🧒➡️🏃 </span>
+              {help.why}
+            </p>
+          </HelpCard>
+        );
+      })() : null}
       <button type="button" className="big speak" onClick={readAloud} disabled={!built.length}>
         <ButtonFace icon="speaker">Read it to me</ButtonFace>
       </button>
       <div className="nav">
-        <button type="button" className="big" onClick={check} disabled={!built.length}>
+        <button type="button" className="big" onClick={check} disabled={!built.length || (note && !note.ok)}>
           <ButtonFace icon="check">Check</ButtonFace>
         </button>
         <button type="button" className="big alt" onClick={clearAll}>

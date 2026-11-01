@@ -6,6 +6,8 @@ import StoryArt from "./StoryArt.jsx";
 import { speakSequence, speakWord, stopSpeaking } from "./speech.js";
 import { ButtonFace, Icon } from "./icons.jsx";
 import Say, { isPreReader } from "./Say.jsx";
+import { storyHelp } from "./explain.js";
+import HelpCard from "./HelpCard.jsx";
 
 function mix(items) {
   const copy = [...items];
@@ -50,6 +52,7 @@ export default function StoryTime({ onBack }) {
   const [question, setQuestion] = useState(0);
   const [choices, setChoices] = useState([]);
   const [feedback, setFeedback] = useState("");
+  const [help, setHelp] = useState(null);
   const wait = useRef(0);
 
   useEffect(() => {
@@ -112,25 +115,32 @@ export default function StoryTime({ onBack }) {
     setView("ask");
   }
 
+  function goNext() {
+    stopSpeaking();
+    setHelp(null);
+    setFeedback("");
+    const next = question + 1;
+    if (next >= story.questions.length) {
+      setView("done");
+      return;
+    }
+    setQuestion(next);
+    setChoices(mix(story.questions[next].choices));
+  }
+
   function answer(choice) {
+    if (help || feedback) return;
     if (!choice.ok) {
-      setFeedback("Not quite.");
-      speakWord("Not quite. Try again.");
+      // Show the right answer and the story sentence; wait for Next.
+      const found = storyHelp(story.sentences, story.questions[question]);
+      setHelp(found);
+      speakWord(found.say);
       return;
     }
     setFeedback("Yes!");
     speakWord("Yes!");
     window.clearTimeout(wait.current);
-    wait.current = window.setTimeout(() => {
-      const next = question + 1;
-      if (next >= story.questions.length) {
-        setView("done");
-        return;
-      }
-      setQuestion(next);
-      setChoices(mix(story.questions[next].choices));
-      setFeedback("");
-    }, 500);
+    wait.current = window.setTimeout(goNext, 500);
   }
 
   if (view === "list" || !story) {
@@ -207,18 +217,32 @@ export default function StoryTime({ onBack }) {
               >
                 <Icon name="speaker" />
               </button>
-              <button type="button" className="big choice-main" onClick={() => answer(choice)}>
+              <button
+                type="button"
+                className={`big choice-main${help && choice.ok ? " right" : ""}${help && !choice.ok ? " dim" : ""}`}
+                onClick={() => answer(choice)}
+                disabled={Boolean(help)}
+              >
                 <ButtonFace icon="choose">{choice.text}</ButtonFace>
               </button>
             </div>
           ))}
         </div>
-        {feedback && (
-          <p className={feedback === "Yes!" ? "note ok" : "note"}>
-            <span aria-hidden="true">{feedback === "Yes!" ? "🎉 " : "🤔 "}</span>
+        {help ? (
+          <HelpCard answer={help.right} say={help.say} onNext={goNext}>
+            {help.because ? (
+              <p className="help-quote">
+                <span aria-hidden="true">📖 </span>
+                “{help.because}”
+              </p>
+            ) : null}
+          </HelpCard>
+        ) : feedback ? (
+          <p className="note ok">
+            <span aria-hidden="true">🎉 </span>
             {feedback}
           </p>
-        )}
+        ) : null}
       </main>
     );
   }
