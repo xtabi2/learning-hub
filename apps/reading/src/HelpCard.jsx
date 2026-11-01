@@ -1,5 +1,5 @@
 import { speakWord } from "./speech.js";
-import { ButtonFace, Icon } from "./icons.jsx";
+import { Icon } from "./icons.jsx";
 
 /**
  * Shown after a wrong answer: the right answer, why (children), a speaker that
@@ -18,7 +18,7 @@ export default function HelpCard({ answer, say, onNext, children }) {
           <Icon name="speaker" />
         </button>
         <button type="button" className="big help-next" aria-label="Next" onClick={onNext}>
-          <ButtonFace icon="next" emoji="➡️">Next</ButtonFace>
+          <span className="btn-text">Next</span> <span aria-hidden="true">➡️</span>
         </button>
       </div>
     </section>

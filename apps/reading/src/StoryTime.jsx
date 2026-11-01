@@ -133,7 +133,7 @@ export default function StoryTime({ onBack }) {
     if (!choice.ok) {
       // Show the right answer and the story sentence; wait for Next.
       const found = storyHelp(story.sentences, story.questions[question]);
-      setHelp(found);
+      setHelp({ ...found, picked: choice.text });
       speakWord(found.say);
       return;
     }
@@ -219,7 +219,7 @@ export default function StoryTime({ onBack }) {
               </button>
               <button
                 type="button"
-                className={`big choice-main${help && choice.ok ? " right" : ""}${help && !choice.ok ? " dim" : ""}`}
+                className={`big choice-main${help && choice.ok ? " right" : ""}${help && choice.text === help.picked ? " wrong" : ""}${help && !choice.ok && choice.text !== help.picked ? " dim" : ""}`}
                 onClick={() => answer(choice)}
                 disabled={Boolean(help)}
               >
