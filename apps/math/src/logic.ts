@@ -7,6 +7,8 @@ export interface Problem {
   text?: string; visual?: string; key?: string;
   /** Word-bank / algebra metadata. */
   template?: string; theme?: string; kind?: string; speak?: string;
+  /** Object emoji used in picture problems (for visual explanations). */
+  emoji?: string;
   /** Non-numeric answers (patterns, true/false): options are indexes into choices. */
   choices?: string[];
 }

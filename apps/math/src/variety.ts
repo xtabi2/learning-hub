@@ -127,13 +127,13 @@ export function makeFormatted(op: Op, format: Format, level: Level, rng: Rng): P
     const t = pick(rng, THINGS);
     if (level.band === 'PreK' && rng() < 0.5) {
       const n = ri(rng, 1, PREK_COUNT_MAX);
-      return { a: n, b: 0, op: 'add', answer: n, format, key: `count:${n}`,
+      return { a: n, b: 0, op: 'add', answer: n, format, key: `count:${n}`, emoji: t.emoji,
         text: 'How many?', visual: t.emoji.repeat(n), options: makeOptions(n, rng) };
     }
     const f = levelFact(op, level, rng, true);
     if (Math.max(f.a, f.b, f.answer) > VISUAL_MAX || f.a === 0 || f.b === 0) return null;
     const visual = `${t.emoji.repeat(f.a) || ''} ${SYMBOL[op]} ${t.emoji.repeat(f.b) || ''}`;
-    return { ...f, op, format, key: `${f.a}${op}${f.b}`, text: 'How many?', visual, options: makeOptions(f.answer, rng) };
+    return { ...f, op, format, key: `${f.a}${op}${f.b}`, emoji: t.emoji, text: 'How many?', visual, options: makeOptions(f.answer, rng) };
   }
   if (format === 'word') return makeWordProblem(op, level, rng);
   if (format === 'algebra') return makeAlgebraProblem(op, level, rng);

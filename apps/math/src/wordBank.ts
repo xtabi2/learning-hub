@@ -97,6 +97,6 @@ export function makeWordProblem(op: Op, level: Level, rng: Rng): Problem {
   const t = pick(rng, THINGS); const p = pick(rng, NAMES); const q = pick(rng, NAMES.filter(x => x !== p));
   const text = tpl.text({ ...f, t, p, q });
   const visual = style === 'short' ? `${t.emoji.repeat(f.a)} ${SYMBOL[tpl.op]} ${t.emoji.repeat(f.b)}` : undefined;
-  return { ...f, op: tpl.op, format: 'word', key: `${f.a}${tpl.op}${f.b}`, text, visual, template: tpl.id, theme: t.theme,
+  return { ...f, op: tpl.op, format: 'word', key: `${f.a}${tpl.op}${f.b}`, text, visual, emoji: t.emoji, template: tpl.id, theme: t.theme,
     speak: text, options: makeOptions(f.answer, rng) };
 }
