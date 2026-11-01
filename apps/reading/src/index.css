@@ -525,3 +525,12 @@ h1 {
   font-size: 2rem;
   line-height: 1;
 }
+
+/* Spoken-prompt speaker next to a heading or label. */
+.said { display: flex; align-items: center; justify-content: center; gap: 0.4rem; }
+.say {
+  display: inline-grid; place-items: center; flex: none;
+  width: 2.75rem; height: 2.75rem; padding: 0; border: 0; border-radius: 999px;
+  background: #e3f2fd; color: #1565c0; cursor: pointer;
+}
+.say .icon { width: 1.6rem; height: 1.6rem; }

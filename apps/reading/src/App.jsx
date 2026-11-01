@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { getLevel, hub, readingGradeId } from "../../../shared/index.js";
-import { grades, wordsForLevel } from "./words.js";
-import { allClassWords, lessons } from "./class-words.js";
+import { grades, underlines, wordsForLevel } from "./words.js";
 import FlashCards from "./FlashCards.jsx";
 import SentenceBuilder from "./SentenceBuilder.jsx";
 import StoryTime from "./StoryTime.jsx";
 import { ButtonFace } from "./icons.jsx";
+import Say from "./Say.jsx";
 
 const gradeMark = { k: "K", 1: "1", 2: "2", 3: "3" };
 
@@ -38,16 +38,7 @@ export default function App() {
       id: grade.id,
       label: grade.label,
       backTo: "decks",
-      words: words.map((text) => ({ text })),
-    });
-  }
-
-  function openLesson(lesson) {
-    openDeck({
-      id: lesson.id,
-      label: lesson.label,
-      backTo: "class",
-      words: lesson.words,
+      words: words.map((text) => (grade.id === "1" && underlines[text] ? { text, underline: underlines[text] } : { text })),
     });
   }
 
@@ -68,40 +59,6 @@ export default function App() {
     return <SentenceBuilder key={deck.id} deck={deck} onBack={leaveDeck} />;
   }
 
-  if (screen === "class") {
-    return (
-      <main className="app">
-        <div className="top">
-          <button type="button" className="big alt grades" onClick={() => setScreen("decks")}>
-            <ButtonFace icon="back">Back</ButtonFace>
-          </button>
-        </div>
-        <h1>Class Words</h1>
-        <div className="grid">
-          {lessons.map((lesson, index) => (
-            <button key={lesson.id} type="button" className="big" onClick={() => openLesson(lesson)}>
-              <ButtonFace icon={`badge-${index + 1}`}>{lesson.label}</ButtonFace>
-            </button>
-          ))}
-          <button
-            type="button"
-            className="big wide"
-            onClick={() =>
-              openDeck({
-                id: "class-all",
-                label: "All together",
-                backTo: "class",
-                words: allClassWords(),
-              })
-            }
-          >
-            <ButtonFace icon="together">All together</ButtonFace>
-          </button>
-        </div>
-      </main>
-    );
-  }
-
   if (screen === "decks") {
     return (
       <main className="app">
@@ -110,7 +67,10 @@ export default function App() {
             <ButtonFace icon="home">Back</ButtonFace>
           </button>
         </div>
-        <h1>{mode === "sentence" ? "Build a Sentence" : "Flash Cards"}</h1>
+        <h1 className="said">
+          {mode === "sentence" ? "Build a Sentence" : "Flash Cards"}
+          <Say text="Tap your star words." />
+        </h1>
         {player() ? <p className="sub">Hi, {player().name}! Your grade is highlighted.</p> : null}
         <div className="grid">
           {grades.map((grade) => (
@@ -124,9 +84,6 @@ export default function App() {
               <ButtonFace icon={`badge-${gradeMark[grade.id] ?? grade.id}`}>{grade.label}</ButtonFace>
             </button>
           ))}
-          <button type="button" className="big alt wide" onClick={() => setScreen("class")}>
-            <ButtonFace icon="abc">Class Words</ButtonFace>
-          </button>
         </div>
       </main>
     );
@@ -134,7 +91,10 @@ export default function App() {
 
   return (
     <main className="app">
-      <h1>Sight Words</h1>
+      <h1 className="said">
+        Sight Words
+        <Say text={`${player() ? `Hi, ${player().name}! ` : ""}Pick a game: flash cards, build a sentence, or story time.`} />
+      </h1>
       {player() ? <p className="sub">Hi, {player().name}!</p> : null}
       <div className="stack">
         <button type="button" className="big" onClick={() => pickMode("cards")}>

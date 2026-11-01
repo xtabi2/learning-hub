@@ -23,21 +23,15 @@ Ohio's [Department of Education and Workforce](https://education.ohio.gov/) does
 
 Big Walnut's assessment photos cover kindergarten through 2nd grade. 3rd grade uses Edward William Dolch's third-grade list from "A Basic Sight Vocabulary," *The Elementary School Journal* 36, no. 6 (1936): 456–460 (a readable reprint is [sightwords.com](https://sightwords.com/sight-words/dolch/)). That is the list Ohio districts commonly use when the state does not publish its own.
 
-## Class Words
+## 1st grade class words
 
-Class Words is a separate deck from the child's Core Knowledge Language Arts (CKLA) take-home word cards:
-
-| Set | Words |
-| --- | --- |
-| Skills 1, lesson 25.1 | 12 |
-| Skills 2, lesson 1.1 | 12 |
-| All together | 22 |
-
-All together plays both lessons and keeps the first copy of a repeated word. `the` and `all` appear on both sheets, so they are practiced once in that set.
-
-Tricky letters stay underlined on the card, matching the sheets: the *a* in all, the *wo* in two, the final *e* in have, the *e* in the, and the whole word one.
+Madison's 1st grade Core Knowledge Language Arts (CKLA) take-home words (Skills 1 lesson 25.1 and Skills 2 lesson 1.1, in `src/class-words.js`) are part of the 1st Grade deck, not a separate deck. Words already on the 1st grade list are not repeated, and a 1st grader's own deck always includes them. Tricky letters stay underlined on 1st Grade cards, matching the sheets.
 
 Add a later lesson by appending an object to the `lessons` array in `src/class-words.js`.
+
+## Pre-K and K
+
+Pre-K uses the Kindergarten words and Kindergarten stories. Pre-K and K kids hear the prompts read aloud (with a speaker button to replay) and get picture feedback, so text is never the only instruction.
 
 ## Build a Sentence
 

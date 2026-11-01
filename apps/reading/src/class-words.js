@@ -1,4 +1,4 @@
-// Class Words from the child's CKLA take-home sheets.
+// Class words from Madison's 1st grade CKLA take-home sheets. words.js rolls them into 1st grade.
 // Add another object to this array to include a later lesson.
 // `underline` is the [start, end) range of the tricky letters on the sheet.
 // All together keeps the first copy of a word and skips later duplicates.

@@ -4,6 +4,7 @@ import { formatSentence, gradeSentence } from "./grade-sentence.js";
 import { dealOrder, mixHand, setKey } from "./sentence-sets.js";
 import { speakWord, stopSpeaking } from "./speech.js";
 import { ButtonFace, Icon } from "./icons.jsx";
+import Say from "./Say.jsx";
 import { loadRecent, rememberRecent, sentenceBucket } from "./variety.js";
 
 const storage = typeof localStorage !== "undefined" ? localStorage : undefined;
@@ -130,6 +131,7 @@ export default function SentenceBuilder({ deck, onBack }) {
   function check() {
     const result = gradeSentence(built);
     setNote(result);
+    speakWord(result.message);
     if (!result.ok) return;
     const child = hub().getCurrentChild();
     if (!child) return;
@@ -151,6 +153,7 @@ export default function SentenceBuilder({ deck, onBack }) {
         </button>
         <div className="progress">
           <span>{deck.label}</span>
+          <Say text="Tap the words to make a sentence." />
         </div>
       </div>
       <div className="chips" aria-label="Words">
@@ -177,7 +180,12 @@ export default function SentenceBuilder({ deck, onBack }) {
           </button>
         ))}
       </div>
-      {note && <p className={note.ok ? "note ok" : "note"}>{note.message}</p>}
+      {note && (
+        <p className={note.ok ? "note ok" : "note"}>
+          <span aria-hidden="true">{note.ok ? "🎉 " : "🤔 "}</span>
+          {note.message}
+        </p>
+      )}
       <button type="button" className="big speak" onClick={readAloud} disabled={!built.length}>
         <ButtonFace icon="speaker">Read it to me</ButtonFace>
       </button>

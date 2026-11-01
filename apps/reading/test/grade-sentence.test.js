@@ -3,16 +3,12 @@ import test from "node:test";
 import { gradeSentence, formatSentence, isAcceptable } from "../src/grade-sentence.js";
 import { dealOrder, mixHand, sentenceSets, sentenceTemplateCount, setKey } from "../src/sentence-sets.js";
 import { grades } from "../src/words.js";
-import { allClassWords, lessons } from "../src/class-words.js";
 
 const decks = {
   k: grades.find((grade) => grade.id === "k").words,
   1: grades.find((grade) => grade.id === "1").words,
   2: grades.find((grade) => grade.id === "2").words,
   3: grades.find((grade) => grade.id === "3").words,
-  "skills-1-25.1": lessons[0].words.map((word) => word.text),
-  "skills-2-1.1": lessons[1].words.map((word) => word.text),
-  "class-all": allClassWords().map((word) => word.text),
 };
 
 function accept(words) {
@@ -188,8 +184,8 @@ test("recent sentences are dealt after fresh ones", () => {
   assert.equal(seenRecent, true);
 });
 
-test("class words together include both lessons", () => {
-  const have = new Set(decks["class-all"].map((word) => word.toLowerCase()));
-  assert.equal(have.has("pigs") && have.has("sheep") && have.has("the"), true);
-  assert.equal(new Set(decks["class-all"]).size, decks["class-all"].length);
+test("1st grade deck has class words once each", () => {
+  const have = new Set(decks[1].map((word) => word.toLowerCase()));
+  assert.equal(have.has("pigs") && have.has("sheep") && have.has("long"), true);
+  assert.equal(new Set(decks[1]).size, decks[1].length);
 });
