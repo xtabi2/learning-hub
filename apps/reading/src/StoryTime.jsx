@@ -5,6 +5,7 @@ import { pickStories, recentStories, rememberStory } from "./story-rotation.js";
 import StoryArt from "./StoryArt.jsx";
 import { speakSequence, speakWord, stopSpeaking } from "./speech.js";
 import { ButtonFace, Icon } from "./icons.jsx";
+import Say, { isPreReader } from "./Say.jsx";
 
 function mix(items) {
   const copy = [...items];
@@ -50,6 +51,12 @@ export default function StoryTime({ onBack }) {
   const [choices, setChoices] = useState([]);
   const [feedback, setFeedback] = useState("");
   const wait = useRef(0);
+
+  useEffect(() => {
+    if (view !== "ask" || !story || !isPreReader(kid)) return undefined;
+    const t = window.setTimeout(() => speakWord(story.questions[question].prompt), 300);
+    return () => window.clearTimeout(t);
+  }, [view, question, story]);
 
   useEffect(() => () => {
     window.clearTimeout(wait.current);
@@ -108,9 +115,11 @@ export default function StoryTime({ onBack }) {
   function answer(choice) {
     if (!choice.ok) {
       setFeedback("Not quite.");
+      speakWord("Not quite. Try again.");
       return;
     }
     setFeedback("Yes!");
+    speakWord("Yes!");
     window.clearTimeout(wait.current);
     wait.current = window.setTimeout(() => {
       const next = question + 1;
@@ -132,7 +141,10 @@ export default function StoryTime({ onBack }) {
             <ButtonFace icon="home">Back</ButtonFace>
           </button>
         </div>
-        <h1>Story Time</h1>
+        <h1 className="said">
+          Story Time
+          <Say text="Pick a story." />
+        </h1>
         <div className="stack">
           {picks.map((item) => (
             <button key={item.id} type="button" className="big story-name" onClick={() => open(item)}>
@@ -157,7 +169,10 @@ export default function StoryTime({ onBack }) {
             <polygon points="40,6 49,30 74,30 54,46 62,70 40,56 18,70 26,46 6,30 31,30" fill="#ffca28" />
           </svg>
         </div>
-        <h1>You did it!</h1>
+        <h1 className="said">
+          You did it!
+          <Say text="You did it!" />
+        </h1>
         <button type="button" className="big" onClick={backToList}>
           <ButtonFace icon="book">Stories</ButtonFace>
         </button>
@@ -198,7 +213,12 @@ export default function StoryTime({ onBack }) {
             </div>
           ))}
         </div>
-        {feedback && <p className={feedback === "Yes!" ? "note ok" : "note"}>{feedback}</p>}
+        {feedback && (
+          <p className={feedback === "Yes!" ? "note ok" : "note"}>
+            <span aria-hidden="true">{feedback === "Yes!" ? "🎉 " : "🤔 "}</span>
+            {feedback}
+          </p>
+        )}
       </main>
     );
   }

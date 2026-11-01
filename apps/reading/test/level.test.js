@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { grades, wordsForLevel } from "../src/words.js";
+import { grades, underlines, wordsForLevel } from "../src/words.js";
+import { allClassWords } from "../src/class-words.js";
 import { storyLevelFor } from "../src/stories.js";
 
 const list = (id) => grades.find((g) => g.id === id).words;
@@ -21,7 +22,8 @@ test("sight words stay inside the lists and grow through the year in order", () 
 test("early 1st grade reviews all K words plus the start of the 1st grade list", () => {
   const words = wordsForLevel({ grade: "1", progress: 0.32 });
   for (const w of list("k")) assert.ok(words.includes(w));
-  const g1 = list("1");
+  const extra = new Set(allClassWords().map((w) => w.text));
+  const g1 = list("1").filter((w) => !extra.has(w) || ["long", "have"].includes(w));
   const n = Math.ceil(g1.length * 0.32);
   for (const w of g1.slice(0, n)) assert.ok(words.includes(w));
   assert.ok(!words.includes(g1[g1.length - 1]) || list("k").includes(g1[g1.length - 1]));
@@ -29,15 +31,25 @@ test("early 1st grade reviews all K words plus the start of the 1st grade list",
   for (const w of g1) assert.ok(full.includes(w));
 });
 
-test("Pre-K gets a small slice of the K list from its start", () => {
-  const words = wordsForLevel({ grade: "PreK", progress: 0.32 });
-  assert.deepEqual(words, list("k").slice(0, words.length));
-  assert.ok(words.length >= 10 && words.length < list("k").length);
+test("Pre-K gets the same Kindergarten deck as K", () => {
+  for (const progress of [0, 0.32, 1]) {
+    assert.deepEqual(wordsForLevel({ grade: "PreK", progress }), wordsForLevel({ grade: "K", progress }));
+  }
+});
+
+test("1st grade deck includes the class words at any point in the year", () => {
+  for (const progress of [0, 0.32, 1]) {
+    const words = wordsForLevel({ grade: "1", progress });
+    for (const w of allClassWords()) assert.ok(words.includes(w.text), w.text);
+  }
+  assert.deepEqual(underlines.two, [1, 3]);
+  assert.ok(!grades.some((g) => /class/i.test(g.label)));
 });
 
 test("story level reviews last year early on", () => {
   assert.equal(storyLevelFor({ grade: "1", progress: 0.32 }), "k");
   assert.equal(storyLevelFor({ grade: "1", progress: 0.5 }), "1");
   assert.equal(storyLevelFor({ grade: "PreK", progress: 0.32 }), "k");
+  assert.equal(storyLevelFor({ grade: "PreK", progress: 0.9 }), storyLevelFor({ grade: "K", progress: 0.9 }));
   assert.equal(storyLevelFor({ grade: "3", progress: 0.1 }), "2");
 });

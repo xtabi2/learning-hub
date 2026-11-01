@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { hub } from "../../../shared/index.js";
 import { speakWord, stopSpeaking } from "./speech.js";
 import { ButtonFace, Icon } from "./icons.jsx";
+import { isPreReader } from "./Say.jsx";
 import { cardBucket, loadRecent, planCards, rememberRecent } from "./variety.js";
 
 const SWIPE_PX = 48;
@@ -61,6 +62,13 @@ export default function FlashCards({ deck, onBack }) {
       return next;
     });
   }
+
+  // Pre-readers hear each new card once; the speaker button replays it.
+  useEffect(() => {
+    if (!card?.word?.text || !isPreReader()) return undefined;
+    const t = window.setTimeout(() => speakWord(card.word.text), 400);
+    return () => window.clearTimeout(t);
+  }, [index]);
 
   useEffect(() => {
     markPracticed(index);

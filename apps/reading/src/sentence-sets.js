@@ -5,18 +5,16 @@
 
 import { gradeSentence, isAcceptable } from "./grade-sentence.js";
 import { grades } from "./words.js";
-import { allClassWords, lessons } from "./class-words.js";
 import { orderByFreshness, shuffle } from "./variety.js";
 
 function asSet(list) {
   return new Set(list.map((word) => (typeof word === "string" ? word : word.text).toLowerCase()));
 }
 
-const deckWords = {
-  "class-all": asSet(allClassWords()),
-};
+const deckWords = {};
 for (const grade of grades) deckWords[grade.id] = asSet(grade.words);
-for (const lesson of lessons) deckWords[lesson.id] = asSet(lesson.words);
+// A 1st grader's own deck also reviews Kindergarten words (used for the class-word sentences).
+deckWords["1-review"] = asSet([...grades[0].words, ...grades[1].words]);
 
 const hands = new Map();
 let sentenceTemplateCount = 0;
@@ -239,42 +237,42 @@ for (const look of KEEP) {
 }
 
 for (const verb of ["run", "kick", "sniff"]) {
-  addSentence(["skills-1-25.1"], ["the", "strong", "pigs", verb]);
-  addSentence(["skills-1-25.1"], ["two", "strong", "pigs", verb]);
-  addSentence(["skills-1-25.1"], ["all", "the", "pigs", verb]);
-  addSentence(["skills-1-25.1"], ["his", "strong", "pigs", verb]);
-  addSentence(["skills-1-25.1"], ["all", "strong", "pigs", verb]);
-  addSentence(["skills-1-25.1"], ["the", "pigs", verb], ["legs"]);
+  addSentence(["1-review"], ["the", "strong", "pigs", verb]);
+  addSentence(["1-review"], ["two", "strong", "pigs", verb]);
+  addSentence(["1-review"], ["all", "the", "pigs", verb]);
+  addSentence(["1-review"], ["his", "strong", "pigs", verb]);
+  addSentence(["1-review"], ["all", "strong", "pigs", verb]);
+  addSentence(["1-review"], ["the", "pigs", verb], ["legs"]);
 }
-addSentence(["skills-1-25.1"], ["the", "pigs", "have", "legs"]);
-addSentence(["skills-1-25.1"], ["all", "pigs", "have", "legs"]);
-addSentence(["skills-1-25.1"], ["two", "pigs", "have", "legs"]);
-addSentence(["skills-1-25.1"], ["his", "pigs", "have", "legs"]);
-addSentence(["skills-1-25.1"], ["strong", "pigs", "have", "legs"]);
+addSentence(["1-review"], ["the", "pigs", "have", "legs"]);
+addSentence(["1-review"], ["all", "pigs", "have", "legs"]);
+addSentence(["1-review"], ["two", "pigs", "have", "legs"]);
+addSentence(["1-review"], ["his", "pigs", "have", "legs"]);
+addSentence(["1-review"], ["strong", "pigs", "have", "legs"]);
 
-addSentence(["skills-2-1.1"], ["the", "long", "sheep", "sleep"]);
-addSentence(["skills-2-1.1"], ["all", "the", "sheep", "sleep"]);
-addSentence(["skills-2-1.1"], ["three", "long", "sheep", "sleep"]);
-addSentence(["skills-2-1.1"], ["all", "long", "sheep", "sleep"]);
-addSentence(["skills-2-1.1"], ["the", "sheep", "sleep"], ["deep", "eel", "week", "one"]);
-addSentence(["skills-2-1.1"], ["all", "sheep", "sleep"], ["deep", "eel", "week"]);
-addSentence(["skills-2-1.1"], ["three", "sheep", "sleep"], ["deep", "eel", "one"]);
-addSentence(["skills-2-1.1"], ["long", "sheep", "sleep"], ["deep", "eel", "week"]);
+addSentence(["1-review"], ["the", "long", "sheep", "sleep"]);
+addSentence(["1-review"], ["all", "the", "sheep", "sleep"]);
+addSentence(["1-review"], ["three", "long", "sheep", "sleep"]);
+addSentence(["1-review"], ["all", "long", "sheep", "sleep"]);
+addSentence(["1-review"], ["the", "sheep", "sleep"], ["deep", "eel", "week", "one"]);
+addSentence(["1-review"], ["all", "sheep", "sleep"], ["deep", "eel", "week"]);
+addSentence(["1-review"], ["three", "sheep", "sleep"], ["deep", "eel", "one"]);
+addSentence(["1-review"], ["long", "sheep", "sleep"], ["deep", "eel", "week"]);
 
 for (const verb of ["run", "kick", "sniff", "sleep"]) {
-  addSentence(["class-all"], ["the", "long", "pigs", verb]);
-  addSentence(["class-all"], ["all", "the", "sheep", verb]);
-  addSentence(["class-all"], ["the", "sheep", verb], ["strong"]);
-  addSentence(["class-all"], ["two", "sheep", verb], ["long"]);
-  addSentence(["class-all"], ["three", "pigs", verb], ["strong"]);
+  addSentence(["1-review"], ["the", "long", "pigs", verb]);
+  addSentence(["1-review"], ["all", "the", "sheep", verb]);
+  addSentence(["1-review"], ["the", "sheep", verb], ["strong"]);
+  addSentence(["1-review"], ["two", "sheep", verb], ["long"]);
+  addSentence(["1-review"], ["three", "pigs", verb], ["strong"]);
 }
-addSentence(["class-all"], ["the", "pigs", "have", "teeth"]);
-addSentence(["class-all"], ["the", "sheep", "have", "teeth"]);
-addSentence(["class-all"], ["all", "sheep", "have", "teeth"]);
-addSentence(["class-all"], ["his", "sheep", "have", "teeth"]);
-addSentence(["class-all"], ["two", "pigs", "have", "teeth"]);
-addSentence(["class-all"], ["his", "pigs", "have", "teeth"]);
-addSentence(["class-all"], ["the", "strong", "sheep", "sleep"]);
+addSentence(["1-review"], ["the", "pigs", "have", "teeth"]);
+addSentence(["1-review"], ["the", "sheep", "have", "teeth"]);
+addSentence(["1-review"], ["all", "sheep", "have", "teeth"]);
+addSentence(["1-review"], ["his", "sheep", "have", "teeth"]);
+addSentence(["1-review"], ["two", "pigs", "have", "teeth"]);
+addSentence(["1-review"], ["his", "pigs", "have", "teeth"]);
+addSentence(["1-review"], ["the", "strong", "sheep", "sleep"]);
 
 export const sentenceSets = [...hands.values()];
 export { sentenceTemplateCount };
