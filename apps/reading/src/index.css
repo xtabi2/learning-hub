@@ -547,3 +547,6 @@ h1 {
 .big.help-next { flex: 1; max-width: 320px; margin: 0; background: #43a047; box-shadow: 0 5px 0 #2e7d32; }
 .big.choice-main.right { background: #43a047; box-shadow: 0 5px 0 #2e7d32; opacity: 1; }
 .big.choice-main.dim { opacity: 0.45; }
+.big.choice-main.right, .big.choice-main.wrong { color: #fff; opacity: 1; }
+.big.choice-main.wrong { background: #e53935; box-shadow: 0 5px 0 #b71c1c; }
+.big.help-next { flex-direction: row; gap: 10px; font-size: 1.9rem; }
