@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getLevel, hub } from '../../../shared/index.js';
 import { Mode, Problem, Result, summarize, answerText } from './logic';
 import { speakWord, stopSpeaking } from '../../reading/src/speech.js';
+import { explain } from './explain';
 import { levelFor, loadRecent, makeVariedRound, modesForLevel, newSeed, saveRecent, seededRng } from './variety';
 
 const storage = typeof localStorage !== 'undefined' ? localStorage : undefined;
@@ -24,6 +25,7 @@ export default function App() {
   const player = hub().getCurrentChild();
   const lv = getLevel(player);
   const level = levelFor(lv.grade, lv.progress);
+  const young = lv.grade === 'PreK' || lv.grade === 'K';
   const modes = MODES.filter(m => modesForLevel(level).includes(m.id));
   const start = (m: Mode) => {
     // Fresh seed every session, skip this kid's recent problems, mixed formats, shuffled order.
@@ -49,10 +51,14 @@ export default function App() {
     const p = round[idx];
     const r: Result = { problem: p, chosen: v, correct: v === p.answer, ms: Math.round(performance.now() - shownAt.current) };
     setResults(rs => [...rs, r]); setFeedback(r);
-    setTimeout(() => {
-      setFeedback(null);
-      if (idx + 1 >= round.length) setScreen('done'); else setIdx(i => i + 1);
-    }, r.correct ? 700 : 1600);
+    // Right answers move on by themselves; wrong answers wait for the Next button.
+    if (r.correct) setTimeout(next, 700);
+    else speakWord(explain(p, young).say);
+  };
+  const next = () => {
+    stopSpeaking();
+    setFeedback(null);
+    if (idx + 1 >= round.length) setScreen('done'); else setIdx(idx + 1);
   };
 
   if (screen === 'start') return (
@@ -75,10 +81,7 @@ export default function App() {
           {p.format === 'word' || p.speak ? (
             <button type="button" className="read-aloud" aria-label="Read aloud" title="Read aloud"
               onClick={() => speakWord(p.speak ?? p.text ?? '')}>
-              <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
-                <path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor" />
-                <path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
-              </svg>
+              <SpeakerIcon />
               <span>Read to me</span>
             </button>
           ) : null}
@@ -86,9 +89,22 @@ export default function App() {
         <div className={`grid answers ${p.choices ? 'choices' : ''}`}>{p.options.map(o => (
           <button key={o} className={`big ans ${feedback && o === p.answer ? 'right' : ''} ${feedback && o === feedback.chosen && !feedback.correct ? 'wrong' : ''}`}
             onClick={() => choose(o)} disabled={!!feedback}>{p.choices ? p.choices[o] : o}</button>))}</div>
-        <div className="feedback" aria-live="polite">
-          {feedback && (feedback.correct ? '🎉 Great job!' : `Oops! The answer is ${p.choices ? p.choices[p.answer] : p.answer}${p.key?.startsWith('count:') || p.format === 'algebra' ? '' : ` (${answerText(p)})`}`)}
-        </div>
+        {feedback && !feedback.correct ? (() => {
+          const e = explain(p, young);
+          return (
+            <section className="explain" aria-live="polite" data-testid="explain">
+              <div className="explain-answer"><span aria-hidden="true">✅</span> {e.answer}</div>
+              {e.visual ? <div className="explain-visual" aria-label={e.visual}>{e.visual}</div> : null}
+              <p className="explain-text">{e.text}</p>
+              <div className="explain-actions">
+                <button type="button" className="speaker" aria-label="Read to me" title="Read to me" onClick={() => speakWord(e.say)}>
+                  <SpeakerIcon />
+                </button>
+                <button type="button" className="big next" aria-label="Next" onClick={next}>Next <span aria-hidden="true">➡️</span></button>
+              </div>
+            </section>
+          );
+        })() : <div className="feedback" aria-live="polite">{feedback?.correct ? '🎉 Great job!' : ''}</div>}
       </main>
     );
   }
@@ -109,5 +125,14 @@ export default function App() {
         <button className="big alt" onClick={() => setScreen('start')}>Change operation</button>
       </div>
     </main>
+  );
+}
+
+function SpeakerIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false">
+      <path d="M3 9v6h4l5 4V5L7 9H3z" fill="currentColor" />
+      <path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
+    </svg>
   );
 }
