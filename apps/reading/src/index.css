@@ -534,3 +534,16 @@ h1 {
   background: #e3f2fd; color: #1565c0; cursor: pointer;
 }
 .say .icon { width: 1.6rem; height: 1.6rem; }
+
+/* Wrong-answer help card */
+.help { margin: 14px 0; padding: 14px 12px; background: #fff; border: 5px solid #43a047; border-radius: 22px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); }
+.help-answer { margin: 0 0 6px; font-size: clamp(1.6rem, 7vw, 2.2rem); font-weight: 800; color: #2e7d32; }
+.help-quote { margin: 6px 0; font-size: clamp(1.2rem, 5vw, 1.5rem); font-style: italic; color: #4e342e; }
+.help-why { margin: 6px 0; font-size: 1.2rem; color: #6d4c41; }
+.help-words { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 6px 0; }
+.help-actions { display: flex; gap: 12px; align-items: center; justify-content: center; margin-top: 10px; }
+.help-speaker { width: 72px; height: 72px; flex: none; border: none; border-radius: 50%; background: #ffe082; color: #4e342e; box-shadow: 0 4px 0 #ffca28; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.help-speaker .icon { width: 2.2rem; height: 2.2rem; }
+.big.help-next { flex: 1; max-width: 320px; margin: 0; background: #43a047; box-shadow: 0 5px 0 #2e7d32; }
+.big.choice-main.right { background: #43a047; box-shadow: 0 5px 0 #2e7d32; opacity: 1; }
+.big.choice-main.dim { opacity: 0.45; }
