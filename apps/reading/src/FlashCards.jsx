@@ -34,11 +34,11 @@ export default function FlashCards({ deck, onBack }) {
   const [cards] = useState(() => planCards(deck.words, loadRecent(storage, who.current, cardBucket(deck.id))));
   const [index, setIndex] = useState(0);
   const [speaking, setSpeaking] = useState(false);
-  const [streak, setStreak] = useState(0);
   const [celebrate, setCelebrate] = useState(false);
   const drag = useRef(null);
   const speakWatch = useRef(0);
   const cheer = useRef(0);
+  const seenCount = useRef(0);
   const practiced = useRef(new Set());
   const card = cards[index];
 
@@ -52,15 +52,12 @@ export default function FlashCards({ deck, onBack }) {
     if (child) {
       hub().recordProgress(child.id, { reading: { practicedWords: [seen.word.text] } });
     }
-    setStreak((current) => {
-      const next = current + 1;
-      if (next === 3 || next % 5 === 0) {
-        setCelebrate(true);
-        window.clearTimeout(cheer.current);
-        cheer.current = window.setTimeout(() => setCelebrate(false), 1300);
-      }
-      return next;
-    });
+    const next = (seenCount.current += 1);
+    if (next === 3 || next % 5 === 0) {
+      setCelebrate(true);
+      window.clearTimeout(cheer.current);
+      cheer.current = window.setTimeout(() => setCelebrate(false), 1300);
+    }
   }
 
   // Pre-readers hear each new card once; the speaker button replays it.
@@ -166,13 +163,6 @@ export default function FlashCards({ deck, onBack }) {
           <span>
             {index + 1} of {cards.length}
           </span>
-          {streak > 0 ? (
-            <span className="streak" aria-label={`${streak} in a row`}>
-              {Array.from({ length: Math.min(streak, 5) }, (_, star) => (
-                <Icon key={star} name="star" />
-              ))}
-            </span>
-          ) : null}
         </div>
       </div>
       <div className={`card theme-${card.theme}`} aria-live="polite">

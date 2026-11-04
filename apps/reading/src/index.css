@@ -275,19 +275,6 @@ h1 {
   animation: bob 0.55s ease-in-out 2;
 }
 
-.streak {
-  display: flex;
-  justify-content: flex-end;
-  gap: 2px;
-  min-height: 22px;
-}
-
-.streak .icon {
-  width: 22px;
-  height: 22px;
-  color: #ffb300;
-}
-
 .tricky {
   text-decoration: underline;
   text-decoration-thickness: 0.12em;
