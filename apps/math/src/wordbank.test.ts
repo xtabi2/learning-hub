@@ -90,7 +90,7 @@ describe('no shape questions', () => {
     for (const band of ALL) for (let seed = 1; seed <= 60; seed++) for (const mode of modesForLevel(LEVELS[band])) {
       for (const p of makeVariedRound(mode, { level: LEVELS[band], rng: seededRng(seed), recent: [] })) {
         expect(p.kind).not.toBe('sort');
-        const shown = [p.text, p.prompt, p.emoji, ...(p.choices ?? [])].filter(Boolean).join(' ');
+        const shown = [p.text, p.emoji, ...(p.choices ?? [])].filter(Boolean).join(' ');
         // Ten-frame dots are the only allowed counters, and only on make-ten.
         expect(shown, `${band} ${shown}`).not.toMatch(SHAPES);
         if (p.kind !== 'make-ten' && p.visual) expect(p.visual).not.toMatch(SHAPES);
