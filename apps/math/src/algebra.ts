@@ -5,27 +5,17 @@ import type { Band, Level, Rng } from './variety';
 /**
  * "Algebraic thinking" problems, following Ohio's Operations and Algebraic Thinking strands:
  * patterns, the equal sign (true/false), unknowns in any position, fact families, and making 10.
- * Pre-K gets only picture patterns and sorting.
+ * Pre-K gets counting-number patterns and true/false. No shape or odd-one-out questions.
  */
-export type AlgebraKind = 'pattern' | 'sort' | 'true-false' | 'unknown' | 'fact-family' | 'make-ten';
+export type AlgebraKind = 'pattern' | 'true-false' | 'unknown' | 'fact-family' | 'make-ten';
 
 export const KINDS_BY_BAND: Record<Band, AlgebraKind[]> = {
-  PreK: ['pattern', 'sort'],
+  PreK: ['pattern', 'true-false'],
   K: ['pattern', 'true-false', 'unknown', 'make-ten'],
   '1': ['pattern', 'true-false', 'unknown', 'fact-family', 'make-ten'],
   '2': ['pattern', 'true-false', 'unknown', 'fact-family', 'make-ten'],
   '3': ['pattern', 'true-false', 'unknown', 'fact-family', 'make-ten'],
   none: ['pattern', 'true-false', 'unknown', 'fact-family', 'make-ten'],
-};
-
-export const PATTERN_SHAPES = ['🔴', '🔵', '🟡', '🟢', '🟣', '⭐', '❤️', '🔺', '🟦', '🌙'];
-/** Units for picture patterns: AB, AAB, ABB, ABC. */
-export const PATTERN_UNITS = [[0, 1], [0, 0, 1], [0, 1, 1], [0, 1, 2]];
-export const SORT_GROUPS: Record<string, string[]> = {
-  fruit: ['🍎', '🍌', '🍓', '🍇', '🍐', '🍊'],
-  animals: ['🐶', '🐱', '🐰', '🐸', '🐢', '🦆'],
-  vehicles: ['🚗', '🚌', '🚀', '🚲', '🚂', '⛵'],
-  shapes: ['🔴', '🔵', '🟡', '🟢', '🟣', '🟠'],
 };
 
 const ri = (rng: Rng, lo: number, hi: number) => lo + Math.floor(rng() * (hi - lo + 1));
@@ -45,29 +35,14 @@ function numberProblem(kind: AlgebraKind, op: Op, a: number, b: number, answer: 
 }
 
 function pattern(level: Level, rng: Rng): Problem {
-  if (level.band === 'PreK' || level.band === 'K' && rng() < 0.5) {
-    const unit = pick(rng, PATTERN_UNITS);
-    const shapes = shuffle(PATTERN_SHAPES, rng).slice(0, 3);
-    const seq = Array.from({ length: unit.length * 2 + 1 }, (_, i) => shapes[unit[i % unit.length]]);
-    const next = shapes[unit[seq.length % unit.length]];
-    const choices = [...new Set([next, ...shapes.slice(0, Math.max(...unit) + 1), shapes[2]])].slice(0, 3);
-    return choiceProblem('pattern', 'What comes next?', `${seq.join(' ')} ❓`, choices, next, rng);
-  }
   const max = level.addMax;
-  const steps = level.band === 'K' ? [1] : level.band === '1' ? [1, 2, 5] : level.band === '2' ? [2, 5, 10] : [2, 3, 4, 5, 10, 25];
+  const steps = level.band === 'PreK' || level.band === 'K' ? [1] : level.band === '1' ? [1, 2, 5] : level.band === '2' ? [2, 5, 10] : [2, 3, 4, 5, 10, 25];
   const step = pick(rng, steps.filter(s => s * 4 <= max));
-  const down = level.band !== 'K' && rng() < 0.3;
+  const down = level.band !== 'PreK' && level.band !== 'K' && rng() < 0.3;
   const start = down ? ri(rng, step * 4, max) : ri(rng, 0, max - step * 4);
   const seq = [0, 1, 2, 3].map(i => down ? start - i * step : start + i * step);
   const answer = down ? start - 4 * step : start + 4 * step;
   return numberProblem('pattern', down ? 'sub' : 'add', seq[3], step, answer, `${seq.join(', ')}, __`, rng);
-}
-
-function sort(rng: Rng): Problem {
-  const [g1, g2] = shuffle(Object.keys(SORT_GROUPS), rng);
-  const same = shuffle(SORT_GROUPS[g1], rng).slice(0, 3);
-  const odd = pick(rng, SORT_GROUPS[g2]);
-  return choiceProblem('sort', 'Which one does not belong?', undefined, [...same, odd], odd, rng);
 }
 
 const result = (op: Op, a: number, b: number) => ({ add: a + b, sub: a - b, mul: a * b, div: a / b })[op];
@@ -76,7 +51,7 @@ function trueFalse(op: Op, level: Level, rng: Rng): Problem {
   const f = storyNumbers(op, level, rng);
   const v = f.answer;
   const truth = rng() < 0.5;
-  const target = truth ? v : (v <= 1 || rng() < 0.5 ? v + 1 : v - 1);
+  const target = truth ? v : (v <= 1 || (v < level.addMax && rng() < 0.5) ? v + 1 : v - 1);
   // Right side: another addition with the target value, different from the left when possible.
   const c = ri(rng, 0, target); const d = target - c;
   const right = rng() < 0.2 && level.band !== 'K' ? `${target}` : `${c} + ${d}`;
@@ -125,7 +100,6 @@ export function makeAlgebraProblem(op: Op, level: Level, rng: Rng, kind?: Algebr
   const k = kind ?? pick(rng, KINDS_BY_BAND[level.band]);
   switch (k) {
     case 'pattern': return pattern(level, rng);
-    case 'sort': return sort(rng);
     case 'true-false': return trueFalse(op, level, rng);
     case 'unknown': return unknown(op, level, rng);
     case 'fact-family': return factFamily(op, level, rng);

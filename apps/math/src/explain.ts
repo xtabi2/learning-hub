@@ -1,11 +1,10 @@
 import { Op, Problem, SYMBOL } from './logic';
-import { SORT_GROUPS } from './algebra';
 
 /** What a kid sees (and hears) after a wrong answer: the right answer and a short why. */
 export interface Explanation {
   /** The correct answer as shown on its button. */
   answer: string;
-  /** Picture explanation (emoji / dots), always present for Pre-K and K. */
+  /** Picture explanation (emoji objects), always present for Pre-K and K. */
   visual?: string;
   /** One or two short kid-level sentences. */
   text: string;
@@ -13,7 +12,7 @@ export interface Explanation {
   say: string;
 }
 
-const DOT = '🔵';
+const DOT = '🍎';
 const SMALL = 10;
 const calc = (op: Op, a: number, b: number) => ({ add: a + b, sub: a - b, mul: a * b, div: b ? a / b : 0 })[op];
 const rep = (e: string, n: number) => e.repeat(Math.max(0, n));
@@ -59,22 +58,13 @@ function algebraWhy(p: Problem): Pick<Explanation, 'visual' | 'text'> {
   const ans = choiceLabel(p);
   switch (p.kind) {
     case 'pattern':
-      if (p.choices) {
-        const seq = (p.visual ?? '').replace('❓', '').trim().split(/\s+/);
-        return { visual: `${seq.join(' ')} ${ans}`, text: 'The pattern repeats, so this one comes next.' };
-      }
       return { text: `It goes ${p.op === 'sub' ? 'down' : 'up'} by ${p.b} each time: ${p.a} ${SYMBOL[p.op]} ${p.b} = ${p.answer}.` };
-    case 'sort': {
-      const group = Object.entries(SORT_GROUPS).find(([, xs]) => xs.includes(ans))?.[0];
-      const same = (p.choices ?? []).filter(c => c !== ans);
-      return { visual: `${same.join(' ')}  ≠  ${ans}`, text: group ? `This one is not like the others. It is in the ${group} group.` : `This one is not like the others.` };
-    }
     case 'true-false': {
       const m = /^Is (.+) = (.+)\?$/.exec(p.text ?? '');
       const evalSide = (s: string) => { const t = /^(\d+) (.) (\d+)$/.exec(s.trim()); if (!t) return Number(s); const op = (Object.keys(SYMBOL) as Op[]).find(k => SYMBOL[k] === t[2])!; return calc(op, +t[1], +t[3]); };
       if (!m) return { text: `The answer is ${ans}.` };
       const l = evalSide(m[1]); const r = evalSide(m[2]);
-      return { visual: Math.max(l, r) <= SMALL ? `${rep(DOT, l) || '0'}  ${l === r ? '=' : '≠'}  ${rep(DOT, r) || '0'}` : undefined, text: `${m[1]} = ${l}. ${m[2]} = ${r}. ${l === r ? 'Both sides match, so it is True.' : `${l} is not ${r}, so it is False.`}` };
+      return { visual: Math.max(l, r) <= SMALL * 2 ? `${rep(DOT, l) || '0'}  ${l === r ? '=' : '≠'}  ${rep(DOT, r) || '0'}` : undefined, text: `${m[1]} = ${l}. ${m[2]} = ${r}. ${l === r ? 'Both sides match, so it is True.' : `${l} is not ${r}, so it is False.`}` };
     }
     case 'make-ten':
       if (p.visual) return { visual: `${rep('🔴', p.a)}${rep('🟢', p.answer)}`, text: `${p.a} and ${p.answer} more fill all 10 spots.` };

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Problem } from './logic';
 import { Band, LEVELS, makeVariedRound, modesForLevel, seededRng } from './variety';
 import { TEMPLATES, makeWordProblem } from './wordBank';
-import { KINDS_BY_BAND, SORT_GROUPS, makeAlgebraProblem } from './algebra';
+import { KINDS_BY_BAND, makeAlgebraProblem } from './algebra';
 
 const KID_BANDS: Band[] = ['PreK', 'K', '1', '2', '3'];
 const ALL: Band[] = [...KID_BANDS, 'none'];
@@ -18,16 +18,6 @@ function ev(expr: string): number {
 function solve(p: Problem): number | string {
   const t = p.text!;
   if (p.kind === 'true-false') { const [l, r] = t.replace(/^Is /, '').replace(/\?$/, '').split('='); return ev(l) === ev(r) ? 'True' : 'False'; }
-  if (p.kind === 'sort') {
-    const group = (e: string) => Object.keys(SORT_GROUPS).find(g => SORT_GROUPS[g].includes(e));
-    const odd = p.choices!.filter(c => p.choices!.filter(d => group(d) === group(c)).length === 1);
-    expect(odd).toHaveLength(1); return odd[0];
-  }
-  if (p.kind === 'pattern' && p.choices) {
-    const seq = p.visual!.replace('❓', '').trim().split(' ');
-    for (let u = 1; u <= 3; u++) if (seq.every((x, i) => i < u || x === seq[i - u])) return seq[seq.length - u];
-    throw new Error('no period');
-  }
   if (p.kind === 'pattern') {
     const s = nums(t); const d = s[1] - s[0];
     s.forEach((x, i) => { if (i) expect(x - s[i - 1]).toBe(d); });
@@ -94,6 +84,21 @@ describe('word problem bank', () => {
   });
 });
 
+describe('no shape questions', () => {
+  const SHAPES = /[🔴🔵🟡🟢🟣🟠🟤⚫⚪🟥🟦🟨🟩🟪🟧⬛⬜◼◻▪▫🔺🔻🔷🔶🔸🔹⭐🌟❤🌙△▲□■○●◯◆◇]|belong|shape|circle|square|triangle/iu;
+  it('no round at any grade shows a shape or odd-one-out question', () => {
+    for (const band of ALL) for (let seed = 1; seed <= 60; seed++) for (const mode of modesForLevel(LEVELS[band])) {
+      for (const p of makeVariedRound(mode, { level: LEVELS[band], rng: seededRng(seed), recent: [] })) {
+        expect(p.kind).not.toBe('sort');
+        const shown = [p.text, p.prompt, p.emoji, ...(p.choices ?? [])].filter(Boolean).join(' ');
+        // Ten-frame dots are the only allowed counters, and only on make-ten.
+        expect(shown, `${band} ${shown}`).not.toMatch(SHAPES);
+        if (p.kind !== 'make-ten' && p.visual) expect(p.visual).not.toMatch(SHAPES);
+      }
+    }
+  });
+});
+
 describe('algebraic thinking', () => {
   it('every kind is answered correctly for every grade', () => {
     for (const band of ALL) for (const kind of KINDS_BY_BAND[band]) for (const op of LEVELS[band].ops) for (let s = 0; s < 150; s++) {
@@ -105,15 +110,15 @@ describe('algebraic thinking', () => {
     }
   });
 
-  it('covers patterns, true/false, unknowns in every position, fact families, making 10; Pre-K only patterns and sorting', () => {
-    expect(KINDS_BY_BAND.PreK).toEqual(['pattern', 'sort']);
+  it('covers patterns, true/false, unknowns in every position, fact families, making 10; Pre-K only number patterns and true/false', () => {
+    expect(KINDS_BY_BAND.PreK).toEqual(['pattern', 'true-false']);
+    for (const band of ALL) expect(KINDS_BY_BAND[band]).not.toContain('sort');
     const forms = new Set<string>();
     for (let s = 0; s < 400; s++) {
       const p = makeAlgebraProblem('add', LEVELS['1'], seededRng(s), 'unknown');
       forms.add(p.text!.replace(/\d+/g, 'n'));
       const pk = makeAlgebraProblem('add', LEVELS.PreK, seededRng(s));
-      expect(['pattern', 'sort']).toContain(pk.kind);
-      expect(pk.choices).toBeDefined();
+      expect(['pattern', 'true-false']).toContain(pk.kind);
     }
     expect(forms).toEqual(new Set(['__ + n = n', 'n + __ = n', 'n = __ + n', 'n = n + __']));
     const tf = new Set(Array.from({ length: 200 }, (_, s) => solve(makeAlgebraProblem('add', LEVELS.K, seededRng(s), 'true-false'))));
@@ -129,7 +134,7 @@ describe('algebraic thinking', () => {
     for (const band of KID_BANDS) for (const kind of KINDS_BY_BAND[band]) for (let s = 0; s < 200; s++) {
       const op = LEVELS[band].ops[s % LEVELS[band].ops.length];
       const p = makeAlgebraProblem(op, LEVELS[band], seededRng(s + 99), kind);
-      const cap = band === 'PreK' ? 0 : LEVELS[band].addMax;
+      const cap = LEVELS[band].addMax;
       for (const x of nums(p.text!)) expect(x).toBeLessThanOrEqual(cap);
       if (!p.choices) expect(p.answer).toBeLessThanOrEqual(cap);
     }
