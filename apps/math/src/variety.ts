@@ -100,7 +100,7 @@ export function shuffle<T>(xs: T[], rng: Rng): T[] {
 
 // ---------- content ----------
 const THINGS: { emoji: string; one: string; many: string }[] = [
-  { emoji: '🍎', one: 'apple', many: 'apples' }, { emoji: '⭐', one: 'star', many: 'stars' },
+  { emoji: '🍎', one: 'apple', many: 'apples' }, { emoji: '🍓', one: 'strawberry', many: 'strawberries' },
   { emoji: '🐟', one: 'fish', many: 'fish' }, { emoji: '🎈', one: 'balloon', many: 'balloons' },
   { emoji: '🍪', one: 'cookie', many: 'cookies' }, { emoji: '🐞', one: 'ladybug', many: 'ladybugs' },
   { emoji: '🚗', one: 'toy car', many: 'toy cars' }, { emoji: '🌸', one: 'flower', many: 'flowers' },

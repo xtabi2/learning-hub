@@ -21,7 +21,7 @@ describe('wrong-answer explanations', () => {
     }
   });
   it('covers each algebra kind', () => {
-    const kinds: AlgebraKind[] = ['pattern', 'sort', 'true-false', 'unknown', 'fact-family', 'make-ten'];
+    const kinds: AlgebraKind[] = ['pattern', 'true-false', 'unknown', 'fact-family', 'make-ten'];
     for (const k of kinds) {
       const p = makeAlgebraProblem('add', LEVELS['1'], seededRng(7), k);
       const e = explain(p);

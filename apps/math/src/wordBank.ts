@@ -10,7 +10,7 @@ export const THINGS: Thing[] = [
   { theme: 'animals', emoji: '🐶', one: 'puppy', many: 'puppies' }, { theme: 'animals', emoji: '🐱', one: 'kitten', many: 'kittens' },
   { theme: 'animals', emoji: '🐰', one: 'bunny', many: 'bunnies' }, { theme: 'animals', emoji: '🦆', one: 'duck', many: 'ducks' },
   { theme: 'animals', emoji: '🐸', one: 'frog', many: 'frogs' }, { theme: 'animals', emoji: '🐢', one: 'turtle', many: 'turtles' },
-  { theme: 'space', emoji: '🚀', one: 'rocket', many: 'rockets' }, { theme: 'space', emoji: '⭐', one: 'star', many: 'stars' },
+  { theme: 'space', emoji: '🚀', one: 'rocket', many: 'rockets' }, { theme: 'space', emoji: '🛸', one: 'flying saucer', many: 'flying saucers' },
   { theme: 'space', emoji: '🪐', one: 'planet', many: 'planets' }, { theme: 'space', emoji: '👽', one: 'alien', many: 'aliens' },
   { theme: 'snacks', emoji: '🍎', one: 'apple', many: 'apples' }, { theme: 'snacks', emoji: '🍪', one: 'cookie', many: 'cookies' },
   { theme: 'snacks', emoji: '🧁', one: 'cupcake', many: 'cupcakes' }, { theme: 'snacks', emoji: '🍓', one: 'strawberry', many: 'strawberries' },
